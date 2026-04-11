@@ -321,11 +321,23 @@ determined entirely by the interior ODE, not by the boundary.
 
 
 
-The parameter $\theta$ has a natural physical interpretation: it is the net drift of
-the battery level that would prevail in the absence of boundary effects. When $\theta > 0$
-(lightly loaded) the battery tends to fill and mass concentrates near $x = B$; when
-$\theta < 0$ (heavily loaded) the battery tends to drain and mass concentrates near
-$x = 0$; when $\theta = 0$ the density is uniform.
+The parameter $\theta = \mu p_2/c - \lambda/p_0$ has a precise physical interpretation.
+Consider a single idle-busy cycle in the absence of battery boundaries: the battery
+charges at rate $p_0$ during the idle period (mean duration $1/\lambda$) and discharges
+at rate $c$ during the busy period (mean duration $1/(\mu p_2)$). The expected net
+battery change per cycle is
+\[
+  \Delta = \frac{p_0}{\lambda} - \frac{c}{\mu p_2},
+\]
+One verifies directly that $\theta > 0$ if and only if $\Delta > 0$: both are
+equivalent to $\lambda/\mu < p_0 p_2/c$. Thus $\theta$ is positive when the offered
+load $\lambda/\mu$ is below the threshold $p_0 p_2/c$, meaning the battery gains energy
+on average per cycle, and negative when it loses energy. Thus $\theta > 0$ corresponds to a lightly loaded station where the battery
+tends to fill, mass concentrates near $x = B$, and blocking is close to the M/M/1/1
+value at the fast rate $p_2$. When $\theta < 0$ the battery tends to drain on average,
+mass concentrates near $x = 0$, and a significant fraction of service occurs at the slow
+rate $p_1$. When $\theta = 0$ the expected gain per cycle is exactly zero and the
+stationary density is uniform on $(0, B)$.
 
 We now derive the key performance metrics directly from Theorem~\ref{thm:stationary}.
 
@@ -525,4 +537,5 @@ and a study of the optimal battery sizing problem are left for future work.
 
 
 \end{document}
+
 

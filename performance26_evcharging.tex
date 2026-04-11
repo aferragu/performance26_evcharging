@@ -1,0 +1,528 @@
+\documentclass{sig-alternate-per-modified}
+
+\usepackage[utf8]{inputenc}
+%\usepackage[T1]{fontenc}
+\usepackage{amsmath,amsfonts}
+%\usepackage{array}
+\usepackage{tikz, pgfplots}
+\usepackage{mathtools, balance}
+\usepackage{subfig}
+% Circuit
+\usepackage{circuitikz}
+% Notation
+\usepackage{siunitx}
+\usepackage{balance}
+\usepackage{microtype}
+
+% Theorems
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{assumption}[theorem]{Assumption}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{lemma}[theorem]{Lemma}
+%\newtheorem*{lemma*}{Lemma}
+
+% Pgfplots
+\pgfplotsset{width=\columnwidth, height = 0.75\columnwidth, grid style = {dashed, gray}, every tick label/.append style = {font=\footnotesize}, compat=1.18, legend style={font=\footnotesize}, every axis/.append style={label style={font=\footnotesize}}}
+
+% Tikz
+\usetikzlibrary{arrows, intersections, shapes}
+\tikzset{>=stealth'}
+\usetikzlibrary{backgrounds}
+\usepgfplotslibrary{patchplots}
+\usepgfplotslibrary{fillbetween}
+%\tikzexternalize
+\newcommand{\graphwidth}{\columnwidth}
+% Colors
+\definecolor{azulcito}{RGB}{40,40,150}
+\definecolor{rojito}{RGB}{150,40,40}
+\definecolor{verdecito}{RGB}{40,150,40}
+
+\begin{document}
+
+%Conference
+\conferenceinfo{IFIP Performance '26.}{3-5 November 2026, Ghent, Belgium}
+
+\title{Queueing analysis of a battery-backed electrical vehicle charging system}
+ 
+ \numberofauthors{2}
+ \author{
+	\alignauthor Andres Ferragut\\
+		\affaddr{Universidad ORT Uruguay}\\
+		\affaddr{Montevideo, Uruguay}\\
+		\email{ferragut@ort.edu.uy}
+	\alignauthor Sebastián Bibiloni \thanks{This work was partially supported by ANII Uruguay under grant CF\_1\_2024\_1\_182277.}\\
+		\affaddr{Universidad de la República}\\
+		\affaddr{Montevideo, Uruguay}\\
+		\email{sebastianbibiloni@ingener.com}
+ }	
+
+\date{November 2026}
+\maketitle
+
+%% The abstract is a short summary of the work to be presented in the
+%% article.
+\begin{abstract}
+We study a battery-buffered electric vehicle fast charging station modeled as a
+piecewise-deterministic Markov process. A battery buffer mediates between a grid
+connection and one or more chargers, delivering fast service when charged and falling
+back to the grid rate when depleted. For the single-server loss system we derive the
+stationary distribution in closed form, uncovering a decoupling property whereby the
+charger state and battery level are independent in steady state, and obtain explicit
+formulas for blocking probability, mean charging time, and a slowdown factor quantifying
+service degradation as a function of car energy demand. We extend the analysis to the
+multi-server loss system, showing that the stationary densities retain an exponential
+form with occupancy weights governed by a simple recurrence, and that the classical
+Erlang-B formula is recovered at the critical load where the mean battery drift vanishes.
+\end{abstract}
+
+\keywords{Piecewise deterministic Markov processes, Electrical Vehicles.}
+
+
+
+
+
+
+% -------------------------------------------------------
+\section{Introduction}
+\label{sec:intro}
+% -------------------------------------------------------
+
+The rapid adoption of electric vehicles is placing increasing demands on electrical
+infrastructure. A key challenge is the provisioning of public fast charging: modern DC
+fast chargers can deliver 150~kW or more per port, requiring grid connections sized for
+their peak output. Yet in practice a charging station is not used continuously; vehicles
+arrive stochastically and the chargers are idle most of the time. Sizing the grid
+connection for worst-case simultaneous demand is therefore wasteful, and utility demand
+charges (fees based on peak power draw within a billing cycle) can represent the dominant
+operating cost of a fast charging site~\cite{NREL2023}. A battery buffer placed between
+the grid and the chargers resolves this mismatch: the battery trickle-charges from the
+grid at a steady, modest rate and discharges at high power during the brief intervals a
+vehicle is present, enabling a much smaller and cheaper grid connection. Battery storage
+at EV stations has been studied primarily in the context of renewable energy integration,
+where the battery smooths intermittent solar or wind supply~\cite{Bayram2011,Kabir2020,Tran2019};
+the low-utilization motivation is equally compelling for purely grid-connected stations.
+
+The central analytical question this raises is a queueing one: given that vehicles
+arrive randomly and the battery recharges during idle periods, how often does a vehicle
+arrive to find the battery depleted, forcing service at the slower grid rate? This
+coupling between the continuous battery state and the discrete service rate is what
+distinguishes the battery-buffered station from a standard loss queue, and it has not
+been captured in the existing EV charging literature, which models charging with a fixed
+service rate~\cite{Bayram2013,Dupont2023,Tan2014}.
+
+We model the station as a Piecewise-Deterministic Markov Process
+(PDMP)~\cite{Davis1984,Davis1993}: the battery level evolves deterministically between
+random events, while car arrivals and departures trigger instantaneous mode switches.
+The state is the pair $(n, x)$ of charger occupancy and battery level. The generator
+of this process is derived explicitly, and from it the stationary distribution is
+obtained in closed form for the single-server loss system. A key structural finding is
+a \emph{decoupling property}: in steady state the charger occupancy and battery level
+are conditionally independent given the interior of the state space, so that the
+stationary density factors as a product of an exponential in $x$ and a mode-dependent
+weight. This yields explicit formulas for the blocking probability, mean charging time,
+and a \emph{slowdown factor} quantifying the service degradation as a function of a
+car's energy demand. We then extend the analysis to a loss system with $s$ parallel
+chargers sharing a common battery. The exponential form of the stationary density is
+preserved, with the mode weights now governed by a simple recurrence, and the classical
+Erlang-B blocking formula is recovered in the critical case where the mean battery
+drift vanishes.
+
+The paper is organized as follows. Section~\ref{sec:model} introduces the single-server
+model and its PDMP formulation. Section~\ref{sec:stationary} derives the stationary
+distribution and performance metrics. Section~\ref{sec:multiserver} treats the
+many-server case. Section~\ref{sec:conclusions} concludes.
+
+
+
+
+% -------------------------------------------------------
+\section{Single-Server Model}
+\label{sec:model}
+% -------------------------------------------------------
+
+We consider a single EV charging station consisting of one charger connected to the
+electrical grid, equipped with a battery buffer of capacity $B > 0$. Cars arrive
+according to a Poisson process of rate $\lambda > 0$, each carrying an energy demand
+$Y \sim \mathrm{Exp}(\mu)$. The station operates as a \emph{loss system}: a car that
+arrives when the charger is busy is turned away.
+
+The system is characterized by the following power rates: $p_0 > 0$, the rate at which
+the grid recharges the battery when the charger is idle; $p_1 > p_0$, the maximum grid
+supply rate; $p_2 > p_1$, the fast charging rate delivered to a car when the battery is
+positive; and $c = p_2 - p_1 > 0$, the net battery discharge rate during fast charging.
+The ordering $p_0 \leq p_1 < p_2$ reflects a practical constraint: the battery recharges
+slowly to extend its life, while fast charging draws power simultaneously from both grid
+and battery.
+
+When a car is admitted, service proceeds in at most two phases. In \emph{Phase~1}
+(fast charging), while the battery level $x > 0$, the car charges at rate $p_2$ and the
+battery discharges at rate $c$. In \emph{Phase~2} (slow charging), once the battery is
+exhausted ($x = 0$), the car charges at rate $p_1$ and the battery remains at zero. A car with small demand may complete service entirely in Phase~1. With exponential demands,
+the instantaneous departure rate is $\mu p(x)$, where
+$p(x) = p_2\,\mathbf{1}_{x>0} + p_1\,\mathbf{1}_{x=0}$.
+
+The system state at time $t$ is the pair $Z(t) = (n(t), x(t))$, where $n(t) \in \{0,1\}$
+is the charger status ($0$ = idle, $1$ = busy) and $x(t) \in [0,B]$ is the battery
+level. The state space is $E = \{0,1\} \times [0,B]$. Between events, the battery evolves
+deterministically according to $\dot{x} = r(n, x)$, where
+\begin{equation}
+  r(n, x) = \begin{cases}
+    p_0  & n = 0,\ x < B, \\
+    0    & n = 0,\ x = B, \\
+    -c   & n = 1,\ x > 0, \\
+    0    & n = 1,\ x = 0.
+  \end{cases}
+  \label{eq:vectorfield}
+\end{equation}
+The jumps are spontaneous events: \emph{arrivals} at $(0,x)$ occur at rate $\lambda$ and
+transition to $(1,x)$; \emph{departures} at $(1,x)$ with $x>0$ occur at rate $\mu p_2$
+and transition to $(0,x)$; \emph{departures} at $(1,0)$ occur at rate $\mu p_1$ and
+transition to $(0,0)$. In all cases the battery level is unchanged at the jump epoch.
+
+The process $Z(t)$ fits the PDMP framework of Davis~\cite{Davis1984,Davis1993},
+though the standard theory requires an open state space and forces the process to jump
+before reaching the boundary. Neither condition holds here: $E$ is compact and the flow
+reaches $x=0$ and $x=B$ in finite time without a jump. Nevertheless, the vector
+field~\eqref{eq:vectorfield} is bounded and monotone on each mode, so the flow is
+globally well-defined. The strong Markov property follows from the martingale-problem
+approach, which extends to this setting since all jump rates are bounded and the jump
+kernel leaves $x$ unchanged.
+
+Note that an arriving car always finds $x>0$ with probability one. During any idle period
+the battery charges at rate $p_0 > 0$, and since the idle time before the next arrival is
+$\mathrm{Exp}(\lambda)$ (positive a.s.), the battery is strictly positive at every arrival
+epoch. The state $(n=0, x=0)$ therefore has zero probability under any stationary
+distribution.
+
+The extended generator $\mathcal{A}$ of $Z(t)$ has domain $\mathcal{D}(\mathcal{A})$
+consisting of functions $\psi : E \to \mathbb{R}$ such that $\psi(n,\cdot)$ is absolutely
+continuous on $[0,B]$ for each $n$. For $\psi \in \mathcal{D}(\mathcal{A})$,
+\begin{align}
+  \mathcal{A}\psi(0, x) &= r(0,x)\,\psi_0'(x) + \lambda\,[\psi(1,x) - \psi(0,x)],
+  \label{eq:gen0} \\
+  \mathcal{A}\psi(1, x) &= r(1,x)\,\psi_1'(x) + \mu p(x)\,[\psi(0,x) - \psi(1,x)],
+  \label{eq:gen1}
+\end{align}
+where $\psi_n' = \partial_x \psi(n,\cdot)$ is defined Lebesgue-a.e. The first term in
+each line is the flow contribution; the second is the jump contribution. For any
+$\psi \in \mathcal{D}(\mathcal{A})$, the process $M_t^\psi := \psi(Z(t)) - \psi(Z(0)) - \int_0^t \mathcal{A}\psi(Z(s))\,ds$
+is a local martingale~\cite{Davis1984}.
+
+A stationary distribution $\pi$ satisfies $\int \mathcal{A}\psi\,d\pi = 0$ for all
+$\psi \in \mathcal{D}(\mathcal{A})$, which is the weak form of the Kolmogorov forward
+equation $\mathcal{A}^*\pi = 0$. We seek $\pi$ as a mixed measure with densities on
+$(0,B)$ and point masses at the boundary points where flow accumulates. Substituting
+this form into $\int \mathcal{A}\psi\,d\pi = 0$ and integrating by parts yields a
+system of ODEs on $(0,B)$ and flux-balance conditions at the boundary, which we solve
+in the next section.
+
+% -------------------------------------------------------
+\section{Single-Server Steady-State Analysis}
+\label{sec:stationary}
+% -------------------------------------------------------
+
+Since $E$ is compact and $Z(t)$ is irreducible (every open rectangle
+$\{n\}\times(a,b)$ is reachable with positive probability from any starting point, by
+a combination of deterministic drift and Poisson events), the process is ergodic with a
+unique stationary distribution $\pi$~\cite{MeynTweedie1993}.
+
+Following the approach outlined at the end of Section~\ref{sec:model}, we write $\pi$
+in the mixed form
+\begin{equation}
+  \pi = f_0(x)\,dx + f_1(x)\,dx + \pi_{0,B}\,\delta_{(0,B)} + \pi_{1,0}\,\delta_{(1,0)},
+  \label{eq:ansatz}
+\end{equation}
+where $f_n \geq 0$ are densities on $(0,B)$ and $\pi_{0,B}, \pi_{1,0} \geq 0$ are point
+masses at the corners where the flow accumulates: $x=B$ in mode~$0$ (since $r(0,\cdot)=p_0>0$)
+and $x=0$ in mode~$1$ (since $r(1,\cdot)=-c<0$). The other two corners carry no atoms.
+
+\textbf{Steady-state equations.}
+Setting $\mathcal{A}^*\pi = 0$ and using \eqref{eq:gen0}--\eqref{eq:gen1}, the
+stationarity condition $\int \mathcal{A}\psi\,d\pi = 0$ for all
+$\psi \in \mathcal{D}(\mathcal{A})$ yields, after integration by parts, the following
+system. The \emph{interior equations} on $(0,B)$ are
+\begin{align}
+  p_0\, f_0'(x) &= -\lambda\, f_0(x) + \mu p_2\, f_1(x), \label{eq:E0} \\
+  -c\, f_1'(x)  &= \phantom{-}\lambda\, f_0(x) - \mu p_2\, f_1(x). \label{eq:E1}
+\end{align}
+The \emph{boundary flux equations} are obtained by flux conservation at each boundary
+point: mass arriving at a boundary via the flow must equal mass leaving via jumps.
+At $x=0$ in mode $1$, the inward flow $c\,f_1(0^+)$ feeds the atom $\pi_{1,0}$, which
+drains via departures at rate $\mu p_1$:
+\begin{equation}
+  c\,f_1(0^+) = \mu p_1\,\pi_{1,0}. \label{eq:B1}
+\end{equation}
+At $x=0$ in mode $0$, the atom $\pi_{1,0}$ is created by departures and immediately
+carried into the interior by the flow at rate $p_0$:
+\begin{equation}
+  p_0\,f_0(0^+) = \mu p_1\,\pi_{1,0}. \label{eq:B0}
+\end{equation}
+At $x=B$ in mode $0$, the inward flow $p_0\,f_0(B^-)$ feeds the atom $\pi_{0,B}$,
+which drains via arrivals at rate $\lambda$:
+\begin{equation}
+  p_0\,f_0(B^-) = \lambda\,\pi_{0,B}. \label{eq:B2}
+\end{equation}
+At $x=B$ in mode $1$, arrivals from $\pi_{0,B}$ feed the interior flow at rate $\lambda$:
+\begin{equation}
+  c\,f_1(B^-) = \lambda\,\pi_{0,B}. \label{eq:B3}
+\end{equation}
+These are supplemented by normalization:
+$\int_0^B (f_0 + f_1)\,dx + \pi_{0,B} + \pi_{1,0} = 1$.
+
+We can now state the main result of this section.
+
+\begin{theorem}
+\label{thm:stationary}
+Let $\theta = \mu p_2/c - \lambda/p_0$. The unique stationary distribution of $Z(t)$
+has the form~\eqref{eq:ansatz} with
+\begin{equation}
+  f_0(x) = \frac{e^{\theta x}}{K}, \qquad
+  f_1(x) = \frac{p_0}{c}\cdot\frac{e^{\theta x}}{K}, \qquad x \in (0,B),
+  \label{eq:densities}
+\end{equation}
+\begin{equation}
+  \pi_{1,0} = \frac{p_0}{\mu p_1\, K}, \qquad
+  \pi_{0,B} = \frac{p_0\,e^{\theta B}}{\lambda\, K},
+  \label{eq:atoms}
+\end{equation}
+where the normalization constant is
+\begin{equation}
+  K = \frac{p_0+c}{c}\cdot\frac{e^{\theta B}-1}{\theta}
+    + \frac{p_0}{\mu p_1} + \frac{p_0\,e^{\theta B}}{\lambda},
+  \label{eq:K}
+\end{equation}
+with the convention $(e^{\theta B}-1)/\theta = B$ when $\theta = 0$.
+\end{theorem}
+
+\begin{proof}[Proof sketch]
+\textbf{Decoupling.} Adding \eqref{eq:E0} and \eqref{eq:E1} gives
+$\tfrac{d}{dx}[p_0 f_0 - c f_1] = 0$, so $p_0 f_0 - c f_1$ is constant on $(0,B)$.
+Equations \eqref{eq:B1} and \eqref{eq:B0} together give $p_0 f_0(0^+) = c f_1(0^+)$,
+so the constant is zero: $f_1(x) = (p_0/c)\,f_0(x)$ for all $x \in (0,B)$.
+
+\textbf{Exponential solution.} Substituting $f_1 = (p_0/c) f_0$ into \eqref{eq:E0}
+yields $f_0'(x) = \theta\, f_0(x)$ with $\theta = \mu p_2/c - \lambda/p_0$, whose
+solution is $f_0(x) = f_0(0^+)\,e^{\theta x}$.
+
+\textbf{Atoms and normalization.} The atoms follow directly from \eqref{eq:B0}
+and \eqref{eq:B2}. One can verify that \eqref{eq:B3} is automatically satisfied,
+confirming consistency. Setting $f_0(0^+) = 1/K$ and imposing normalization
+determines $K$ as in \eqref{eq:K}.
+
+\textbf{Boundary conditions at $x=B$.} Equations \eqref{eq:B2}--\eqref{eq:B3}
+are both satisfied by the exponential solution with the atoms given in \eqref{eq:atoms},
+confirming that no additional constraint on $\theta$ arises: the parameter $\theta$ is
+determined entirely by the interior ODE, not by the boundary.
+\end{proof}
+
+
+
+The parameter $\theta$ has a natural physical interpretation: it is the net drift of
+the battery level that would prevail in the absence of boundary effects. When $\theta > 0$
+(lightly loaded) the battery tends to fill and mass concentrates near $x = B$; when
+$\theta < 0$ (heavily loaded) the battery tends to drain and mass concentrates near
+$x = 0$; when $\theta = 0$ the density is uniform.
+
+We now derive the key performance metrics directly from Theorem~\ref{thm:stationary}.
+
+\begin{proposition}[Blocking probability]
+\label{prop:blocking}
+\begin{sloppypar}
+By PASTA, $P_B$ is the stationary probability the charger is busy:
+\end{sloppypar}
+\begin{equation}
+  P_B = \int_0^B f_1(x)\,dx + \pi_{1,0}
+      = \frac{p_0}{K}\left(\frac{e^{\theta B}-1}{c\,\theta} + \frac{1}{\mu p_1}\right).
+  \label{eq:PB}
+\end{equation}
+As $B \to 0$, $P_B \to \lambda/(\lambda + \mu p_1)$, the blocking probability of an
+$M/M/1/1$ queue at rate $p_1$. As $B \to \infty$ with $\theta > 0$,
+$P_B \to \lambda/(\lambda + \mu p_2)$, corresponding to service always at the fast
+rate $p_2$. When $\theta < 0$, $P_B$ converges to a value strictly between these two
+limits even as $B \to \infty$, reflecting the residual probability of finding the
+battery depleted.
+\end{proposition}
+
+\begin{proposition}[Mean charging time]
+\label{prop:meantime}
+By Little's law, the mean service time of an admitted car is
+
+\begin{equation}
+  \mathbb{E}[T] = \frac{P_B}{\lambda(1-P_B)}.
+  \label{eq:ET}
+\end{equation}
+\end{proposition}
+
+\begin{proposition}[Slowdown factor]
+\label{prop:slowdown}
+Given admission at level $x$ with demand $Y=y$, let
+$T(x,y) = y/p_2 + (p_1^{-1}{-}p_2^{-1})\max(y - p_2 x/c, 0)$ be the charging time.
+The \emph{slowdown factor} $S(y) = \mathbb{E}[T \mid Y=y]/(y/p_2) \geq 1$
+quantifies degradation relative to ideal fast charging.
+With $\tilde{x}(y) = cy/p_2$ the critical battery level:
+
+\noindent For $y < p_2 B/c$ (battery may survive):
+\begin{equation}
+  S(y) = 1 + \frac{p_2-p_1}{p_1\,y\,K(1-P_B)\,\theta}
+         \left[\frac{p_2}{c\,\theta}\!\left(e^{\theta cy/p_2}-1\right) - y\right].
+  \label{eq:Sy1}
+\end{equation}
+For $y \geq p_2 B/c$ (battery always depletes):
+\begin{multline}
+  S(y) = 1 + \frac{p_2-p_1}{p_1\,y\,K(1-P_B)}
+         \Bigl\{\tfrac{1}{\theta}\bigl[(y-\tfrac{p_2 B}{c})e^{\theta B} - y
+         + \tfrac{p_2(e^{\theta B}-1)}{c\theta}\bigr] \\
+         + \tfrac{p_0 e^{\theta B}}{\lambda}(y-\tfrac{p_2 B}{c})\Bigr\}.
+  \label{eq:Sy2}
+\end{multline}
+$S(y)$ satisfies $S(y) \geq 1$, is increasing in $y$, tends to $1$ as $y \to 0$
+or $B \to \infty$, and tends to $p_2/p_1$ as $y \to \infty$ or $B \to 0$.
+\end{proposition}
+
+% -------------------------------------------------------
+\section{The Many-Server Case}
+\label{sec:multiserver}
+% -------------------------------------------------------
+
+We now extend the model to $s \geq 1$ parallel chargers sharing a single battery buffer
+of capacity $B$ and a single grid connection of rate $p_1$. The station continues to
+operate as a loss system: a car that arrives when all $s$ chargers are busy is turned away.
+
+\textbf{Assumptions.} We impose $p_1 < s p_2$, so the grid alone cannot sustain all $s$
+chargers simultaneously at full rate; the battery is essential at full occupancy. We
+also set $p_0 = p_1$, so the idle recharge rate equals the grid supply rate;
+this simplifies the structure of the vector field.
+
+\textbf{State space and dynamics.} The state is $Z(t)=(n(t),x(t))$ with
+$n(t)\in\{0,\ldots,s\}$ busy chargers and $x(t)\in[0,B]$;
+$E=\{0,\ldots,s\}\times[0,B]$ is compact. With $n$ busy chargers each drawing
+$p_2$ and the grid supplying $p_1$, the net drift is $r_n = p_1-np_2$.
+Setting $p_0=p_1$ makes this hold for all $n$: the battery charges at rate
+$p_1$ when idle and drains at rate $np_2-p_1$ when $n>p_1/p_2$. The vector field is
+\begin{equation}
+  \dot{x} = \begin{cases}
+    r_n & 0 < x < B,\ r_n \neq 0, \\
+    0   & \text{otherwise (boundary reflection).}
+  \end{cases}
+  \label{eq:vf_multi}
+\end{equation}
+Define the \emph{critical occupancy} $n^* = \lfloor p_1/p_2 \rfloor \in \{0,\ldots,s-1\}$;
+the battery charges when $n \leq n^*$ and drains when $n > n^*$.
+
+The jumps are: arrivals at rate $\lambda$ when $n < s$, transitioning $n \to n+1$ with
+$x$ unchanged; departures at total rate $n\mu p_2$ when $x > 0$, and at rate $\mu p_1$
+when $x = 0$ (the grid supplies $p_1$ shared equally, giving total throughput $\mu p_1$
+regardless of occupancy), each transitioning $n \to n-1$ with $x$ unchanged.
+
+The process $Z(t)$ is again a PDMP on a compact state space, and the same
+martingale-problem argument as in Section~\ref{sec:model} establishes the strong Markov
+property. Irreducibility follows by the same reachability argument, so $Z(t)$ is ergodic
+with a unique stationary distribution.
+
+\textbf{Form of the stationary distribution.} The flow direction at each boundary point
+now depends on the occupancy level $n$. Atoms accumulate at $(n, B)$ for $n \leq n^*$
+(where the flow pushes toward $x = B$) and at $(n, 0)$ for $n > n^*$ (where the flow
+pushes toward $x = 0$). We therefore seek a stationary distribution of the form
+\begin{equation}
+  \pi = \sum_{n=0}^{s} f_n(x)\,dx
+      + \sum_{n=0}^{n^*} \pi_n^{(B)}\,\delta_{(n,B)}
+      + \sum_{n=n^*+1}^{s} \pi_n^{(0)}\,\delta_{(n,0)},
+  \label{eq:form_multi}
+\end{equation}
+where $f_n \geq 0$ are densities on $(0,B)$ and $\pi_n^{(B)}, \pi_n^{(0)} \geq 0$ are
+point masses.
+
+\textbf{Interior equations.} Setting $\mathcal{A}^*\pi = 0$ on $(0,B)$ gives, for
+$0 \leq n \leq s$,
+\begin{multline}
+  r_n f_n'(x) = \lambda f_{n-1}(x)\,\mathbf{1}_{n>0}
+              + (n{+}1)\mu p_2\, f_{n+1}(x)\,\mathbf{1}_{n<s} \\
+              - (\lambda\,\mathbf{1}_{n<s} + n\mu p_2)\, f_n(x).
+  \label{eq:En_multi}
+\end{multline}
+
+\begin{theorem}
+\label{thm:multi}
+Let $\rho = \lambda/(\mu p_2)$. There exists a unique $\theta \in \mathbb{R}$, determined
+by the boundary flux equations together with normalization, such that the stationary
+densities take the form
+\begin{equation}
+  f_n(x) = C\,a_n(\theta)\,e^{\theta x}, \qquad x \in (0,B),\ n = 0,\ldots,s,
+  \label{eq:fn_multi}
+\end{equation}
+where $C > 0$ is a normalization constant and the coefficients $a_n(\theta)$ satisfy
+the recurrence $a_0 = 1$ and
+\begin{equation}
+  a_{n+1} = \frac{\theta\,S_n + \lambda\,a_n}{(n+1)\mu p_2},
+  \qquad S_n = \sum_{k=0}^{n} r_k\,a_k, \quad n = 0,\ldots,s-1.
+  \label{eq:recurrence}
+\end{equation}
+When $\theta = 0$, the recurrence yields $a_n = \rho^n/n!$ and the distribution reduces
+to the classical Erlang-B form with uniform density in $x$. For $\theta \neq 0$, the
+blocking probability
+\begin{equation}
+  P_B = C\,a_s\,\frac{e^{\theta B}-1}{\theta} + \pi_s^{(0)}\,\mathbf{1}_{n^* < s}
+  \label{eq:PB_multi}
+\end{equation}
+deviates from the Erlang-B value, with the battery shifting mass toward $x = B$ when
+$\theta > 0$ and toward $x = 0$ when $\theta < 0$.
+\end{theorem}
+
+\begin{proof}[Proof sketch]
+Summing~\eqref{eq:En_multi} from $k=0$ to $n$ telescopes the right side to
+$-\lambda f_n + (n+1)\mu p_2 f_{n+1}$. The exponential form $f_n = Ca_n e^{\theta x}$
+then yields~\eqref{eq:recurrence}. The value of $\theta$ is fixed by the boundary flux
+equations together with normalization. For $s=1$ and $p_0=p_1$, one recovers
+$\theta = \mu p_2/c - \lambda/p_1$ of Theorem~\ref{thm:stationary}.
+\end{proof}
+
+The parameter $\theta$ admits the same physical interpretation as in the single-server
+case. In the unconstrained system (infinite battery), the occupancy evolves as an
+$M/M/s/s$ queue with Erlang-B stationary weights $\pi_n \propto \rho^n/n!$, giving a
+mean battery drift $\bar{r} = p_1 - (\lambda/\mu)(1 - P_B^{\text{Erlang}})$. The sign
+of $\bar{r}$ determines the sign of $\theta$: positive when the grid can sustain the
+average load (battery fills in the long run) and negative otherwise. The case $\theta = 0$
+corresponds exactly to $\bar{r} = 0$, at which point the Erlang-B distribution is recovered.
+
+\textbf{Performance metrics.} The blocking probability is given by~\eqref{eq:PB_multi}.
+By PASTA and Little's law the mean charging time follows from $P_B$ exactly as in
+Propositions~\ref{prop:blocking} and~\ref{prop:meantime}. The slowdown factor
+$S(y)$ generalizes directly: the admitted battery level has the same exponential density
+$f_0(x)/({1-P_B})$ on $(0,B)$ (now with $s$-server normalization), and the conditional
+charging time $T(x,y)$ is unchanged, so the formulas of
+Proposition~\ref{prop:slowdown} apply with the updated $P_B$ and $K = 1/C$.
+
+% -------------------------------------------------------
+\section{Conclusions}
+\label{sec:conclusions}
+% -------------------------------------------------------
+
+We have studied a battery-buffered EV fast charging station using the framework of
+piecewise-deterministic Markov processes. For the single-server loss system we derived
+the stationary distribution in closed form, establishing a decoupling property that
+separates the battery level from the charger state in steady state, and obtained explicit
+expressions for the blocking probability, mean charging time, and slowdown factor. We
+extended the analysis to a loss system with $s$ parallel chargers sharing a common
+battery, showing that the stationary densities retain an exponential form in the battery
+level with occupancy-dependent weights governed by a simple recurrence. In both cases the
+key parameter $\theta$, the sign of the mean battery drift, determines whether the system
+operates in a battery-rich or battery-scarce regime and controls the deviation of the
+blocking probability from the classical Erlang-B value.
+
+The analysis highlights a structural difference from standard fluid queues: the
+state-dependent service rate at $x = 0$ couples the discrete and continuous components
+in a way that prevents a product-form solution in the multi-server case while still
+admitting an exponential form in $x$. Numerical illustrations of the performance metrics
+and a study of the optimal battery sizing problem are left for future work.
+
+
+\bibliographystyle{abbrv}
+\bibliography{evcharging}
+
+
+\end{document}
+

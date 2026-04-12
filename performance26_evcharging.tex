@@ -8,7 +8,7 @@
 \usepackage{mathtools, balance}
 \usepackage{subfig}
 % Circuit
-\usepackage{circuitikz}
+\usepackage{cite}
 % Notation
 \usepackage{siunitx}
 \usepackage{balance}
@@ -67,13 +67,12 @@
 %% article.
 \begin{abstract}
 We study a battery-buffered electric vehicle fast charging station modeled as a
-piecewise-deterministic Markov process. A battery buffer mediates between a grid
-connection and one or more chargers, delivering fast service when charged and falling
+piecewise-deterministic Markov process. A battery mediates between the grid
+connection and one or more chargers, enabling fast service when the battery is charged and falling
 back to the grid rate when depleted. For the single-server loss system we derive the
 stationary distribution in closed form, uncovering a decoupling property whereby the
 charger state and battery level are independent in steady state, and obtain explicit
-formulas for blocking probability, mean charging time, and a slowdown factor quantifying
-service degradation as a function of car energy demand. We extend the analysis to the
+formulas for several performance metrics. We extend the analysis to the
 multi-server loss system, showing that the stationary densities retain an exponential
 form with occupancy weights governed by a simple recurrence, and that the classical
 Erlang-B formula is recovered at the critical load where the mean battery drift vanishes.
@@ -81,55 +80,46 @@ Erlang-B formula is recovered at the critical load where the mean battery drift 
 
 \keywords{Piecewise deterministic Markov processes, Electrical Vehicles.}
 
-
-
-
-
-
 % -------------------------------------------------------
 \section{Introduction}
 \label{sec:intro}
 % -------------------------------------------------------
 
-The rapid adoption of electric vehicles is placing increasing demands on electrical
-infrastructure. A key challenge is the provisioning of public fast charging: modern DC
+The rapid adoption of electric vehicles (EVs) is placing increasing demands on electrical
+infrastructure. A key challenge is the provisioning of public \emph{fast charging}: modern DC
 fast chargers can deliver 150~kW or more per port, requiring grid connections sized for
 their peak output. Yet in practice a charging station is not used continuously; vehicles
-arrive stochastically and the chargers are idle most of the time. Sizing the grid
-connection for worst-case simultaneous demand is therefore wasteful, and utility demand
-charges (fees based on peak power draw within a billing cycle) can represent the dominant
-operating cost of a fast charging site~\cite{NREL2023}. A battery buffer placed between
-the grid and the chargers resolves this mismatch: the battery trickle-charges from the
-grid at a steady, modest rate and discharges at high power during the brief intervals a
-vehicle is present, enabling a much smaller and cheaper grid connection. Battery storage
-at EV stations has been studied primarily in the context of renewable energy integration,
-where the battery smooths intermittent solar or wind supply~\cite{Bayram2011,Kabir2020,Tran2019};
-the low-utilization motivation is equally compelling for purely grid-connected stations.
+arrive stochastically, and the chargers are idle most of the time. Sizing the grid
+connection for worst-case simultaneous demand is therefore wasteful, civil infrastructure becomes costly, and utility demand
+charges (fees based on peak power draw) can represent the dominant
+operating cost of a fast charging site~\cite{NREL2023}. A battery, acting as an energy buffer, placed between
+the grid and the chargers resolves this mismatch: the battery gradually charges from the
+grid at a steady, lower rate and discharges at high power during the brief intervals a
+vehicle is present, enabling a much smaller and cheaper grid connection. While battery storage
+at EV stations has been studied before, it has been done primarily in the context of renewable energy integration,
+where the battery smooths intermittent solar or wind supply~\cite{Bayram2011,Kabir2020,Tran2019}. However, with the advent of fast DC chargers available in highways and remote areas, using a battery buffer in these low-utilization regimes has become equally compelling for purely grid-connected stations.
 
 The central analytical question this raises is a queueing one: given that vehicles
-arrive randomly and the battery recharges during idle periods, how often does a vehicle
+arrive randomly and the battery recharges during idle or low utilization periods, how often does a vehicle
 arrive to find the battery depleted, forcing service at the slower grid rate? This
 coupling between the continuous battery state and the discrete service rate is what
-distinguishes the battery-buffered station from a standard loss queue, and it has not
+distinguishes the battery-buffered station from a standard queue, and it has not
 been captured in the existing EV charging literature, which models charging with a fixed
 service rate~\cite{Bayram2013,Dupont2023,Tan2014}.
 
-We model the station as a Piecewise-Deterministic Markov Process
+In this paper, we propose a station model using a Piecewise-Deterministic Markov Process
 (PDMP)~\cite{Davis1984,Davis1993}: the battery level evolves deterministically between
-random events, while car arrivals and departures trigger instantaneous mode switches.
-The state is the pair $(n, x)$ of charger occupancy and battery level. The generator
-of this process is derived explicitly, and from it the stationary distribution is
-obtained in closed form for the single-server loss system. A key structural finding is
-a \emph{decoupling property}: in steady state the charger occupancy and battery level
-are conditionally independent given the interior of the state space, so that the
+random events, while car arrivals and departures trigger instantaneous switches.
+The state is then the pair $(n, x)$ of system occupancy and battery level. We derive the generator
+of this process, and compute the stationary distribution in closed form for the single-server loss system. 
+A key structural finding is a \emph{decoupling property}: in steady state the charger occupancy and battery level
+are conditionally independent given the battery is the interior of the state space (partially charged), so that the
 stationary density factors as a product of an exponential in $x$ and a mode-dependent
 weight. This yields explicit formulas for the blocking probability, mean charging time,
 and a \emph{slowdown factor} quantifying the service degradation as a function of a
 car's energy demand. We then extend the analysis to a loss system with $s$ parallel
 chargers sharing a common battery. The exponential form of the stationary density is
-preserved, with the mode weights now governed by a simple recurrence, and the classical
-Erlang-B blocking formula is recovered in the critical case where the mean battery
-drift vanishes.
+preserved, with the mode weights now governed by a simple recurrence. Armed with these formulas, we discuss several performance issues and design objectives that provide guidelines on how to design such systems.
 
 The paper is organized as follows. Section~\ref{sec:model} introduces the single-server
 model and its PDMP formulation. Section~\ref{sec:stationary} derives the stationary
@@ -298,7 +288,7 @@ where the normalization constant is
 with the convention $(e^{\theta B}-1)/\theta = B$ when $\theta = 0$.
 \end{theorem}
 
-\begin{proof}[Proof sketch]
+\begin{proof}[sketch]
 \textbf{Decoupling.} Adding \eqref{eq:E0} and \eqref{eq:E1} gives
 $\tfrac{d}{dx}[p_0 f_0 - c f_1] = 0$, so $p_0 f_0 - c f_1$ is constant on $(0,B)$.
 Equations \eqref{eq:B1} and \eqref{eq:B0} together give $p_0 f_0(0^+) = c f_1(0^+)$,
@@ -341,33 +331,26 @@ stationary density is uniform on $(0, B)$.
 
 We now derive the key performance metrics directly from Theorem~\ref{thm:stationary}.
 
-\begin{proposition}[Blocking probability]
-\label{prop:blocking}
-\begin{sloppypar}
-By PASTA, $P_B$ is the stationary probability the charger is busy:
-\end{sloppypar}
+\begin{proposition}\label{prop:blocking}
+The stationary blocking probability of the system is
 \begin{equation}
   P_B = \int_0^B f_1(x)\,dx + \pi_{1,0}
       = \frac{p_0}{K}\left(\frac{e^{\theta B}-1}{c\,\theta} + \frac{1}{\mu p_1}\right).
   \label{eq:PB}
 \end{equation}
-As $B \to 0$, $P_B \to \lambda/(\lambda + \mu p_1)$, the blocking probability of an
-$M/M/1/1$ queue at rate $p_1$. As $B \to \infty$ with $\theta > 0$,
-$P_B \to \lambda/(\lambda + \mu p_2)$, corresponding to service always at the fast
-rate $p_2$. When $\theta < 0$, $P_B$ converges to a value strictly between these two
-limits even as $B \to \infty$, reflecting the residual probability of finding the
-battery depleted.
 \end{proposition}
+This follows directly by the PASTA property of arrivals. Note that this probability is also the probability that the charger is working. As $B \to 0$, $P_B \to \lambda/(\lambda + \mu p_1)$, the blocking probability of an $M/M/1/1$ queue at rate $p_1$. As $B \to \infty$ with $\theta > 0$,
+$P_B \to \lambda/(\lambda + \mu p_2)$, corresponding to service always at the fast rate $p_2$. When $\theta < 0$, $P_B$ converges to a value strictly between these two limits even as $B \to \infty$, reflecting the residual probability of finding the battery depleted.
 
-\begin{proposition}[Mean charging time]
+\begin{proposition}
 \label{prop:meantime}
-By Little's law, the mean service time of an admitted car is
-
+The mean service time of an admitted car is:
 \begin{equation}
   \mathbb{E}[T] = \frac{P_B}{\lambda(1-P_B)}.
   \label{eq:ET}
 \end{equation}
 \end{proposition}
+This follows directly from Little's law and the fact that only one car is present with probability $P_B$.
 
 \begin{proposition}[Slowdown factor]
 \label{prop:slowdown}
@@ -484,7 +467,7 @@ deviates from the Erlang-B value, with the battery shifting mass toward $x = B$ 
 $\theta > 0$ and toward $x = 0$ when $\theta < 0$.
 \end{theorem}
 
-\begin{proof}[Proof sketch]
+\begin{proof}[sketch]
 Summing~\eqref{eq:En_multi} from $k=0$ to $n$ telescopes the right side to
 $-\lambda f_n + (n+1)\mu p_2 f_{n+1}$. The exponential form $f_n = Ca_n e^{\theta x}$
 then yields~\eqref{eq:recurrence}. The value of $\theta$ is fixed by the boundary flux

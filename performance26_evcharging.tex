@@ -140,25 +140,16 @@ according to a Poisson process of rate $\lambda > 0$, each carrying an energy de
 $Y \sim \mathrm{Exp}(\mu)$. The station operates as a \emph{loss system}: a car that
 arrives when the charger is busy is turned away.
 
-The system is characterized by the following power rates: $p_0 > 0$, the rate at which
-the grid recharges the battery when the charger is idle; $p_1 > p_0$, the maximum grid
-supply rate; $p_2 > p_1$, the fast charging rate delivered to a car when the battery is
-positive; and $c = p_2 - p_1 > 0$, the net battery discharge rate during fast charging.
-The ordering $p_0 \leq p_1 < p_2$ reflects a practical constraint: the battery recharges
-slowly to extend its life, while fast charging draws power simultaneously from both grid
-and battery.
+The system parameters are the following: the grid may supply a maximum power $p_1$, and this energy may be used to charge the battery or the car, if present. When the system is idle, the battery is recharged at rate $0<p_0\leqslant p_1$. Inequality reflects that we may want to recharge the battery at a slower rate to preserve battery life. The EV charging station itself may provide power $p_2>p_1$, which amounts to fast charging. When a car is present, this power is provided by the grid at rate $p_1$ and the extra amount $c:=p_2-p_1>0$ is provided by the battery, whenever is not empty. If the battery empties, the system reverts to charging only from the grid at rate $p_1$, and the battery stays depleted until the current car finishes service. We denote by $x(t)\in[0,B]$ the current state of the battery at time $t$, and by $n(t)\in\{0,1\}$ the presence of not of a charging vehicle.
 
-When a car is admitted, service proceeds in at most two phases. In \emph{Phase~1}
+Under the above assumptions, when a car is admitted, service proceeds in at most two phases. In \emph{Phase~1}
 (fast charging), while the battery level $x > 0$, the car charges at rate $p_2$ and the
 battery discharges at rate $c$. In \emph{Phase~2} (slow charging), once the battery is
-exhausted ($x = 0$), the car charges at rate $p_1$ and the battery remains at zero. A car with small demand may complete service entirely in Phase~1. With exponential demands,
-the instantaneous departure rate is $\mu p(x)$, where
-$p(x) = p_2\,\mathbf{1}_{x>0} + p_1\,\mathbf{1}_{x=0}$.
-
-The system state at time $t$ is the pair $Z(t) = (n(t), x(t))$, where $n(t) \in \{0,1\}$
-is the charger status ($0$ = idle, $1$ = busy) and $x(t) \in [0,B]$ is the battery
-level. The state space is $E = \{0,1\} \times [0,B]$. Between events, the battery evolves
-deterministically according to $\dot{x} = r(n, x)$, where
+exhausted, $x = 0$ and the car charges at rate $p_1$, while $x$ remains at zero. A car with small demand may complete service entirely in Phase~1 if its service requirement is low enough. Under the exponential energy demands assumed before, the instantaneous departure rate from the system is therefore $\mu p(x)$, where:
+\begin{equation}\label{eq:power_function}
+p(x) = p_2\,\mathbf{1}_{x>0} + p_1\,\mathbf{1}_{x=0}.
+\end{equation}
+The system state at time $t$ is thus the pair $Z(t) = (n(t), x(t))$. Between arrival and departure events, the battery evolves deterministically according to $\dot{x} = r(n, x)$, where
 \begin{equation}
   r(n, x) = \begin{cases}
     p_0  & n = 0,\ x < B, \\
@@ -169,23 +160,23 @@ deterministically according to $\dot{x} = r(n, x)$, where
   \label{eq:vectorfield}
 \end{equation}
 The jumps are spontaneous events: \emph{arrivals} at $(0,x)$ occur at rate $\lambda$ and
-transition to $(1,x)$; \emph{departures} at $(1,x)$ with $x>0$ occur at rate $\mu p_2$
+the states transitions to $(1,x)$; \emph{departures} at $(1,x)$ with $x>0$ occur at rate $\mu p_2$
 and transition to $(0,x)$; \emph{departures} at $(1,0)$ occur at rate $\mu p_1$ and
-transition to $(0,0)$. In all cases the battery level is unchanged at the jump epoch.
+transition to $(0,0)$, or in short $(1,x)\mapsto (0,x)$ at rate $\mu p(x)$. In all cases the battery level is unchanged at the jump epoch.
 
-The process $Z(t)$ fits the PDMP framework of Davis~\cite{Davis1984,Davis1993},
+The process $Z(t)$ with state space $\{0,1\}\times[0,B]$ fits the PDMP framework of Davis~\cite{Davis1984,Davis1993},
 though the standard theory requires an open state space and forces the process to jump
-before reaching the boundary. Neither condition holds here: $E$ is compact and the flow
+before reaching the boundary. Neither condition holds here: $E$ is compact, and the flow
 reaches $x=0$ and $x=B$ in finite time without a jump. Nevertheless, the vector
 field~\eqref{eq:vectorfield} is bounded and monotone on each mode, so the flow is
 globally well-defined. The strong Markov property follows from the martingale-problem
 approach, which extends to this setting since all jump rates are bounded and the jump
-kernel leaves $x$ unchanged.
+kernel leaves $x$ unchanged, i.e. jumps in the continuous variable are bounded.
 
 Note that an arriving car always finds $x>0$ with probability one. During any idle period
 the battery charges at rate $p_0 > 0$, and since the idle time before the next arrival is
 $\mathrm{Exp}(\lambda)$ (positive a.s.), the battery is strictly positive at every arrival
-epoch. The state $(n=0, x=0)$ therefore has zero probability under any stationary
+epoch. The state $(n=0, x=0)$ therefore should have zero probability under any stationary
 distribution.
 
 The extended generator $\mathcal{A}$ of $Z(t)$ has domain $\mathcal{D}(\mathcal{A})$
@@ -202,16 +193,13 @@ each line is the flow contribution; the second is the jump contribution. For any
 $\psi \in \mathcal{D}(\mathcal{A})$, the process $M_t^\psi := \psi(Z(t)) - \psi(Z(0)) - \int_0^t \mathcal{A}\psi(Z(s))\,ds$
 is a local martingale~\cite{Davis1984}.
 
-A stationary distribution $\pi$ satisfies $\int \mathcal{A}\psi\,d\pi = 0$ for all
+The adjoint operator $\mathcal{A}^*$ operates on the probability distributions on $E$ and provides the forward Kolmogorov equation of the system \cite{Davis1993}. A stationary distribution $\pi$ satisfies $\int \mathcal{A}\psi\,d\pi = 0$ for all
 $\psi \in \mathcal{D}(\mathcal{A})$, which is the weak form of the Kolmogorov forward
-equation $\mathcal{A}^*\pi = 0$. We seek $\pi$ as a mixed measure with densities on
-$(0,B)$ and point masses at the boundary points where flow accumulates. Substituting
-this form into $\int \mathcal{A}\psi\,d\pi = 0$ and integrating by parts yields a
-system of ODEs on $(0,B)$ and flux-balance conditions at the boundary, which we solve
-in the next section.
+equation $\mathcal{A}^*\pi = 0$. We now proceed to solve the steady state of this system by positing a particular form of $\pi$ using the characteristics of the system.
+
 
 % -------------------------------------------------------
-\section{Single-Server Steady-State Analysis}
+\section{Single-Server in steady-state}
 \label{sec:stationary}
 % -------------------------------------------------------
 
@@ -220,15 +208,17 @@ $\{n\}\times(a,b)$ is reachable with positive probability from any starting poin
 a combination of deterministic drift and Poisson events), the process is ergodic with a
 unique stationary distribution $\pi$~\cite{MeynTweedie1993}.
 
-Following the approach outlined at the end of Section~\ref{sec:model}, we write $\pi$
-in the mixed form
+We seek $\pi$ as a mixed measure with densities on
+$(0,B)$ and point masses at the boundary points where flow accumulates. Substituting
+this form into $\int \mathcal{A}\psi\,d\pi = 0$ and integrating by parts yields a
+system of ODEs on $(0,B)$ and flux-balance conditions at the boundary. In particular, we look for solutions $\pi$ in the mixed form
 \begin{equation}
   \pi = f_0(x)\,dx + f_1(x)\,dx + \pi_{0,B}\,\delta_{(0,B)} + \pi_{1,0}\,\delta_{(1,0)},
   \label{eq:ansatz}
 \end{equation}
 where $f_n \geq 0$ are densities on $(0,B)$ and $\pi_{0,B}, \pi_{1,0} \geq 0$ are point
 masses at the corners where the flow accumulates: $x=B$ in mode~$0$ (since $r(0,\cdot)=p_0>0$)
-and $x=0$ in mode~$1$ (since $r(1,\cdot)=-c<0$). The other two corners carry no atoms.
+and $x=0$ in mode~$1$ (since $r(1,\cdot)=-c<0$). The other two corners should carry no atoms.
 
 \textbf{Steady-state equations.}
 Setting $\mathcal{A}^*\pi = 0$ and using \eqref{eq:gen0}--\eqref{eq:gen1}, the

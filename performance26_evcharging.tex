@@ -32,6 +32,7 @@
 \usetikzlibrary{arrows, intersections, shapes}
 \tikzset{>=stealth'}
 \usetikzlibrary{backgrounds}
+\usetikzlibrary{patterns}
 \usepgfplotslibrary{patchplots}
 \usepgfplotslibrary{fillbetween}
 %\tikzexternalize
@@ -160,7 +161,7 @@ The system state at time $t$ is thus the pair $Z(t) = (n(t), x(t))$. Between arr
   \label{eq:vectorfield}
 \end{equation}
 The jumps are spontaneous events: \emph{arrivals} at $(0,x)$ occur at rate $\lambda$ and
-the states transitions to $(1,x)$; \emph{departures} at $(1,x)$ with $x>0$ occur at rate $\mu p_2$
+the states transitions (deterministically) to $(1,x)$; \emph{departures} at $(1,x)$ with $x>0$ occur at rate $\mu p_2$
 and transition to $(0,x)$; \emph{departures} at $(1,0)$ occur at rate $\mu p_1$ and
 transition to $(0,0)$, or in short $(1,x)\mapsto (0,x)$ at rate $\mu p(x)$. In all cases the battery level is unchanged at the jump epoch.
 
@@ -173,30 +174,54 @@ globally well-defined. The strong Markov property follows from the martingale-pr
 approach, which extends to this setting since all jump rates are bounded and the jump
 kernel leaves $x$ unchanged, i.e. jumps in the continuous variable are bounded.
 
-Note that an arriving car always finds $x>0$ with probability one. During any idle period
-the battery charges at rate $p_0 > 0$, and since the idle time before the next arrival is
-$\mathrm{Exp}(\lambda)$ (positive a.s.), the battery is strictly positive at every arrival
-epoch. The state $(n=0, x=0)$ therefore should have zero probability under any stationary
-distribution.
-
 The extended generator $\mathcal{A}$ of $Z(t)$ has domain $\mathcal{D}(\mathcal{A})$
 consisting of functions $\psi : E \to \mathbb{R}$ such that $\psi(n,\cdot)$ is absolutely
 continuous on $[0,B]$ for each $n$. For $\psi \in \mathcal{D}(\mathcal{A})$,
+\begin{subequations}\label{eq:generator}
 \begin{align}
   \mathcal{A}\psi(0, x) &= r(0,x)\,\psi_0'(x) + \lambda\,[\psi(1,x) - \psi(0,x)],
   \label{eq:gen0} \\
   \mathcal{A}\psi(1, x) &= r(1,x)\,\psi_1'(x) + \mu p(x)\,[\psi(0,x) - \psi(1,x)],
   \label{eq:gen1}
 \end{align}
+\end{subequations}
 where $\psi_n' = \partial_x \psi(n,\cdot)$ is defined Lebesgue-a.e. The first term in
-each line is the flow contribution; the second is the jump contribution. For any
+each line is the flow contribution; the second is the jump contribution, which in fact just switches mass from $n=0$ to $n=1$ and viceversa leaving $x$ unchanged. For any
 $\psi \in \mathcal{D}(\mathcal{A})$, the process $M_t^\psi := \psi(Z(t)) - \psi(Z(0)) - \int_0^t \mathcal{A}\psi(Z(s))\,ds$
-is a local martingale~\cite{Davis1984}.
+is a local martingale~\cite{Davis1984}, and the process is right-continuous and a strong Markov process.
+
+Note that an arriving car always finds $x>0$ with probability one. During any idle period
+the battery charges at rate $p_0 > 0$, and since the idle time before the next arrival is
+$\mathrm{Exp}(\lambda)$ (positive a.s.), the battery is strictly positive at every arrival
+epoch. The state $(n=0, x=0)$ therefore should have zero probability under any stationary
+distribution.
 
 The adjoint operator $\mathcal{A}^*$ operates on the probability distributions on $E$ and provides the forward Kolmogorov equation of the system \cite{Davis1993}. A stationary distribution $\pi$ satisfies $\int \mathcal{A}\psi\,d\pi = 0$ for all
 $\psi \in \mathcal{D}(\mathcal{A})$, which is the weak form of the Kolmogorov forward
 equation $\mathcal{A}^*\pi = 0$. We now proceed to solve the steady state of this system by positing a particular form of $\pi$ using the characteristics of the system.
 
+\begin{figure}
+  \begin{center}
+  \begin{tikzpicture}
+    \draw[->] (-0.5,-1) node[anchor=east] {$n=0$} -- (6,-1) node[below right] {$x$};
+    \draw[->] (-0.5,1) node[anchor=east] {$n=1$} -- (6,1);
+    \draw[dashed] (0,-1.1) node[below] {$0$} -- (0,1.1);
+    \draw[dashed] (5,-1.1) node[below] {$B$} -- (5,1.1);
+
+    %barriers
+    \fill[pattern=north west lines] (5,-1.2) rectangle ++(.2,.4); 
+    \fill[pattern=north west lines] (0,.8) rectangle ++(-.2,.4); 
+
+    \draw[very thick,azulcito,->] (1,-1) --node[midway,below] {\footnotesize drifts at $p_0$} (4,-1);
+    \draw[very thick,azulcito,->] (4,1) --node[midway,above] {\footnotesize drifts at $-c=p_1-p_2$} (0.5,1);
+    \node[azulcito, fill=azulcito, circle, minimum size = .2cm, inner sep=0pt] at (1,-1) {};
+    
+    \draw[very thick, azulcito, dashed, ->] (4,-1) -- node[midway,anchor=east] {\footnotesize $\lambda$} (4,1);
+    \draw[very thick, azulcito, dashed, ->] (0.5,1) -- node[midway,anchor=west] {\footnotesize $\mu p(x)$} (0.5,-1);
+  \end{tikzpicture}
+  \end{center}
+  \caption{State space and system dynamics, showing a typical trajectory of $Z(t)$}\label{fig:dynamics_single_server}
+\end{figure}
 
 % -------------------------------------------------------
 \section{Single-Server in steady-state}
@@ -221,7 +246,7 @@ masses at the corners where the flow accumulates: $x=B$ in mode~$0$ (since $r(0,
 and $x=0$ in mode~$1$ (since $r(1,\cdot)=-c<0$). The other two corners should carry no atoms.
 
 \textbf{Steady-state equations.}
-Setting $\mathcal{A}^*\pi = 0$ and using \eqref{eq:gen0}--\eqref{eq:gen1}, the
+Setting $\mathcal{A}^*\pi = 0$ and using eqs. \eqref{eq:generator}, the
 stationarity condition $\int \mathcal{A}\psi\,d\pi = 0$ for all
 $\psi \in \mathcal{D}(\mathcal{A})$ yields, after integration by parts, the following
 system. The \emph{interior equations} on $(0,B)$ are

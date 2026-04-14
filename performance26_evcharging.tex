@@ -406,7 +406,7 @@ leaving:
 \end{equation}
 This depends only on $\alpha$ and $\beta$, not on the load. It is a useful design
 property: the average slowdown is determined entirely by hardware parameters, and
-is the same for any load $\tilde\rho \leq 1/\alpha$. As $\beta \to 0$,
+is the same for any load $\tilde\rho \leq 1/(\alpha-1)$. As $\beta \to 0$,
 $\bar{S} \to \alpha = p_2/p_1$ (no battery, all service at the slow rate); as
 $\beta \to \infty$, $\bar{S} \to 1$ (infinite battery, always fast). The battery
 capacity achieving a target $\bar{S}_0 \in (1,\alpha)$ is:
@@ -418,16 +418,15 @@ capacity achieving a target $\bar{S}_0 \in (1,\alpha)$ is:
 \end{equation}
 
 \textbf{Blocking probability.}
-A direct computation gives $1 - P_B = 1/(1 + \tilde\rho\,\bar{S})$, and therefore:
+Substituting $\theta=0$ and $p_0=p_0^*$ into the expression for $P_B$ in
+Proposition~\ref{prop:blocking}, the normalization constant $K$ cancels and one obtains:
 \begin{equation}
-  P_B = \frac{\tilde\rho\,\bar{S}}{1 + \tilde\rho\,\bar{S}}
-      = \frac{\tilde\rho(\beta+\alpha)}{\beta + 1 + \tilde\rho(\beta+\alpha)}.
+  P_B = \frac{\tilde\rho(\beta+\alpha)}{\beta + 1 + \tilde\rho(\beta+\alpha)}.
   \label{eq:PB_opt}
 \end{equation}
 This has the form of an M/M/1/1 blocking formula with effective load
-$\tilde\rho\,\bar{S}$: the slowdown inflates the apparent offered load seen by the
-server. Unlike $\bar{S}$, the blocking probability does depend on $\tilde\rho$, as
-expected.
+$\tilde\rho\bar{S}$, since $P_B = \tilde\rho\bar{S}/(1+\tilde\rho\bar{S})$.
+Unlike $\bar{S}$, the blocking probability depends on $\tilde\rho$, as expected.
 
 \begin{figure}[t]
 \centering

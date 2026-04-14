@@ -233,57 +233,48 @@ $\{n\}\times(a,b)$ is reachable with positive probability from any starting poin
 a combination of deterministic drift and Poisson events), the process is ergodic with a
 unique stationary distribution $\pi$~\cite{MeynTweedie1993}.
 
-We seek $\pi$ as a mixed measure with densities on
-$(0,B)$ and point masses at the boundary points where flow accumulates. Substituting
-this form into $\int \mathcal{A}\psi\,d\pi = 0$ and integrating by parts yields a
-system of ODEs on $(0,B)$ and flux-balance conditions at the boundary. In particular, we look for solutions $\pi$ in the mixed form
+We now seek $\pi$ as a mixed measure with densities on $(0,B)$ and point masses at the boundary points where flow accumulates. Therefore, we propose the following solution structure:
 \begin{equation}
-  \pi = f_0(x)\,dx + f_1(x)\,dx + \pi_{0,B}\,\delta_{(0,B)} + \pi_{1,0}\,\delta_{(1,0)},
+  \pi = f_0(x)\,dx + f_1(x)\,dx + \pi_{0,B}\,\delta_{(0,B)} + \pi_{1,0}\,\delta_{(1,0)}. 
   \label{eq:ansatz}
 \end{equation}
-where $f_n \geq 0$ are densities on $(0,B)$ and $\pi_{0,B}, \pi_{1,0} \geq 0$ are point
+Here $f_n(x)$ $n=0,1$ are the interior densities and $\pi_{0,B}, \pi_{1,0} \geq 0$ are point
 masses at the corners where the flow accumulates: $x=B$ in mode~$0$ (since $r(0,\cdot)=p_0>0$)
-and $x=0$ in mode~$1$ (since $r(1,\cdot)=-c<0$). The other two corners should carry no atoms.
+and $x=0$ in mode~$1$ (since $r(1,\cdot)=-c<0$). The other two corners should carry no atoms since flow arriving on them is immediately carried into the interior by the flow (cf. Figure \ref{fig:dynamics_single_server})
 
-\textbf{Steady-state equations.}
-Setting $\mathcal{A}^*\pi = 0$ and using eqs. \eqref{eq:generator}, the
-stationarity condition $\int \mathcal{A}\psi\,d\pi = 0$ for all
-$\psi \in \mathcal{D}(\mathcal{A})$ yields, after integration by parts, the following
-system. The \emph{interior equations} on $(0,B)$ are
-\begin{align}
+Substituting this form into $\int \mathcal{A}\psi\,d\pi = 0$ and using eqs. \eqref{eq:generator}, the
+stationarity condition $\int \mathcal{A}\psi\,d\pi = 0$ for all $\psi \in \mathcal{D}(\mathcal{A})$ yields the following balance equations for the interior densities:
+\begin{subequations}
+  \begin{align}
   p_0\, f_0'(x) &= -\lambda\, f_0(x) + \mu p_2\, f_1(x), \label{eq:E0} \\
   -c\, f_1'(x)  &= \phantom{-}\lambda\, f_0(x) - \mu p_2\, f_1(x). \label{eq:E1}
-\end{align}
-The \emph{boundary flux equations} are obtained by flux conservation at each boundary
-point: mass arriving at a boundary via the flow must equal mass leaving via jumps.
-At $x=0$ in mode $1$, the inward flow $c\,f_1(0^+)$ feeds the atom $\pi_{1,0}$, which
+  \end{align}
+
+As for the atoms, we obtain the following \emph{boundary flux equations}, obtained by flux conservation at each boundary
+point. At $x=0$ in mode $1$, the inward flow $c\,f_1(0^+)$ feeds the atom $\pi_{1,0}$, which
 drains via departures at rate $\mu p_1$:
 \begin{equation}
   c\,f_1(0^+) = \mu p_1\,\pi_{1,0}. \label{eq:B1}
 \end{equation}
-At $x=0$ in mode $0$, the atom $\pi_{1,0}$ is created by departures and immediately
-carried into the interior by the flow at rate $p_0$:
-\begin{equation}
-  p_0\,f_0(0^+) = \mu p_1\,\pi_{1,0}. \label{eq:B0}
-\end{equation}
-At $x=B$ in mode $0$, the inward flow $p_0\,f_0(B^-)$ feeds the atom $\pi_{0,B}$,
+Similarly, at $x=B$ in mode $0$, the inward flow $p_0\,f_0(B^-)$ feeds the atom $\pi_{0,B}$,
 which drains via arrivals at rate $\lambda$:
 \begin{equation}
   p_0\,f_0(B^-) = \lambda\,\pi_{0,B}. \label{eq:B2}
 \end{equation}
-At $x=B$ in mode $1$, arrivals from $\pi_{0,B}$ feed the interior flow at rate $\lambda$:
+Finally, at $(n,x)=(0,0)$, mass arriving from departures at rate $\mu p_1$ must immediately be carried at rate $p_0$ into the interior (no atom), yielding:
+\begin{equation}
+  p_0\,f_0(0^+) = \mu p_1\,\pi_{1,0}. \label{eq:B0}
+\end{equation}
+And finally by a similar argument, at $(n,x)=(1,B)$
 \begin{equation}
   c\,f_1(B^-) = \lambda\,\pi_{0,B}. \label{eq:B3}
 \end{equation}
-These are supplemented by normalization:
-$\int_0^B (f_0 + f_1)\,dx + \pi_{0,B} + \pi_{1,0} = 1$.
+\end{subequations}
+Finally we have the normalization condition $\int_0^B (f_0 + f_1)\,dx + \pi_{0,B} + \pi_{1,0} = 1$. We can now state the main result of this section.
 
-We can now state the main result of this section.
-
-\begin{theorem}
-\label{thm:stationary}
-Let $\theta = \mu p_2/c - \lambda/p_0$. The unique stationary distribution of $Z(t)$
-has the form~\eqref{eq:ansatz} with
+\begin{theorem} \label{thm:stationary}
+Let $\theta := \mu p_2/c - \lambda/p_0$. The unique stationary distribution of $Z(t)$ has the form~\eqref{eq:ansatz} with
+\begin{subequations}
 \begin{equation}
   f_0(x) = \frac{e^{\theta x}}{K}, \qquad
   f_1(x) = \frac{p_0}{c}\cdot\frac{e^{\theta x}}{K}, \qquad x \in (0,B),
@@ -294,7 +285,8 @@ has the form~\eqref{eq:ansatz} with
   \pi_{0,B} = \frac{p_0\,e^{\theta B}}{\lambda\, K},
   \label{eq:atoms}
 \end{equation}
-where the normalization constant is
+\end{subequations}
+and the normalization constant is
 \begin{equation}
   K = \frac{p_0+c}{c}\cdot\frac{e^{\theta B}-1}{\theta}
     + \frac{p_0}{\mu p_1} + \frac{p_0\,e^{\theta B}}{\lambda},
@@ -304,84 +296,54 @@ with the convention $(e^{\theta B}-1)/\theta = B$ when $\theta = 0$.
 \end{theorem}
 
 \begin{proof}[sketch]
-\textbf{Decoupling.} Adding \eqref{eq:E0} and \eqref{eq:E1} gives
-$\tfrac{d}{dx}[p_0 f_0 - c f_1] = 0$, so $p_0 f_0 - c f_1$ is constant on $(0,B)$.
-Equations \eqref{eq:B1} and \eqref{eq:B0} together give $p_0 f_0(0^+) = c f_1(0^+)$,
-so the constant is zero: $f_1(x) = (p_0/c)\,f_0(x)$ for all $x \in (0,B)$.
-
-\textbf{Exponential solution.} Substituting $f_1 = (p_0/c) f_0$ into \eqref{eq:E0}
-yields $f_0'(x) = \theta\, f_0(x)$ with $\theta = \mu p_2/c - \lambda/p_0$, whose
-solution is $f_0(x) = f_0(0^+)\,e^{\theta x}$.
-
-\textbf{Atoms and normalization.} The atoms follow directly from \eqref{eq:B0}
-and \eqref{eq:B2}. One can verify that \eqref{eq:B3} is automatically satisfied,
-confirming consistency. Setting $f_0(0^+) = 1/K$ and imposing normalization
+Adding \eqref{eq:E0}, \eqref{eq:E1} gives $\frac{d}{dx}[p_0 f_0 - c f_1] = 0$, so $p_0 f_0 - c f_1$ is constant on $(0,B)$. Equations \eqref{eq:B1} and \eqref{eq:B0} together give $p_0 f_0(0^+) = c f_1(0^+)$, so the constant is zero. Therefore the densities should be proportional to each other, i.e. $f_1(x) = (p_0/c)\,f_0(x)$ for all $x \in (0,B)$. Substituting this condition into \eqref{eq:E0} yields a first order differential equation for $f_0$, which accounting for the definition of $\theta$ is simply $f_0'(x) = \theta\, f_0(x)$. We conclude that $f_0$ (and thus also $f_1$) should be exponential: $f_0(x) = f_0(0^+)\,e^{\theta x}$. With this expression, the atoms follow directly from \eqref{eq:B2}, \eqref{eq:B0}, and \eqref{eq:B3} is automatically satisfied, confirming consistency. Setting $f_0(0^+) = 1/K$ and imposing normalization
 determines $K$ as in \eqref{eq:K}.
-
-\textbf{Boundary conditions at $x=B$.} Equations \eqref{eq:B2}--\eqref{eq:B3}
-are both satisfied by the exponential solution with the atoms given in \eqref{eq:atoms},
-confirming that no additional constraint on $\theta$ arises: the parameter $\theta$ is
-determined entirely by the interior ODE, not by the boundary.
 \end{proof}
 
-
-
-The parameter $\theta = \mu p_2/c - \lambda/p_0$ has a precise physical interpretation.
-Consider a single idle-busy cycle in the absence of battery boundaries: the battery
+The parameter $\theta$ has a physical interpretation: define the offered load of the system $\rho:=\lambda/\mu$, i.e. the average external power request. Consider now a single idle-busy cycle in the absence of battery boundaries: the battery
 charges at rate $p_0$ during the idle period (mean duration $1/\lambda$) and discharges
-at rate $c$ during the busy period (mean duration $1/(\mu p_2)$). The expected net
-battery change per cycle is
-\[
-  \Delta = \frac{p_0}{\lambda} - \frac{c}{\mu p_2},
-\]
-One verifies directly that $\theta > 0$ if and only if $\Delta > 0$: both are
-equivalent to $\lambda/\mu < p_0 p_2/c$. Thus $\theta$ is positive when the offered
-load $\lambda/\mu$ is below the threshold $p_0 p_2/c$, meaning the battery gains energy
-on average per cycle, and negative when it loses energy. Thus $\theta > 0$ corresponds to a lightly loaded station where the battery
-tends to fill, mass concentrates near $x = B$, and blocking is close to the M/M/1/1
-value at the fast rate $p_2$. When $\theta < 0$ the battery tends to drain on average,
-mass concentrates near $x = 0$, and a significant fraction of service occurs at the slow
-rate $p_1$. When $\theta = 0$ the expected gain per cycle is exactly zero and the
-stationary density is uniform on $(0, B)$.
+at rate $c$ during the busy period with mean duration $1/(\mu p_2)$. Then, the expected net
+battery change per cycle is therefore $\Delta := \frac{p_0}{\lambda} - \frac{c}{\mu p_2}$. It is easy to see that $\theta$ has the same sign as $\Delta$, in particular:
+\begin{equation*}
+  \theta > 0 \Leftrightarrow \rho < \frac{p_0p_2}{c} = \rho < \frac{p_0 p_2}{p_2-p_1}
+\end{equation*}
+This corresponds to a \emph{lightly loaded} station, where the battery gains energy on average on each cycle and thus tends to fill, concentrating its mass towards $x=B$. When $\lambda/\mu > p_0 p_2/c$, we are in the \emph{highly loaded} regime, $\theta < 0$, the battery tends to drain and mass concentrates near $x = 0$, where a significant fraction of service occurs at the slow
+rate $p_1$. When $\theta = 0$ the battery neither drains nor fills on average and stationary density is uniform on $(0, B)$.
 
-We now derive the key performance metrics directly from Theorem~\ref{thm:stationary}.
+\subsection{Performance metrics}\label{ssec:metrics}
 
-\begin{proposition}\label{prop:blocking}
-The stationary blocking probability of the system is
+We now derive the key performance metrics directly from Theorem~\ref{thm:stationary}. We begin by computing the blocking probability, that due to the PASTA property, is just the stationary probability of being in state $1$, i.e.
 \begin{equation}
   P_B = \int_0^B f_1(x)\,dx + \pi_{1,0}
       = \frac{p_0}{K}\left(\frac{e^{\theta B}-1}{c\,\theta} + \frac{1}{\mu p_1}\right).
   \label{eq:PB}
 \end{equation}
-\end{proposition}
-This follows directly by the PASTA property of arrivals. Note that this probability is also the probability that the charger is working. As $B \to 0$, $P_B \to \lambda/(\lambda + \mu p_1)$, the blocking probability of an $M/M/1/1$ queue at rate $p_1$. As $B \to \infty$ with $\theta > 0$,
-$P_B \to \lambda/(\lambda + \mu p_2)$, corresponding to service always at the fast rate $p_2$. When $\theta < 0$, $P_B$ converges to a value strictly between these two limits even as $B \to \infty$, reflecting the residual probability of finding the battery depleted.
+Note that this probability is also the probability that the charger is working. As $B \to 0$, $P_B \to \rho/(\rho + p_1)$, the blocking probability of an $M/M/1/1$ queue at rate $p_1$, since cars can only be served from the grid. Conversely, if the battery is large, as $B \to \infty$ we distinguish two cases: in the lightly loaded regime, $\theta > 0$ and $P_B \to \rho/(\rho + p_2)$, corresponding to service always at the fast rate $p_2$ because the battery can cope with the load and the system operates most of the time in fast charging. However, if the system is highly loaded ($\theta < 0$), $P_B$ converges to a value strictly between these two limits even as $B \to \infty$, reflecting that the system operates \emph{partly in both charging regimes} because the battery regularly depletes.
 
-\begin{proposition}
-\label{prop:meantime}
-The mean service time of an admitted car is:
+We now focus on the mean service time. By Little's law, since there is only one server working and arrivals onto a busy system are blocked, we have $E[N] = P_B = \lambda (1-P_B)E[T]$ and therefore, the mean service time of an admitted car is:
 \begin{equation}
   \mathbb{E}[T] = \frac{P_B}{\lambda(1-P_B)}.
   \label{eq:ET}
 \end{equation}
-\end{proposition}
-This follows directly from Little's law and the fact that only one car is present with probability $P_B$.
+A more meaningful quantity is the \emph{average slowdown}, which we define as $E[T]$ normalized by the average service time in a system that operates at the fast rate $p_2$ permanently, which is given by:
+\begin{equation}\label{eq:avg_slowdown}
+  \bar{S} := \frac{E[T]}{E[Y]} = \frac{\mu p_2  P_B}{\lambda(1-P_B)} = \frac{p_2}{\rho} \frac{P_B}{1-P_B}
+\end{equation}
 
-\begin{proposition}[Slowdown factor]
-\label{prop:slowdown}
-Given admission at level $x$ with demand $Y=y$, let
-$T(x,y) = y/p_2 + (p_1^{-1}{-}p_2^{-1})\max(y - p_2 x/c, 0)$ be the charging time.
-The \emph{slowdown factor} $S(y) = \mathbb{E}[T \mid Y=y]/(y/p_2) \geq 1$
-quantifies degradation relative to ideal fast charging.
-With $\tilde{x}(y) = cy/p_2$ the critical battery level:
-
-\noindent For $y < p_2 B/c$ (battery may survive):
+A final quantity of interest is how different demands are affected in terms of charging time. One expects that larger demands are more affected since the battery may deplete during serive. To this end, define the \emph{slowdown factor}:
 \begin{equation}
+  S(y) := \frac{\mathbb{E}[T \mid Y=y]}{(y/p_2)}.
+\end{equation}
+The following proposition is proved in the Appendix.
+\begin{proposition}\label{prop:slowdown}
+Define the energy threshold $x^* = p_2 B/c$. If $Y=y<x^*$, the battery may be active during the whole charge and: 
+\begin{subequations}
+  \begin{equation}
   S(y) = 1 + \frac{p_2-p_1}{p_1\,y\,K(1-P_B)\,\theta}
          \left[\frac{p_2}{c\,\theta}\!\left(e^{\theta cy/p_2}-1\right) - y\right].
   \label{eq:Sy1}
 \end{equation}
-For $y \geq p_2 B/c$ (battery always depletes):
+For $y\geqslant x^*$, the battery always depletes during service and:
 \begin{multline}
   S(y) = 1 + \frac{p_2-p_1}{p_1\,y\,K(1-P_B)}
          \Bigl\{\tfrac{1}{\theta}\bigl[(y-\tfrac{p_2 B}{c})e^{\theta B} - y
@@ -389,9 +351,9 @@ For $y \geq p_2 B/c$ (battery always depletes):
          + \tfrac{p_0 e^{\theta B}}{\lambda}(y-\tfrac{p_2 B}{c})\Bigr\}.
   \label{eq:Sy2}
 \end{multline}
-$S(y)$ satisfies $S(y) \geq 1$, is increasing in $y$, tends to $1$ as $y \to 0$
-or $B \to \infty$, and tends to $p_2/p_1$ as $y \to \infty$ or $B \to 0$.
+\end{subequations}
 \end{proposition}
+
 
 % -------------------------------------------------------
 \section{The Many-Server Case}
@@ -532,6 +494,35 @@ and a study of the optimal battery sizing problem are left for future work.
 
 \bibliographystyle{abbrv}
 \bibliography{evcharging}
+
+\appendix
+
+\section{Proof of several results}
+
+\begin{proof}[of Propsition \ref{prop:slowdown}]
+Given admission at level $x$ with demand $Y=y$, let
+$T(x,y) = y/p_2 + (p_1^{-1}{-}p_2^{-1})\max(y - p_2 x/c, 0)$ be the charging time.
+The \emph{slowdown factor} $S(y) = \mathbb{E}[T \mid Y=y]/(y/p_2) \geq 1$
+quantifies degradation relative to ideal fast charging.
+With $\tilde{x}(y) = cy/p_2$ the critical battery level:
+
+\noindent For $y < p_2 B/c$ (battery may survive):
+\begin{equation}
+  S(y) = 1 + \frac{p_2-p_1}{p_1\,y\,K(1-P_B)\,\theta}
+         \left[\frac{p_2}{c\,\theta}\!\left(e^{\theta cy/p_2}-1\right) - y\right].
+  \label{eq:Sy1}
+\end{equation}
+For $y \geq p_2 B/c$ (battery always depletes):
+\begin{multline}
+  S(y) = 1 + \frac{p_2-p_1}{p_1\,y\,K(1-P_B)}
+         \Bigl\{\tfrac{1}{\theta}\bigl[(y-\tfrac{p_2 B}{c})e^{\theta B} - y
+         + \tfrac{p_2(e^{\theta B}-1)}{c\theta}\bigr] \\
+         + \tfrac{p_0 e^{\theta B}}{\lambda}(y-\tfrac{p_2 B}{c})\Bigr\}.
+  \label{eq:Sy2}
+\end{multline}
+$S(y)$ satisfies $S(y) \geq 1$, is increasing in $y$, tends to $1$ as $y \to 0$
+or $B \to \infty$, and tends to $p_2/p_1$ as $y \to \infty$ or $B \to 0$.
+\end{proof}
 
 
 \end{document}

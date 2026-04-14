@@ -305,7 +305,7 @@ charges at rate $p_0$ during the idle period (mean duration $1/\lambda$) and dis
 at rate $c$ during the busy period with mean duration $1/(\mu p_2)$. Then, the expected net
 battery change per cycle is therefore $\Delta := \frac{p_0}{\lambda} - \frac{c}{\mu p_2}$. It is easy to see that $\theta$ has the same sign as $\Delta$, in particular:
 \begin{equation*}
-  \theta > 0 \Leftrightarrow \rho < \frac{p_0p_2}{c} = \rho < \frac{p_0 p_2}{p_2-p_1}
+  \theta > 0 \Leftrightarrow \rho < \frac{p_0p_2}{c} = \rho \frac{p_0 p_2}{p_2-p_1}
 \end{equation*}
 This corresponds to a \emph{lightly loaded} station, where the battery gains energy on average on each cycle and thus tends to fill, concentrating its mass towards $x=B$. When $\lambda/\mu > p_0 p_2/c$, we are in the \emph{highly loaded} regime, $\theta < 0$, the battery tends to drain and mass concentrates near $x = 0$, where a significant fraction of service occurs at the slow
 rate $p_1$. When $\theta = 0$ the battery neither drains nor fills on average and stationary density is uniform on $(0, B)$.
@@ -487,7 +487,7 @@ blocking probability from the classical Erlang-B value.
 
 The analysis highlights a structural difference from standard fluid queues: the
 state-dependent service rate at $x = 0$ couples the discrete and continuous components
-in a way that prevents a product-form solution in the multi-server case while still
+in a way that prevents a product-form solution in the many-server case while still
 admitting an exponential form in $x$. Numerical illustrations of the performance metrics
 and a study of the optimal battery sizing problem are left for future work.
 
@@ -499,7 +499,7 @@ and a study of the optimal battery sizing problem are left for future work.
 
 \section{Proof of several results}
 
-\begin{proof}[of Propsition \ref{prop:slowdown}]
+\begin{proof}[of Proposition \ref{prop:slowdown}]
 Given admission at level $x$ with demand $Y=y$, let
 $T(x,y) = y/p_2 + (p_1^{-1}{-}p_2^{-1})\max(y - p_2 x/c, 0)$ be the charging time.
 The \emph{slowdown factor} $S(y) = \mathbb{E}[T \mid Y=y]/(y/p_2) \geq 1$
@@ -510,7 +510,6 @@ With $\tilde{x}(y) = cy/p_2$ the critical battery level:
 \begin{equation}
   S(y) = 1 + \frac{p_2-p_1}{p_1\,y\,K(1-P_B)\,\theta}
          \left[\frac{p_2}{c\,\theta}\!\left(e^{\theta cy/p_2}-1\right) - y\right].
-  \label{eq:Sy1}
 \end{equation}
 For $y \geq p_2 B/c$ (battery always depletes):
 \begin{multline}
@@ -518,7 +517,6 @@ For $y \geq p_2 B/c$ (battery always depletes):
          \Bigl\{\tfrac{1}{\theta}\bigl[(y-\tfrac{p_2 B}{c})e^{\theta B} - y
          + \tfrac{p_2(e^{\theta B}-1)}{c\theta}\bigr] \\
          + \tfrac{p_0 e^{\theta B}}{\lambda}(y-\tfrac{p_2 B}{c})\Bigr\}.
-  \label{eq:Sy2}
 \end{multline}
 $S(y)$ satisfies $S(y) \geq 1$, is increasing in $y$, tends to $1$ as $y \to 0$
 or $B \to \infty$, and tends to $p_2/p_1$ as $y \to \infty$ or $B \to 0$.

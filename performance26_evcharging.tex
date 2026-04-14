@@ -228,6 +228,8 @@ equation $\mathcal{A}^*\pi = 0$. We now proceed to solve the steady state of thi
 \label{sec:stationary}
 % -------------------------------------------------------
 
+\subsection{Stationary distribution}\label{ssec:stationary_dist}
+
 Since $E$ is compact and $Z(t)$ is irreducible (every open rectangle
 $\{n\}\times(a,b)$ is reachable with positive probability from any starting point, by
 a combination of deterministic drift and Poisson events), the process is ergodic with a
@@ -354,6 +356,107 @@ For $y\geqslant x^*$, the battery always depletes during service and:
 \end{subequations}
 \end{proposition}
 
+
+\subsection{Optimal battery regime}\label{ssec:optimal_regime}
+
+For practical battery health it is desirable to charge the battery as slowly as
+possible and to keep it cycling continuously rather than reflecting against the
+boundaries at $x=0$ or $x=B$. The stationary distribution of Theorem~\ref{thm:stationary}
+reveals a natural design criterion that achieves both goals simultaneously.
+
+From the exponential form $f_0(x) \propto e^{\theta x}$, mass concentrates near $x=B$
+when $\theta>0$ and near $x=0$ when $\theta<0$; in either case the battery spends a
+significant fraction of time pinned against a boundary. The uniform regime $\theta=0$
+eliminates this concentration, giving a flat stationary density on $(0,B)$ and minimising
+boundary sojourn. Since $\theta = \mu p_2/c - \lambda/p_0$, setting $\theta=0$ determines
+the required idle recharge rate:
+\begin{equation}
+  p_0^* = \frac{\lambda c}{\mu p_2} = \frac{\rho c}{p_2},
+  \label{eq:p0star}
+\end{equation}
+where $\rho = \lambda/\mu$ is the offered load. This is also the slowest recharge rate
+compatible with $\theta=0$, which is desirable for battery longevity. The constraint
+$p_0^* \leq p_1$ requires $\rho \leq p_1 p_2/c$, i.e.\ the offered load must not exceed
+the threshold
+\begin{equation}
+  \rho^* = \frac{p_1 p_2}{c} = \frac{p_1 p_2}{p_2 - p_1}.
+  \label{eq:rhostar}
+\end{equation}
+Below this threshold the operator can always tune $p_0$ to achieve the uniform regime;
+above it, $\theta < 0$ regardless of $p_0$ and the battery inevitably drains on average.
+
+In the uniform regime the average slowdown takes a particularly clean form. Setting
+$\theta=0$ and $p_0 = p_0^*$ in the expressions for $K$, $P_B$, and $\bar{S}$, one
+computes that $K$ cancels in the ratio $P_B/(1-P_B)$ and the offered load $\rho$
+cancels as well, leaving:
+\begin{equation}
+  \bar{S} = \frac{B + c/(\mu p_1)}{B + c/(\mu p_2)}.
+  \label{eq:Sbar_opt}
+\end{equation}
+This depends only on the battery capacity $B$ and the system rates $\mu, p_1, p_2$,
+not on the arrival rate $\lambda$. This is a useful property for infrastructure design:
+the average slowdown is determined entirely by the hardware parameters and is the same
+for any load below the threshold $\rho^*$. Introducing the normalised battery capacity
+$\tilde\beta = \mu B p_1/c$ (battery energy in units of the mean slow-charge session
+$1/(\mu p_1)$) and the speed-up ratio $\alpha = p_2/p_1$, the formula becomes
+\begin{equation}
+  \bar{S} = \frac{\tilde\beta + 1}{\tilde\beta + 1/\alpha},
+  \label{eq:Sbar_beta}
+\end{equation}
+which depends only on $\alpha$ and $\tilde\beta$, with no additional scale parameter.
+As $\tilde\beta \to 0$, $\bar{S} \to \alpha$; as $\tilde\beta \to \infty$, $\bar{S} \to 1$.
+The normalised capacity needed to achieve a target $\bar{S}_0 \in (1, \alpha)$ is:
+\begin{equation}
+  \tilde\beta^* = \frac{\alpha - \bar{S}_0}{\alpha(\bar{S}_0 - 1)}
+  \quad \Longleftrightarrow \quad
+  B^* = \frac{c}{\mu p_1}\cdot\frac{\alpha - \bar{S}_0}{\alpha(\bar{S}_0 - 1)}.
+  \label{eq:Bstar}
+\end{equation}
+
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+  width=\columnwidth,
+  height=0.65\columnwidth,
+  xlabel={Normalised battery capacity $\tilde\beta = \mu B p_1/c$},
+  ylabel={Average slowdown $\bar{S}$},
+  xmin=0, xmax=8,
+  ymin=1, ymax=4.3,
+  xtick={0,2,4,6,8},
+  ytick={1,2,3,4},
+  yticklabels={$1$,$2$,$3$,$4$},
+  grid=both,
+  grid style={dashed,gray!40},
+  thick,
+  legend pos=north east,
+  legend style={font=\footnotesize},
+  clip=false,
+]
+% r=2: Sbar = (tbeta+1)/(tbeta+1/2)
+\addplot[color=verdecito, very thick, domain=0:4, samples=200]
+  {(x+1)/(x+0.5)};
+\addlegendentry{$\alpha=p_2/p_1=2$}
+% r=3: Sbar = (tbeta+1)/(tbeta+1/3)
+\addplot[color=azulcito, very thick, domain=0:4, samples=200]
+  {(x+1)/(x+1/3)};
+\addlegendentry{$\alpha=p_2/p_1=3$}
+% r=4: Sbar = (tbeta+1)/(tbeta+1/4)
+\addplot[color=rojito, very thick, domain=0:4, samples=200]
+  {(x+1)/(x+0.25)};
+\addlegendentry{$\alpha=p_2/p_1=4$}
+% Asymptote at Sbar=1
+\addplot[dashed, gray, domain=0:4] {1};
+\end{axis}
+\end{tikzpicture}
+\caption{Average slowdown $\bar{S}$ in the optimal battery regime ($\theta=0$)
+as a function of the normalised battery capacity $\tilde\beta = \mu B p_1/c$,
+for three values of the speed-up ratio $\alpha=p_2/p_1$. Each curve starts at
+$\bar{S}=\alpha$ for $\tilde\beta=0$ (no battery) and decreases to $1$ as
+$\tilde\beta\to\infty$. The normalisation $\tilde\beta$ measures battery
+energy in units of the mean slow-charge service time $1/(\mu p_1)$.}
+\label{fig:Sbar}
+\end{figure}
 
 % -------------------------------------------------------
 \section{The Many-Server Case}
@@ -497,30 +600,69 @@ and a study of the optimal battery sizing problem are left for future work.
 
 \appendix
 
-\section{Proof of several results}
+\section{Proof of Proposition~\ref{prop:slowdown}}
 
-\begin{proof}[of Proposition \ref{prop:slowdown}]
-Given admission at level $x$ with demand $Y=y$, let
-$T(x,y) = y/p_2 + (p_1^{-1}{-}p_2^{-1})\max(y - p_2 x/c, 0)$ be the charging time.
-The \emph{slowdown factor} $S(y) = \mathbb{E}[T \mid Y=y]/(y/p_2) \geq 1$
-quantifies degradation relative to ideal fast charging.
-With $\tilde{x}(y) = cy/p_2$ the critical battery level:
-
-\noindent For $y < p_2 B/c$ (battery may survive):
+\textbf{Charging time formula.}
+Given admission when the battery is at level $x \in (0,B)$ and the car has demand
+$Y = y$, service proceeds in two phases. In Phase~1 (fast charging at rate $p_2$),
+the battery discharges at rate $c$, so it is exhausted after delivering energy
+$p_2 \cdot (x/c) = p_2 x/c$ to the car; this takes time $x/c$. If $y \leq p_2 x/c$,
+the car completes in Phase~1 with charging time $y/p_2$. Otherwise, the remaining
+demand $y - p_2 x/c$ is served in Phase~2 at rate $p_1$, taking additional time
+$(y - p_2 x/c)/p_1$. Hence the total charging time is
 \begin{equation}
-  S(y) = 1 + \frac{p_2-p_1}{p_1\,y\,K(1-P_B)\,\theta}
-         \left[\frac{p_2}{c\,\theta}\!\left(e^{\theta cy/p_2}-1\right) - y\right].
+  T(x,y) = \frac{y}{p_2} + \left(\frac{1}{p_1} - \frac{1}{p_2}\right)
+            \max\!\left(y - \frac{p_2 x}{c},\, 0\right). \label{eq:Txy}
 \end{equation}
-For $y \geq p_2 B/c$ (battery always depletes):
-\begin{multline}
-  S(y) = 1 + \frac{p_2-p_1}{p_1\,y\,K(1-P_B)}
-         \Bigl\{\tfrac{1}{\theta}\bigl[(y-\tfrac{p_2 B}{c})e^{\theta B} - y
-         + \tfrac{p_2(e^{\theta B}-1)}{c\theta}\bigr] \\
-         + \tfrac{p_0 e^{\theta B}}{\lambda}(y-\tfrac{p_2 B}{c})\Bigr\}.
-\end{multline}
-$S(y)$ satisfies $S(y) \geq 1$, is increasing in $y$, tends to $1$ as $y \to 0$
-or $B \to \infty$, and tends to $p_2/p_1$ as $y \to \infty$ or $B \to 0$.
-\end{proof}
+The slowdown factor $S(y) = \mathbb{E}[T \mid Y=y]\,/\,(y/p_2)$ measures the ratio of
+actual to ideal (all-fast) charging time.
+
+\textbf{Averaging over the admitted battery distribution.}
+By PASTA, an admitted car sees the stationary distribution conditioned on $n=0$.
+The admitted battery level has density $g(x) = f_0(x)/(1-P_B)$ on $(0,B)$, plus
+atom $\pi_{0,B}/(1-P_B)$ at $x = B$. Substituting \eqref{eq:Txy} and writing
+$x^* = cy/p_2$ for the critical level at which the battery would be exactly depleted:
+\begin{equation}
+  \mathbb{E}[T \mid Y=y] = \frac{y}{p_2} + \frac{p_2 - p_1}{p_1 p_2}
+  \cdot \frac{1}{1-P_B}
+  \int_0^{\min(x^*,\,B)} \!\left(y - \frac{p_2 x}{c}\right) f_0(x)\,dx
+  + \mathbf{1}_{y \geq p_2B/c}\,\frac{\pi_{0,B}}{1-P_B}\left(y - \frac{p_2 B}{c}\right)
+  \cdot\frac{p_2-p_1}{p_1 p_2}.
+  \label{eq:ET_y}
+\end{equation}
+The indicator term accounts for cars admitted from the atom at $x=B$ when their demand
+exceeds $p_2 B/c$, in which case the battery is always depleted during service.
+
+\textbf{Case 1: $y < x^* = p_2B/c$.}
+Here $\min(x^*,B)=x^*$ and no atom contribution arises. Using $f_0(x) = e^{\theta x}/K$:
+\begin{align*}
+  \int_0^{x^*} \left(y - \frac{p_2 x}{c}\right) \frac{e^{\theta x}}{K}\,dx
+  &= \frac{1}{K}\left[y\,\frac{e^{\theta x^*}-1}{\theta}
+     - \frac{p_2}{c}\int_0^{x^*} x\,e^{\theta x}\,dx\right] \\
+  &= \frac{1}{K}\left[y\,\frac{e^{\theta x^*}-1}{\theta}
+     - \frac{p_2}{c}\left(\frac{x^* e^{\theta x^*}}{\theta}
+     - \frac{e^{\theta x^*}-1}{\theta^2}\right)\right].
+\end{align*}
+Substituting $x^* = cy/p_2$ and simplifying yields \eqref{eq:Sy1}.
+
+\textbf{Case 2: $y \geq x^* = p_2B/c$.}
+Here the battery is always depleted during service regardless of the admission level.
+Setting $\min(x^*,B) = B$:
+\begin{align*}
+  \int_0^{B} \left(y - \frac{p_2 x}{c}\right) \frac{e^{\theta x}}{K}\,dx
+  &= \frac{1}{K}\left[y\,\frac{e^{\theta B}-1}{\theta}
+     - \frac{p_2}{c}\left(\frac{B e^{\theta B}}{\theta}
+     - \frac{e^{\theta B}-1}{\theta^2}\right)\right].
+\end{align*}
+Adding the atom contribution $({\pi_{0,B}}/{K(1-P_B)})(y - p_2 B/c)$ with
+$\pi_{0,B} = p_0 e^{\theta B}/(\lambda K)$ and collecting terms yields \eqref{eq:Sy2}.
+
+\textbf{Monotonicity and limiting behaviour.}
+Since $(1/p_1 - 1/p_2) > 0$ and the Phase~2 component $\max(y - p_2 x/c, 0)$ is
+non-decreasing in $y$, we have $S(y) \geq 1$ for all $y$, with $S(y) \to 1$ as
+$y \to 0$ (all service in Phase~1). As $y \to \infty$ the Phase~2 component dominates
+and $S(y) \to p_2/p_1$. As $B \to \infty$ the battery is never depleted and
+$S(y) \to 1$; as $B \to 0$ all service is at rate $p_1$ and $S(y) = p_2/p_1$. \qed
 
 
 \end{document}

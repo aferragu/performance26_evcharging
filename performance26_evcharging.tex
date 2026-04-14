@@ -360,58 +360,74 @@ For $y\geqslant x^*$, the battery always depletes during service and:
 \subsection{Optimal battery regime}\label{ssec:optimal_regime}
 
 For practical battery health it is desirable to charge the battery as slowly as
-possible and to keep it cycling continuously rather than reflecting against the
-boundaries at $x=0$ or $x=B$. The stationary distribution of Theorem~\ref{thm:stationary}
-reveals a natural design criterion that achieves both goals simultaneously.
+possible and to keep it cycling continuously rather than dwelling near the boundaries
+$x=0$ or $x=B$. The stationary distribution of Theorem~\ref{thm:stationary} reveals
+a natural design criterion that achieves both goals simultaneously.
 
-From the exponential form $f_0(x) \propto e^{\theta x}$, mass concentrates near $x=B$
-when $\theta>0$ and near $x=0$ when $\theta<0$; in either case the battery spends a
-significant fraction of time pinned against a boundary. The uniform regime $\theta=0$
-eliminates this concentration, giving a flat stationary density on $(0,B)$ and minimising
-boundary sojourn. Since $\theta = \mu p_2/c - \lambda/p_0$, setting $\theta=0$ determines
-the required idle recharge rate:
+\textbf{Design parameters.}
+We introduce two dimensionless parameters that will govern the analysis. The
+\emph{speed-up ratio} $\alpha = p_2/p_1 > 1$ measures how much faster the charger
+operates with a full battery than without. The \emph{normalised battery capacity}
+$\beta = \mu B p_2 / c$ is the ratio of the battery drain time $B/c$ to the mean
+fast-charge session $1/(\mu p_2)$: it counts how many full fast-charge sessions
+the battery can sustain before depleting. Finally, the \emph{normalised load}
+$\tilde\rho = \rho/p_2 = \lambda/(\mu p_2)$ is the offered load measured in units
+of fast-charge capacity; it is the mean number of fast-charge sessions arriving per
+unit of service capacity at rate $p_2$.
+
+\textbf{Optimal recharge rate and feasibility.}
+From the exponential form $f_0(x) \propto e^{\theta x}$, mass concentrates near
+$x=B$ when $\theta>0$ and near $x=0$ when $\theta<0$; in either case the battery
+spends time pinned at a boundary. The uniform regime $\theta=0$ eliminates this,
+giving a flat stationary density on $(0,B)$. Since $\theta = \mu p_2/c - \lambda/p_0$,
+setting $\theta=0$ uniquely determines the idle recharge rate:
 \begin{equation}
-  p_0^* = \frac{\lambda c}{\mu p_2} = \frac{\rho c}{p_2},
+  p_0^* = \tilde\rho\, c.
   \label{eq:p0star}
 \end{equation}
-where $\rho = \lambda/\mu$ is the offered load. This is also the slowest recharge rate
-compatible with $\theta=0$, which is desirable for battery longevity. The constraint
-$p_0^* \leq p_1$ requires $\rho \leq p_1 p_2/c$, i.e.\ the offered load must not exceed
-the threshold
+This is also the \emph{slowest} recharge rate achieving $\theta=0$, which minimises
+battery stress. The constraint $p_0^* \leq p_1$ requires
 \begin{equation}
-  \rho^* = \frac{p_1 p_2}{c} = \frac{p_1 p_2}{p_2 - p_1}.
-  \label{eq:rhostar}
+  \tilde\rho \leq \frac{p_1}{c} = \frac{1}{\alpha - 1},
+  \qquad \text{equivalently} \qquad
+  \rho \leq \rho_{\max} = \frac{p_1 p_2}{c}.
+  \label{eq:rhomax}
 \end{equation}
-Below this threshold the operator can always tune $p_0$ to achieve the uniform regime;
-above it, $\theta < 0$ regardless of $p_0$ and the battery inevitably drains on average.
+Below this threshold the operator can always achieve the uniform regime by tuning
+$p_0$; above it, $\theta < 0$ regardless of $p_0$.
 
-In the uniform regime the average slowdown takes a particularly clean form. Setting
-$\theta=0$ and $p_0 = p_0^*$ in the expressions for $K$, $P_B$, and $\bar{S}$, one
-computes that $K$ cancels in the ratio $P_B/(1-P_B)$ and the offered load $\rho$
-cancels as well, leaving:
+\textbf{Average slowdown.}
+Setting $\theta=0$ and $p_0 = p_0^*$ in the expressions for $K$ and $P_B$, one finds
+that $K$ cancels in the ratio $P_B/(1-P_B)$ and the load $\rho$ drops out entirely,
+leaving:
 \begin{equation}
-  \bar{S} = \frac{B + c/(\mu p_1)}{B + c/(\mu p_2)}.
-  \label{eq:Sbar_opt}
-\end{equation}
-This depends only on the battery capacity $B$ and the system rates $\mu, p_1, p_2$,
-not on the arrival rate $\lambda$. This is a useful property for infrastructure design:
-the average slowdown is determined entirely by the hardware parameters and is the same
-for any load below the threshold $\rho^*$. Introducing the normalised battery capacity
-$\tilde\beta = \mu B p_1/c$ (battery energy in units of the mean slow-charge session
-$1/(\mu p_1)$) and the speed-up ratio $\alpha = p_2/p_1$, the formula becomes
-\begin{equation}
-  \bar{S} = \frac{\tilde\beta + 1}{\tilde\beta + 1/\alpha},
+  \bar{S} = \frac{\beta + \alpha}{\beta + 1}.
   \label{eq:Sbar_beta}
 \end{equation}
-which depends only on $\alpha$ and $\tilde\beta$, with no additional scale parameter.
-As $\tilde\beta \to 0$, $\bar{S} \to \alpha$; as $\tilde\beta \to \infty$, $\bar{S} \to 1$.
-The normalised capacity needed to achieve a target $\bar{S}_0 \in (1, \alpha)$ is:
+This depends only on $\alpha$ and $\beta$, not on the load. It is a useful design
+property: the average slowdown is determined entirely by hardware parameters, and
+is the same for any load $\tilde\rho \leq 1/\alpha$. As $\beta \to 0$,
+$\bar{S} \to \alpha = p_2/p_1$ (no battery, all service at the slow rate); as
+$\beta \to \infty$, $\bar{S} \to 1$ (infinite battery, always fast). The battery
+capacity achieving a target $\bar{S}_0 \in (1,\alpha)$ is:
 \begin{equation}
-  \tilde\beta^* = \frac{\alpha - \bar{S}_0}{\alpha(\bar{S}_0 - 1)}
-  \quad \Longleftrightarrow \quad
-  B^* = \frac{c}{\mu p_1}\cdot\frac{\alpha - \bar{S}_0}{\alpha(\bar{S}_0 - 1)}.
+  \beta^* = \frac{\alpha - \bar{S}_0}{\bar{S}_0 - 1}
+  \qquad \Longleftrightarrow \qquad
+  B^* = \frac{c}{\mu p_2}\cdot\frac{\alpha - \bar{S}_0}{\bar{S}_0 - 1}.
   \label{eq:Bstar}
 \end{equation}
+
+\textbf{Blocking probability.}
+A direct computation gives $1 - P_B = 1/(1 + \tilde\rho\,\bar{S})$, and therefore:
+\begin{equation}
+  P_B = \frac{\tilde\rho\,\bar{S}}{1 + \tilde\rho\,\bar{S}}
+      = \frac{\tilde\rho(\beta+\alpha)}{\beta + 1 + \tilde\rho(\beta+\alpha)}.
+  \label{eq:PB_opt}
+\end{equation}
+This has the form of an M/M/1/1 blocking formula with effective load
+$\tilde\rho\,\bar{S}$: the slowdown inflates the apparent offered load seen by the
+server. Unlike $\bar{S}$, the blocking probability does depend on $\tilde\rho$, as
+expected.
 
 \begin{figure}[t]
 \centering
@@ -419,11 +435,11 @@ The normalised capacity needed to achieve a target $\bar{S}_0 \in (1, \alpha)$ i
 \begin{axis}[
   width=\columnwidth,
   height=0.65\columnwidth,
-  xlabel={Normalised battery capacity $\tilde\beta = \mu B p_1/c$},
+  xlabel={Normalised battery capacity $\beta = \mu B p_2/c$},
   ylabel={Average slowdown $\bar{S}$},
-  xmin=0, xmax=8,
+  xmin=0, xmax=6,
   ymin=1, ymax=4.3,
-  xtick={0,2,4,6,8},
+  xtick={0,1,2,3,4,5,6},
   ytick={1,2,3,4},
   yticklabels={$1$,$2$,$3$,$4$},
   grid=both,
@@ -433,28 +449,22 @@ The normalised capacity needed to achieve a target $\bar{S}_0 \in (1, \alpha)$ i
   legend style={font=\footnotesize},
   clip=false,
 ]
-% r=2: Sbar = (tbeta+1)/(tbeta+1/2)
-\addplot[color=verdecito, very thick, domain=0:4, samples=200]
-  {(x+1)/(x+0.5)};
-\addlegendentry{$\alpha=p_2/p_1=2$}
-% r=3: Sbar = (tbeta+1)/(tbeta+1/3)
-\addplot[color=azulcito, very thick, domain=0:4, samples=200]
-  {(x+1)/(x+1/3)};
-\addlegendentry{$\alpha=p_2/p_1=3$}
-% r=4: Sbar = (tbeta+1)/(tbeta+1/4)
-\addplot[color=rojito, very thick, domain=0:4, samples=200]
-  {(x+1)/(x+0.25)};
-\addlegendentry{$\alpha=p_2/p_1=4$}
-% Asymptote at Sbar=1
-\addplot[dashed, gray, domain=0:4] {1};
+\addplot[color=verdecito, very thick, domain=0:6, samples=200]
+  {(x+2)/(x+1)};
+\addlegendentry{$\alpha=2$}
+\addplot[color=azulcito, very thick, domain=0:6, samples=200]
+  {(x+3)/(x+1)};
+\addlegendentry{$\alpha=3$}
+\addplot[color=rojito, very thick, domain=0:6, samples=200]
+  {(x+4)/(x+1)};
+\addlegendentry{$\alpha=4$}
+\addplot[dashed, gray, domain=0:6] {1};
 \end{axis}
 \end{tikzpicture}
-\caption{Average slowdown $\bar{S}$ in the optimal battery regime ($\theta=0$)
-as a function of the normalised battery capacity $\tilde\beta = \mu B p_1/c$,
-for three values of the speed-up ratio $\alpha=p_2/p_1$. Each curve starts at
-$\bar{S}=\alpha$ for $\tilde\beta=0$ (no battery) and decreases to $1$ as
-$\tilde\beta\to\infty$. The normalisation $\tilde\beta$ measures battery
-energy in units of the mean slow-charge service time $1/(\mu p_1)$.}
+\caption{Average slowdown $\bar{S} = (\beta+\alpha)/(\beta+1)$ in the optimal
+battery regime as a function of normalised capacity $\beta = \mu B p_2/c$, for
+three values of the speed-up ratio $\alpha = p_2/p_1$. Each curve starts at
+$\bar{S}=\alpha$ for $\beta=0$ and decreases to $1$ as $\beta\to\infty$.}
 \label{fig:Sbar}
 \end{figure}
 

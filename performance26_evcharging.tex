@@ -1,4 +1,4 @@
-\documentclass{sig-alternate-per-modified}
+\documentclass[blind]{sig-alternate-per-modified}
 
 \usepackage[utf8]{inputenc}
 %\usepackage[T1]{fontenc}
@@ -49,17 +49,17 @@
 
 \title{Queueing analysis of a battery-backed electrical vehicle charging system}
  
- \numberofauthors{2}
- \author{
-	\alignauthor Andres Ferragut\\
-		\affaddr{Universidad ORT Uruguay}\\
-		\affaddr{Montevideo, Uruguay}\\
-		\email{ferragut@ort.edu.uy}
-	\alignauthor Sebastián Bibiloni \thanks{This work was partially supported by ANII Uruguay under grant CF\_1\_2024\_1\_182277.}\\
-		\affaddr{Universidad de la República}\\
-		\affaddr{Montevideo, Uruguay}\\
-		\email{sebastianbibiloni@ingener.com}
- }	
+%  \numberofauthors{2}
+%  \author{
+% 	\alignauthor Andres Ferragut\\
+% 		\affaddr{Universidad ORT Uruguay}\\
+% 		\affaddr{Montevideo, Uruguay}\\
+% 		\email{ferragut@ort.edu.uy}
+% 	\alignauthor Sebastián Bibiloni \thanks{This work was partially supported by ANII Uruguay under grant CF\_1\_2024\_1\_182277.}\\
+% 		\affaddr{Universidad de la República}\\
+% 		\affaddr{Montevideo, Uruguay}\\
+% 		\email{sebastianbibiloni@ingener.com}
+%  }	
 
 \date{November 2026}
 \maketitle
@@ -120,15 +120,7 @@ weight. This yields explicit formulas for the blocking probability, mean chargin
 and a \emph{slowdown factor} quantifying the service degradation as a function of a
 car's energy demand. We then extend the analysis to a loss system with $s$ parallel
 chargers sharing a common battery. The exponential form of the stationary density is
-preserved, with the mode weights now governed by a simple recurrence. Armed with these formulas, we discuss several performance issues and design objectives that provide guidelines on how to design such systems.
-
-The paper is organized as follows. Section~\ref{sec:model} introduces the single-server
-model and its PDMP formulation. Section~\ref{sec:stationary} derives the stationary
-distribution and performance metrics. Section~\ref{sec:multiserver} treats the
-many-server case. Section~\ref{sec:conclusions} concludes.
-
-
-
+preserved, with the mode weights now governed by a simple recurrence. Armed with these formulas, we discuss several performance issues, design objectives that provide guidelines on how to design such systems and provide some numerical examples.
 
 % -------------------------------------------------------
 \section{Single-Server Model}
@@ -220,7 +212,7 @@ equation $\mathcal{A}^*\pi = 0$. We now proceed to solve the steady state of thi
     \draw[very thick, azulcito, dashed, ->] (0.5,1) -- node[midway,anchor=west] {\footnotesize $\mu p(x)$} (0.5,-1);
   \end{tikzpicture}
   \end{center}
-  \caption{State space and system dynamics, showing a typical trajectory of $Z(t)$}\label{fig:dynamics_single_server}
+  \caption{State space and system dynamics, showing a typical trajectory of $Z(t)$.}\label{fig:dynamics_single_server}
 \end{figure}
 
 % -------------------------------------------------------
@@ -338,7 +330,7 @@ A final quantity of interest is how different demands are affected in terms of c
 \end{equation}
 The following proposition is proved in the Appendix.
 \begin{proposition}\label{prop:slowdown}
-Define the energy threshold $x^* = p_2 B/c$. If $Y=y<x^*$, the battery may be active during the whole charge and: 
+Define $x^* = p_2 B/c$. If $Y=y<x^*$, the battery may be active during the whole charge and: 
 \begin{subequations}
   \begin{equation}
   S(y) = 1 + \frac{p_2-p_1}{p_1\,y\,K(1-P_B)\,\theta}
@@ -359,72 +351,40 @@ For $y\geqslant x^*$, the battery always depletes during service and:
 
 \subsection{Optimal battery regime}\label{ssec:optimal_regime}
 
-For practical battery health it is desirable to charge the battery as slowly as
-possible and to keep it cycling continuously rather than dwelling near the boundaries
-$x=0$ or $x=B$. The stationary distribution of Theorem~\ref{thm:stationary} reveals
-a natural design criterion that achieves both goals simultaneously.
+For practical battery health it is desirable to charge the battery \emph{slowly}, and to keep it \emph{cycling}
+continuously rather maintaining it fully charged or fully depleted for long periods. The stationary distribution of Theorem~\ref{thm:stationary} reveals a natural design criterion that achieves both goals simultaneously: namely control the value of the idle recharge time to reduce recharging power, but aim for the balanced regime where $\theta=0$ so the battery is kept most of the time in $(0,B)$ and not the boundaries.
 
-\textbf{Design parameters.}
-We introduce two dimensionless parameters that will govern the analysis. The
-\emph{speed-up ratio} $\alpha = p_2/p_1 > 1$ measures how much faster the charger
-operates with a full battery than without. The \emph{normalised battery capacity}
-$\beta = \mu B p_2 / c$ is the ratio of the battery drain time $B/c$ to the mean
-fast-charge session $1/(\mu p_2)$: it counts how many full fast-charge sessions
-the battery can sustain before depleting. Finally, the \emph{normalised load}
-$\tilde\rho = \rho/p_2 = \lambda/(\mu p_2)$ is the offered load measured in units
-of fast-charge capacity; it is the mean number of fast-charge sessions arriving per
-unit of service capacity at rate $p_2$.
+To analyze this, we first introduce the following definitions. Let $\alpha = p_1/p_1 >1$ be the \emph{speed-up ratio} of fast vs. slow charging. Let $\beta = \mu B p_2 / c$ be the \emph{normalized battery capacity}, the ratio between the battery drain time and the average fast recharge session duration, i.e. how many full fast-charge sessions the battery can sustain before depleting. Finally, define the \emph{normalised load}
+$\tilde\rho = \rho/p_2 = \lambda/(\mu p_2)$.
 
-\textbf{Optimal recharge rate and feasibility.}
-From the exponential form $f_0(x) \propto e^{\theta x}$, mass concentrates near
-$x=B$ when $\theta>0$ and near $x=0$ when $\theta<0$; in either case the battery
-spends time pinned at a boundary. The uniform regime $\theta=0$ eliminates this,
-giving a flat stationary density on $(0,B)$. Since $\theta = \mu p_2/c - \lambda/p_0$,
-setting $\theta=0$ uniquely determines the idle recharge rate:
+We aim for the uniform stationary density achieved when $\theta=0$. Setting $\theta = \mu p_2/c - \lambda/p_0=0$ uniquely determines the idle recharge rate as:
 \begin{equation}
-  p_0^* = \tilde\rho\, c.
+  p_0^* = \frac{lambda}{\mu p_2 c} = \tilde\rho\, c.
   \label{eq:p0star}
 \end{equation}
-This is also the \emph{slowest} recharge rate achieving $\theta=0$, which minimises
-battery stress. The constraint $p_0^* \leq p_1$ requires
+The constraint $p_0^* \leqslant p_1$ requires then:
 \begin{equation}
-  \tilde\rho \leq \frac{p_1}{c} = \frac{1}{\alpha - 1},
-  \qquad \text{equivalently} \qquad
-  \rho \leq \rho_{\max} = \frac{p_1 p_2}{c}.
+  \tilde\rho \leqslant \frac{p_1}{c} = \frac{1}{\alpha - 1} \; \Longleftrightarrow \; \rho \leqslant \rho_{\max} = \frac{p_1 p_2}{c}.
   \label{eq:rhomax}
 \end{equation}
-Below this threshold the operator can always achieve the uniform regime by tuning
-$p_0$; above it, $\theta < 0$ regardless of $p_0$.
+Below this threshold the operator can minimize battery stress by throttling down the idle recharge rate (slower recharge) and achieve the uniform regime. Above it, $\theta < 0$ regardless of $p_0$ and the battery drains on steady state.
 
-\textbf{Average slowdown.}
-Setting $\theta=0$ and $p_0 = p_0^*$ in the expressions for $K$ and $P_B$, one finds
-that $K$ cancels in the ratio $P_B/(1-P_B)$ and the load $\rho$ drops out entirely,
-leaving:
+Setting now $\theta=0$ and $p_0 = p_0^*$ in the expressions for $K$ and $P_B$, one finds a simple form for the average slowdown in terms of the normalized battery capacity:
 \begin{equation}
-  \bar{S} = \frac{\beta + \alpha}{\beta + 1}.
+  \bar{S} = \frac{\alpha + \beta}{\beta + 1}.
   \label{eq:Sbar_beta}
 \end{equation}
-This depends only on $\alpha$ and $\beta$, not on the load. It is a useful design
-property: the average slowdown is determined entirely by hardware parameters, and
-is the same for any load $\tilde\rho \leq 1/(\alpha-1)$. As $\beta \to 0$,
-$\bar{S} \to \alpha = p_2/p_1$ (no battery, all service at the slow rate); as
-$\beta \to \infty$, $\bar{S} \to 1$ (infinite battery, always fast). The battery
-capacity achieving a target $\bar{S}_0 \in (1,\alpha)$ is:
+Remarkably, this depends only on $\alpha$ and $\beta$ and not on the load. This is very useful from a design perspective since \emph{the same design} works across all (feasible) loads $\rho<\rho^*$, and decreases from $\alpha=p_2/p_1$ at $\beta\to 0s$ (no battery) to $1$ at $\beta\to\infty$. Setting a target slowdown $\bar{S}_0 \in (1,\alpha)$ we get:
 \begin{equation}
-  \beta^* = \frac{\alpha - \bar{S}_0}{\bar{S}_0 - 1}
-  \qquad \Longleftrightarrow \qquad
-  B^* = \frac{c}{\mu p_2}\cdot\frac{\alpha - \bar{S}_0}{\bar{S}_0 - 1}.
+  \beta^* = \frac{\alpha - \bar{S}_0}{\bar{S}_0 - 1} \; \Longleftrightarrow \; B^* = \frac{c}{\mu p_2}\frac{\alpha - \bar{S}_0}{\bar{S}_0 - 1}.
   \label{eq:Bstar}
 \end{equation}
-
-\textbf{Blocking probability.}
-Substituting $\theta=0$ and $p_0=p_0^*$ into the expression for $P_B$ in
-Proposition~\ref{prop:blocking}, the normalization constant $K$ cancels and one obtains:
+Finally the blocking probability becomes:
 \begin{equation}
-  P_B = \frac{\tilde\rho(\beta+\alpha)}{\beta + 1 + \tilde\rho(\beta+\alpha)}.
+  P_B = \tilde\rho\bar{S}_0/(1+\tilde\rho\bar{S}_0) = \frac{\tilde\rho(\alpha + \beta)}{\beta + 1 + \tilde\rho(\alpha + \beta)}.
   \label{eq:PB_opt}
 \end{equation}
-This has the form of an M/M/1/1 blocking formula with effective load
+This has the form of an $M/M/1/1$ blocking formula with effective load
 $\tilde\rho\bar{S}$, since $P_B = \tilde\rho\bar{S}/(1+\tilde\rho\bar{S})$.
 Unlike $\bar{S}$, the blocking probability depends on $\tilde\rho$, as expected.
 
@@ -434,7 +394,7 @@ Unlike $\bar{S}$, the blocking probability depends on $\tilde\rho$, as expected.
 \begin{axis}[
   width=\columnwidth,
   height=0.65\columnwidth,
-  xlabel={Normalised battery capacity $\beta = \mu B p_2/c$},
+  xlabel={Normalised battery capacity $\beta$},
   ylabel={Average slowdown $\bar{S}$},
   xmin=0, xmax=6,
   ymin=1, ymax=4.3,
@@ -460,10 +420,8 @@ Unlike $\bar{S}$, the blocking probability depends on $\tilde\rho$, as expected.
 \addplot[dashed, gray, domain=0:6] {1};
 \end{axis}
 \end{tikzpicture}
-\caption{Average slowdown $\bar{S} = (\beta+\alpha)/(\beta+1)$ in the optimal
-battery regime as a function of normalised capacity $\beta = \mu B p_2/c$, for
-three values of the speed-up ratio $\alpha = p_2/p_1$. Each curve starts at
-$\bar{S}=\alpha$ for $\beta=0$ and decreases to $1$ as $\beta\to\infty$.}
+\caption{Average slowdown $\bar{S}$ in the optimal battery regime as a function of normalized capacity $\beta = \mu B p_2/c$, for
+three values of the speed-up ratio $\alpha = p_2/p_1$.}
 \label{fig:Sbar}
 \end{figure}
 
@@ -580,6 +538,13 @@ $f_0(x)/({1-P_B})$ on $(0,B)$ (now with $s$-server normalization), and the condi
 charging time $T(x,y)$ is unchanged, so the formulas of
 Proposition~\ref{prop:slowdown} apply with the updated $P_B$ and $K = 1/C$.
 
+
+% -------------------------------------------------------
+\section{Simulation}
+\label{sec:sims}
+% -------------------------------------------------------
+
+
 % -------------------------------------------------------
 \section{Conclusions}
 \label{sec:conclusions}
@@ -609,7 +574,7 @@ and a study of the optimal battery sizing problem are left for future work.
 
 \appendix
 
-\section{Proof of Proposition~\ref{prop:slowdown}}
+\section{Proof of Proposition \lowercase{\ref{prop:slowdown}}}
 
 \textbf{Charging time formula.}
 Given admission when the battery is at level $x \in (0,B)$ and the car has demand

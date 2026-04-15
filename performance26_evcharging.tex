@@ -1,4 +1,4 @@
-\documentclass[blind]{sig-alternate-per-modified}
+\documentclass{sig-alternate-per-modified}
 
 \usepackage[utf8]{inputenc}
 %\usepackage[T1]{fontenc}
@@ -234,7 +234,7 @@ We now seek $\pi$ as a mixed measure with densities on $(0,B)$ and point masses 
 \end{equation}
 Here $f_n(x)$ $n=0,1$ are the interior densities and $\pi_{0,B}, \pi_{1,0} \geq 0$ are point
 masses at the corners where the flow accumulates: $x=B$ in mode~$0$ (since $r(0,\cdot)=p_0>0$)
-and $x=0$ in mode~$1$ (since $r(1,\cdot)=-c<0$). The other two corners should carry no atoms since flow arriving on them is immediately carried into the interior by the flow (cf. Figure \ref{fig:dynamics_single_server})
+and $x=0$ in mode~$1$ (since $r(1,\cdot)=-c<0$). The other two corners should carry no atoms since flow arriving on them is immediately carried into the interior by the flow (cf. Figure \ref{fig:dynamics_single_server}).
 
 Substituting this form into $\int \mathcal{A}\psi\,d\pi = 0$ and using eqs. \eqref{eq:generator}, the
 stationarity condition $\int \mathcal{A}\psi\,d\pi = 0$ for all $\psi \in \mathcal{D}(\mathcal{A})$ yields the following balance equations for the interior densities:
@@ -354,12 +354,12 @@ For $y\geqslant x^*$, the battery always depletes during service and:
 For practical battery health it is desirable to charge the battery \emph{slowly}, and to keep it \emph{cycling}
 continuously rather maintaining it fully charged or fully depleted for long periods. The stationary distribution of Theorem~\ref{thm:stationary} reveals a natural design criterion that achieves both goals simultaneously: namely control the value of the idle recharge time to reduce recharging power, but aim for the balanced regime where $\theta=0$ so the battery is kept most of the time in $(0,B)$ and not the boundaries.
 
-To analyze this, we first introduce the following definitions. Let $\alpha = p_1/p_1 >1$ be the \emph{speed-up ratio} of fast vs. slow charging. Let $\beta = \mu B p_2 / c$ be the \emph{normalized battery capacity}, the ratio between the battery drain time and the average fast recharge session duration, i.e. how many full fast-charge sessions the battery can sustain before depleting. Finally, define the \emph{normalised load}
+To analyze this, we first introduce the following definitions. Let $\alpha = p_2/p_1 >1$ be the \emph{speed-up ratio} of fast vs. slow charging. Let $\beta = \mu B p_2 / c$ be the \emph{normalized battery capacity}, the ratio between the battery drain time and the average fast recharge session duration, i.e. how many full fast-charge sessions the battery can sustain before depleting. Finally, define the \emph{normalized load}
 $\tilde\rho = \rho/p_2 = \lambda/(\mu p_2)$.
 
 We aim for the uniform stationary density achieved when $\theta=0$. Setting $\theta = \mu p_2/c - \lambda/p_0=0$ uniquely determines the idle recharge rate as:
 \begin{equation}
-  p_0^* = \frac{lambda}{\mu p_2 c} = \tilde\rho\, c.
+  p_0^* = \frac{\lambda}{\mu p_2 c} = \tilde\rho\, c.
   \label{eq:p0star}
 \end{equation}
 The constraint $p_0^* \leqslant p_1$ requires then:

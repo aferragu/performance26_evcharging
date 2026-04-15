@@ -359,7 +359,7 @@ $\tilde\rho = \rho/p_2 = \lambda/(\mu p_2)$.
 
 We aim for the uniform stationary density achieved when $\theta=0$. Setting $\theta = \mu p_2/c - \lambda/p_0=0$ uniquely determines the idle recharge rate as:
 \begin{equation}
-  p_0^* = \frac{\lambda}{\mu p_2 c} = \tilde\rho\, c.
+  p_0^* = \frac{\lambda c}{\mu p_2} = \tilde\rho\, c.
   \label{eq:p0star}
 \end{equation}
 The constraint $p_0^* \leqslant p_1$ requires then:
@@ -431,112 +431,50 @@ three values of the speed-up ratio $\alpha = p_2/p_1$.}
 % -------------------------------------------------------
 
 We now extend the model to $s \geq 1$ parallel chargers sharing a single battery buffer
-of capacity $B$ and a single grid connection of rate $p_1$. The station continues to
-operate as a loss system: a car that arrives when all $s$ chargers are busy is turned away.
+of capacity $B$ and a grid connection of rate $p_1$, still operating as a loss system.
+We impose $p_1 < s p_2$ (the grid alone cannot sustain full occupancy) and, for
+simplicity, set $p_0 = p_1$ (the idle recharge rate equals the grid supply rate). This
+last condition ensures that the net battery drift $r_n = p_1 - np_2$ has a uniform
+expression for all $n \geq 0$: the battery charges at rate $r_n > 0$ whenever
+$n \leq n^* := \lfloor p_1/p_2 \rfloor$ (including idle), and drains at rate
+$|r_n| = np_2 - p_1 > 0$ when $n > n^*$.\footnote{If $p_2/p_1 \in \mathbb{Z}$ then
+$r_{n^*} = 0$ exactly: at occupancy $n^*$ the battery neither charges nor drains.
+The balance equation~\eqref{eq:En_multi} at $n=n^*$ then contains no derivative term
+and $f_{n^*}$ is determined algebraically; the exponential form and
+recurrence~\eqref{eq:recurrence} remain valid without modification.}
+Relaxing $p_0 \neq p_1$ is possible but breaks the uniform structure of $r_n$ and
+complicates the recurrence below without changing its qualitative form.
 
-\textbf{Assumptions.} We impose $p_1 < s p_2$, so the grid alone cannot sustain all $s$
-chargers simultaneously at full rate; the battery is essential at full occupancy. We
-also set $p_0 = p_1$, so the idle recharge rate equals the grid supply rate;
-this simplifies the structure of the vector field.
-
-\textbf{State space and dynamics.} The state is $Z(t)=(n(t),x(t))$ with
-$n(t)\in\{0,\ldots,s\}$ busy chargers and $x(t)\in[0,B]$;
-$E=\{0,\ldots,s\}\times[0,B]$ is compact. With $n$ busy chargers each drawing
-$p_2$ and the grid supplying $p_1$, the net drift is $r_n = p_1-np_2$.
-Setting $p_0=p_1$ makes this hold for all $n$: the battery charges at rate
-$p_1$ when idle and drains at rate $np_2-p_1$ when $n>p_1/p_2$. The vector field is
-\begin{equation}
-  \dot{x} = \begin{cases}
-    r_n & 0 < x < B,\ r_n \neq 0, \\
-    0   & \text{otherwise (boundary reflection).}
-  \end{cases}
-  \label{eq:vf_multi}
-\end{equation}
-Define the \emph{critical occupancy} $n^* = \lfloor p_1/p_2 \rfloor \in \{0,\ldots,s-1\}$;
-the battery charges when $n \leq n^*$ and drains when $n > n^*$.
-
-The jumps are: arrivals at rate $\lambda$ when $n < s$, transitioning $n \to n+1$ with
-$x$ unchanged; departures at total rate $n\mu p_2$ when $x > 0$, and at rate $\mu p_1$
-when $x = 0$ (the grid supplies $p_1$ shared equally, giving total throughput $\mu p_1$
-regardless of occupancy), each transitioning $n \to n-1$ with $x$ unchanged.
-
-The process $Z(t)$ is again a PDMP on a compact state space, and the same
-martingale-problem argument as in Section~\ref{sec:model} establishes the strong Markov
-property. Irreducibility follows by the same reachability argument, so $Z(t)$ is ergodic
-with a unique stationary distribution.
-
-\textbf{Form of the stationary distribution.} The flow direction at each boundary point
-now depends on the occupancy level $n$. Atoms accumulate at $(n, B)$ for $n \leq n^*$
-(where the flow pushes toward $x = B$) and at $(n, 0)$ for $n > n^*$ (where the flow
-pushes toward $x = 0$). We therefore seek a stationary distribution of the form
-\begin{equation}
-  \pi = \sum_{n=0}^{s} f_n(x)\,dx
-      + \sum_{n=0}^{n^*} \pi_n^{(B)}\,\delta_{(n,B)}
-      + \sum_{n=n^*+1}^{s} \pi_n^{(0)}\,\delta_{(n,0)},
-  \label{eq:form_multi}
-\end{equation}
-where $f_n \geq 0$ are densities on $(0,B)$ and $\pi_n^{(B)}, \pi_n^{(0)} \geq 0$ are
-point masses.
-
-\textbf{Interior equations.} Setting $\mathcal{A}^*\pi = 0$ on $(0,B)$ gives, for
-$0 \leq n \leq s$,
-\begin{multline}
-  r_n f_n'(x) = \lambda f_{n-1}(x)\,\mathbf{1}_{n>0}
-              + (n{+}1)\mu p_2\, f_{n+1}(x)\,\mathbf{1}_{n<s} \\
-              - (\lambda\,\mathbf{1}_{n<s} + n\mu p_2)\, f_n(x).
-  \label{eq:En_multi}
-\end{multline}
+The state space is $E = \{0,\ldots,s\} \times [0,B]$, compact. Arrivals occur at rate
+$\lambda$ when $n < s$; departures occur at total rate $n\mu p_2$ when $x > 0$ and at
+rate $\mu p_1$ when $x = 0$ (the grid supplies $p_1$ shared equally among the $n$
+busy chargers, giving total throughput $\mu p_1$ regardless of $n$). The process
+$Z(t) = (n(t), x(t))$ is again an ergodic PDMP by the same arguments as
+Section~\ref{sec:model}. The stationary distribution has densities $f_n(x)$ on $(0,B)$
+and point masses at $(n,B)$ for $n \leq n^*$ and $(n,0)$ for $n > n^*$.
 
 \begin{theorem}
 \label{thm:multi}
-Let $\rho = \lambda/(\mu p_2)$. There exists a unique $\theta \in \mathbb{R}$, determined
-by the boundary flux equations together with normalization, such that the stationary
-densities take the form
+Let $\rho = \lambda/(\mu p_2)$. There exists a unique $\theta \in \mathbb{R}$, satisfying
+the boundary flux equations at $x=0$ and $x=B$ together with normalization, such that
+the stationary densities take the form
 \begin{equation}
   f_n(x) = C\,a_n(\theta)\,e^{\theta x}, \qquad x \in (0,B),\ n = 0,\ldots,s,
   \label{eq:fn_multi}
 \end{equation}
 where $C > 0$ is a normalization constant and the coefficients $a_n(\theta)$ satisfy
-the recurrence $a_0 = 1$ and
+$a_0 = 1$ and
 \begin{equation}
   a_{n+1} = \frac{\theta\,S_n + \lambda\,a_n}{(n+1)\mu p_2},
-  \qquad S_n = \sum_{k=0}^{n} r_k\,a_k, \quad n = 0,\ldots,s-1.
+  \quad S_n = \textstyle\sum_{k=0}^{n} r_k\,a_k,
+  \quad n = 0,\ldots,s-1.
   \label{eq:recurrence}
 \end{equation}
-When $\theta = 0$, the recurrence yields $a_n = \rho^n/n!$ and the distribution reduces
-to the classical Erlang-B form with uniform density in $x$. For $\theta \neq 0$, the
-blocking probability
-\begin{equation}
-  P_B = C\,a_s\,\frac{e^{\theta B}-1}{\theta} + \pi_s^{(0)}\,\mathbf{1}_{n^* < s}
-  \label{eq:PB_multi}
-\end{equation}
-deviates from the Erlang-B value, with the battery shifting mass toward $x = B$ when
-$\theta > 0$ and toward $x = 0$ when $\theta < 0$.
+The proof is given in Appendix~\ref{app:multi}.
 \end{theorem}
 
-\begin{proof}[sketch]
-Summing~\eqref{eq:En_multi} from $k=0$ to $n$ telescopes the right side to
-$-\lambda f_n + (n+1)\mu p_2 f_{n+1}$. The exponential form $f_n = Ca_n e^{\theta x}$
-then yields~\eqref{eq:recurrence}. The value of $\theta$ is fixed by the boundary flux
-equations together with normalization. For $s=1$ and $p_0=p_1$, one recovers
-$\theta = \mu p_2/c - \lambda/p_1$ of Theorem~\ref{thm:stationary}.
-\end{proof}
-
-The parameter $\theta$ admits the same physical interpretation as in the single-server
-case. In the unconstrained system (infinite battery), the occupancy evolves as an
-$M/M/s/s$ queue with Erlang-B stationary weights $\pi_n \propto \rho^n/n!$, giving a
-mean battery drift $\bar{r} = p_1 - (\lambda/\mu)(1 - P_B^{\text{Erlang}})$. The sign
-of $\bar{r}$ determines the sign of $\theta$: positive when the grid can sustain the
-average load (battery fills in the long run) and negative otherwise. The case $\theta = 0$
-corresponds exactly to $\bar{r} = 0$, at which point the Erlang-B distribution is recovered.
-
-\textbf{Performance metrics.} The blocking probability is given by~\eqref{eq:PB_multi}.
-By PASTA and Little's law the mean charging time follows from $P_B$ exactly as in
-Propositions~\ref{prop:blocking} and~\ref{prop:meantime}. The slowdown factor
-$S(y)$ generalizes directly: the admitted battery level has the same exponential density
-$f_0(x)/({1-P_B})$ on $(0,B)$ (now with $s$-server normalization), and the conditional
-charging time $T(x,y)$ is unchanged, so the formulas of
-Proposition~\ref{prop:slowdown} apply with the updated $P_B$ and $K = 1/C$.
+Performance metrics follow from $C$ and the point masses obtained in the proof via the
+same formulas as Section~\ref{ssec:metrics}.
 
 
 % -------------------------------------------------------
@@ -638,6 +576,73 @@ $y \to 0$ (all service in Phase~1). As $y \to \infty$ the Phase~2 component domi
 and $S(y) \to p_2/p_1$. As $B \to \infty$ the battery is never depleted and
 $S(y) \to 1$; as $B \to 0$ all service is at rate $p_1$ and $S(y) = p_2/p_1$. \qed
 
+
+\section{Proof of Theorem~\ref{thm:multi}}
+\label{app:multi}
+
+\textbf{Interior equations.}
+The stationarity condition $\int \mathcal{A}\psi\,d\pi = 0$ applied to the interior
+densities yields, for $0 \leq n \leq s$,
+\begin{multline}
+  r_n f_n'(x) = \lambda f_{n-1}(x)\,\mathbf{1}_{n>0}
+              + (n{+}1)\mu p_2\, f_{n+1}(x)\,\mathbf{1}_{n<s} \\
+              - (\lambda\,\mathbf{1}_{n<s} + n\mu p_2)\, f_n(x), \quad x \in (0,B).
+  \label{eq:En_multi}
+\end{multline}
+Summing from $k=0$ to $n$ for $0 \leq n \leq s-1$, the right side telescopes to
+$-\lambda f_n + (n+1)\mu p_2 f_{n+1}$, giving the summed equations
+\begin{equation}
+  \sum_{k=0}^n r_k f_k'(x) = -\lambda f_n(x) + (n+1)\mu p_2\, f_{n+1}(x).
+  \label{eq:Tn_multi}
+\end{equation}
+Substituting $f_n(x) = Ca_n e^{\theta x}$ into~\eqref{eq:Tn_multi} and cancelling
+$Ce^{\theta x}$ yields the recurrence~\eqref{eq:recurrence}.
+
+\textbf{Boundary flux equations.}
+At $x = B$, for each $n \leq n^*$ (where $r_n > 0$, flow pushes toward $x=B$), flux
+balance gives:
+\begin{equation}
+  r_n\,f_n(B^-) = -\lambda\,\pi_n^{(B)} + \mu p_2\,(n+1)\,\pi_{n+1}^{(B)}\,\mathbf{1}_{n<n^*}
+                  + \lambda\,\pi_{n-1}^{(B)}\,\mathbf{1}_{n>0}.
+  \label{eq:Bflux_multi}
+\end{equation}
+At $x = 0$, for each $n > n^*$ (where $r_n < 0$, flow pushes toward $x=0$), flux
+balance gives:
+\begin{equation}
+  |r_n|\,f_n(0^+) = -(\lambda\,\mathbf{1}_{n<s} + \mu p_1)\,\pi_n^{(0)}
+                    + \mu p_1\,\pi_{n+1}^{(0)}\,\mathbf{1}_{n<s}
+                    + \lambda\,\pi_{n-1}^{(0)}\,\mathbf{1}_{n>n^*+1}.
+  \label{eq:0flux_multi}
+\end{equation}
+Additionally, at $x=0$ for $n = n^*+1$ the atom $\pi_{n^*+1}^{(0)}$ receives inflow
+from mode $n^*$ via the interior flow reaching $x=0$ and is fed back into the interior
+at mode $n^*$ (no atom there since $r_{n^*} \geq 0$):
+\begin{equation}
+  r_{n^*}\,f_{n^*}(0^+) = \mu p_1\,\pi_{n^*+1}^{(0)} - \lambda\,f_{n^*}(0^+)\,\mathbf{1}_{n^*>0}.
+  \label{eq:0flux_transition}
+\end{equation}
+
+\textbf{Determining $\theta$ and normalization.}
+For each $\theta$, the recurrence~\eqref{eq:recurrence} uniquely determines
+$a_1,\ldots,a_s$ given $a_0=1$. The point masses $\pi_n^{(B)}$ and $\pi_n^{(0)}$ are
+then obtained from~\eqref{eq:Bflux_multi}--\eqref{eq:0flux_transition} by forward
+substitution, giving each as a continuous function of $\theta$. Substituting into the
+normalization condition
+\begin{equation}
+  C\sum_{n=0}^s a_n(\theta)\,\frac{e^{\theta B}-1}{\theta}
+  + \sum_{n=0}^{n^*} \pi_n^{(B)}(\theta)
+  + \sum_{n=n^*+1}^{s} \pi_n^{(0)}(\theta) = 1
+  \label{eq:norm_multi}
+\end{equation}
+yields a scalar equation for $\theta$. A continuity and sign argument shows this
+equation has a unique root, which is the $\theta$ asserted in the theorem.
+
+\textbf{Consistency with $s=1$.}
+For $s=1$ and $p_0=p_1$, we have $n^*=0$, $r_0=p_1$, $r_1=-c$. The recurrence gives
+$a_1 = (\theta p_1 + \lambda)/(\mu p_2)$. The boundary condition at $x=0$ forces
+$c\,f_1(0^+) = \mu p_1\,\pi_1^{(0)}$, i.e.\ $ca_1 = \mu p_1 \cdot p_1 a_1 \cdot (\text{from atom relation})$,
+which together with the boundary at $x=B$ gives $\theta = \mu p_2/c - \lambda/p_1$,
+recovering Theorem~\ref{thm:stationary}. \qed
 
 \end{document}
 

@@ -530,9 +530,10 @@ $\pi_{0,B}/(1-P_B)$ at $x=B$. Writing $x_y = cy/p_2$ for the battery level that
 would be exactly depleted by demand $y$, substituting~\eqref{eq:Txy} and using
 $p_2-p_1=c$ gives
 \begin{multline}
-  \mathbb{E}[T \mid Y=y] = \frac{y}{p_2} + \frac{c}{p_1 p_2(1-P_B)}
-  \Bigl[\int_0^{\min(x_y,B)} \!\left(y - \frac{p_2 x}{c}\right) f_0(x)\,dx \\
-  + \mathbf{1}_{y \geq p_2B/c}\,\pi_{0,B}\Bigl(y - \frac{p_2 B}{c}\Bigr)\Bigr].
+  \mathbb{E}[T \mid Y=y] = \frac{y}{p_2} \\
+  + \frac{c}{p_1 p_2(1-P_B)}
+  \Bigl[\int_0^{\min(x_y,B)} \!\Bigl(y - \tfrac{p_2 x}{c}\Bigr) f_0(x)\,dx \\
+  + \mathbf{1}_{y \geq p_2B/c}\,\pi_{0,B}\,\bigl(y - \tfrac{p_2 B}{c}\bigr)\Bigr].
   \label{eq:ET_y}
 \end{multline}
 We now substitute $u = y/x^* = cy/(p_2 B)$, so $y = up_2B/c$ and $x_y = uB$,
@@ -541,24 +542,23 @@ and use $f_0(x) = e^{\theta x}/K$ and $K(1-P_B) = B + p_0/\lambda$.
 For $u < 1$, the atom at $x=B$ contributes nothing and the integral runs to $uB$.
 Denoting $\mathrm{I} = \int_0^{uB}(y - p_2 x/c)\,e^{\theta x}\,dx/K$, integration by
 parts gives
-\begin{equation*}
-  \mathrm{I} = \frac{1}{K}\left[\frac{up_2B}{c}\cdot\frac{e^{\theta uB}-1}{\theta}
-  - \frac{p_2}{c}\left(\frac{uB\,e^{\theta uB}}{\theta}
-  - \frac{e^{\theta uB}-1}{\theta^2}\right)\right]
-  = \frac{p_2B}{cK}\cdot\frac{e^{\theta uB}-1-\theta uB}{\theta^2}.
-\end{equation*}
+\begin{multline*}
+  \mathrm{I} = \frac{p_2}{cK}\left[uB\cdot\frac{e^{\theta uB}-1}{\theta}
+  - \frac{uB\,e^{\theta uB}}{\theta}
+  + \frac{e^{\theta uB}-1}{\theta^2}\right] \\
+  = \frac{p_2 B}{cK}\cdot\frac{e^{\theta uB}-1-\theta uB}{\theta^2}.
+\end{multline*}
 Substituting into~\eqref{eq:ET_y}, dividing by $y/p_2 = uB/c$ and simplifying
 using $K(1-P_B)=B+p_0/\lambda$ yields~\eqref{eq:Sy1}.
 
 For $u \geq 1$, the integral runs to $B$ and the atom contributes. Writing
 $\pi_{0,B} = p_0 e^{\theta B}/(\lambda K)$ and denoting
-\begin{equation*}
-  \mathrm{II} = \int_0^{B}\!\left(y - \frac{p_2 x}{c}\right)\frac{e^{\theta x}}{K}\,dx
-  = \frac{1}{K}\left[\frac{up_2B}{c}\cdot\frac{e^{\theta B}-1}{\theta}
-  - \frac{p_2}{c}\left(\frac{Be^{\theta B}}{\theta}
-  - \frac{e^{\theta B}-1}{\theta^2}\right)\right],
-\end{equation*}
-the atom term is $\pi_{0,B}(y-p_2B/c)/(K(1-P_B)) = (p_0/\lambda)e^{\theta B}(u-1)B/c \cdot c/(B+p_0/\lambda)$.
+\begin{multline*}
+  \mathrm{II} = \int_0^{B}\!\left(y - \frac{p_2 x}{c}\right)\frac{e^{\theta x}}{K}\,dx \\
+  = \frac{p_2}{cK}\left[uB\cdot\frac{e^{\theta B}-1}{\theta}
+  - \frac{Be^{\theta B}}{\theta} + \frac{e^{\theta B}-1}{\theta^2}\right],
+\end{multline*}
+the atom term equals $(p_0/\lambda)\,e^{\theta B}(u-1)B/(B+p_0/\lambda)$.
 Collecting, dividing by $y/p_2 = uB/c$, and using $K(1-P_B)=B+p_0/\lambda$
 yields~\eqref{eq:Sy2}.
 
@@ -569,9 +569,8 @@ or $B\to 0$ follow directly from the formulas. \qed
 \section{Proof of Theorem \lowercase{\ref{thm:multi}}}
 \label{app:multi}
 
-\textbf{Interior equations.}
-The stationarity condition $\int \mathcal{A}\psi\,d\pi = 0$ applied to the interior
-densities yields, for $0 \leq n \leq s$,
+The stationarity condition $\int \mathcal{A}\psi\,d\pi = 0$ applied to the
+interior densities yields, for $0 \leq n \leq s$,
 \begin{multline}
   r_n f_n'(x) = \lambda f_{n-1}(x)\,\mathbf{1}_{n>0}
               + (n{+}1)\mu p_2\, f_{n+1}(x)\,\mathbf{1}_{n<s} \\

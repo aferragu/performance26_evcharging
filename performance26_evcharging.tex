@@ -329,9 +329,11 @@ A final quantity of interest is how different demands are affected in terms of c
 \end{equation}
 The following proposition is proved in the Appendix.
 \begin{proposition}\label{prop:slowdown}
-Let $u = cy/(p_2 B) = y/x^*$ be the demand normalized by the critical threshold
-$x^* = p_2 B/c$, so that $u < 1$ means the battery may survive the charge and $u \geq 1$
-means it always depletes. Then:
+The quantity $x^* = p_2 B/c$ is the energy demand that would exactly deplete a full
+battery: a car requiring $y < x^*$ may complete in Phase~1, while one with $y \geq x^*$
+is guaranteed to exhaust the battery regardless of the admission level. Define
+$u = y/x^* = cy/(p_2 B)$ as the demand normalized by this threshold, so $u$
+measures how many full batteries the charge would consume. Then:
 \begin{subequations}
 \begin{equation}
   S(u) = 1 + \frac{1}{p_1(B + p_0/\lambda)}
@@ -518,52 +520,75 @@ and a study of the optimal battery sizing problem are left for future work.
 \section{Proof of Proposition \lowercase{\ref{prop:slowdown}}}
 
 Given admission at battery level $x \in (0,B)$ with demand $Y=y$, service runs at
-rate $p_2$ until the battery depletes at time $x/c$, then at rate $p_1$ for any
-remaining demand. The total charging time is
+rate $p_2$ while the battery is positive and at rate $p_1$ once it depletes. The
+battery reaches zero at time $x/c$, having delivered energy $p_2 x/c$ to the car.
+If $y \leq p_2 x/c$ the car finishes in Phase~1; otherwise the remaining demand
+$y - p_2 x/c$ is served at rate $p_1$. The total charging time is therefore
 \begin{equation}
   T(x,y) = \frac{y}{p_2} + \left(\frac{1}{p_1} - \frac{1}{p_2}\right)
             \max\!\left(y - \frac{p_2 x}{c},\, 0\right). \label{eq:Txy}
 \end{equation}
-By PASTA, an admitted car sees the stationary distribution conditioned on $n=0$,
-so the admitted battery level has density $f_0(x)/(1-P_B)$ on $(0,B)$ plus atom
-$\pi_{0,B}/(1-P_B)$ at $x=B$. Writing $x_y = cy/p_2$ for the battery level that
-would be exactly depleted by demand $y$, substituting~\eqref{eq:Txy} and using
-$p_2-p_1=c$ gives
+The slowdown factor is $S(y) = \mathbb{E}[T\mid Y=y]/(y/p_2)$. Since $1/p_1-1/p_2 = c/(p_1 p_2)$,
+taking the conditional expectation over the admitted battery level and using $p_2-p_1=c$ gives
 \begin{multline}
   \mathbb{E}[T \mid Y=y] = \frac{y}{p_2} \\
   + \frac{c}{p_1 p_2(1-P_B)}
   \Bigl[\int_0^{\min(x_y,B)} \!\Bigl(y - \tfrac{p_2 x}{c}\Bigr) f_0(x)\,dx \\
-  + \mathbf{1}_{y \geq p_2B/c}\,\pi_{0,B}\,\bigl(y - \tfrac{p_2 B}{c}\bigr)\Bigr].
+  + \mathbf{1}_{y \geq p_2B/c}\,\pi_{0,B}\,\bigl(y - \tfrac{p_2 B}{c}\bigr)\Bigr],
   \label{eq:ET_y}
 \end{multline}
-We now substitute $u = y/x^* = cy/(p_2 B)$, so $y = up_2B/c$ and $x_y = uB$,
-and use $f_0(x) = e^{\theta x}/K$ and $K(1-P_B) = B + p_0/\lambda$.
+where $x_y = cy/p_2$ is the battery level that would be exactly depleted by demand $y$,
+the integral averages the Phase~2 excess over the admitted density $f_0(x)/(1-P_B)$
+on $(0,B)$, and the indicator term accounts for cars admitted from the atom at $x=B$
+(which always exhaust the battery when $y \geq p_2B/c$). By PASTA the admitted battery
+density is $f_0(x)/(1-P_B)$ with $f_0(x) = e^{\theta x}/K$.
 
-For $u < 1$, the atom at $x=B$ contributes nothing and the integral runs to $uB$.
-Denoting $\mathrm{I} = \int_0^{uB}(y - p_2 x/c)\,e^{\theta x}\,dx/K$, integration by
-parts gives
+We now set $u = y/x^* = cy/(p_2B)$, so $y = up_2B/c$, $x_y = uB$, and
+$y/p_2 = uB/c$. We also use the identity $K(1-P_B) = B + p_0/\lambda$
+from Theorem~\ref{thm:stationary}.
+
+For $u < 1$, the upper limit of the integral is $x_y = uB < B$ and the atom
+does not contribute. Denote
+$\mathrm{I} = \int_0^{uB}(y - p_2 x/c)\,e^{\theta x}\,dx/K$.
+Since $y - p_2x/c = (p_2/c)(uB - x)$, we compute
+\begin{equation*}
+  \mathrm{I} = \frac{p_2}{cK}\int_0^{uB}(uB-x)\,e^{\theta x}\,dx.
+\end{equation*}
+Integrating by parts:
+$\int_0^{uB}(uB-x)e^{\theta x}\,dx = -uB/\theta + (e^{\theta uB}-1)/\theta^2$, so
 \begin{multline*}
-  \mathrm{I} = \frac{p_2}{cK}\left[uB\cdot\frac{e^{\theta uB}-1}{\theta}
-  - \frac{uB\,e^{\theta uB}}{\theta}
-  + \frac{e^{\theta uB}-1}{\theta^2}\right] \\
+  \mathrm{I} = \frac{p_2}{cK}\cdot\frac{e^{\theta uB}-1-\theta uB}{\theta^2}
   = \frac{p_2 B}{cK}\cdot\frac{e^{\theta uB}-1-\theta uB}{\theta^2}.
 \end{multline*}
-Substituting into~\eqref{eq:ET_y}, dividing by $y/p_2 = uB/c$ and simplifying
-using $K(1-P_B)=B+p_0/\lambda$ yields~\eqref{eq:Sy1}.
-
-For $u \geq 1$, the integral runs to $B$ and the atom contributes. Writing
-$\pi_{0,B} = p_0 e^{\theta B}/(\lambda K)$ and denoting
+Substituting into~\eqref{eq:ET_y} and dividing through by $y/p_2 = uB/c$:
 \begin{multline*}
-  \mathrm{II} = \int_0^{B}\!\left(y - \frac{p_2 x}{c}\right)\frac{e^{\theta x}}{K}\,dx \\
-  = \frac{p_2}{cK}\left[uB\cdot\frac{e^{\theta B}-1}{\theta}
-  - \frac{Be^{\theta B}}{\theta} + \frac{e^{\theta B}-1}{\theta^2}\right],
+  S(u) = 1 + \frac{c}{p_1 p_2(1-P_B)}\cdot\frac{c}{uB}\cdot\frac{p_2 B}{cK}
+         \cdot\frac{e^{\theta uB}-1-\theta uB}{\theta^2} \\
+       = 1 + \frac{1}{p_1 K(1-P_B)}\cdot\frac{e^{\theta uB}-1-\theta uB}{\theta^2 uB}.
 \end{multline*}
-the atom term equals $(p_0/\lambda)\,e^{\theta B}(u-1)B/(B+p_0/\lambda)$.
-Collecting, dividing by $y/p_2 = uB/c$, and using $K(1-P_B)=B+p_0/\lambda$
-yields~\eqref{eq:Sy2}.
+Using $K(1-P_B)=B+p_0/\lambda$ and noting that
+$(e^{\theta uB}-1-\theta uB)/(\theta^2 uB) = (1/\theta)[(e^{\theta uB}-1)/(\theta uB)-1]$
+yields~\eqref{eq:Sy1}.
 
-The limits $S\to 1$ as $u\to 0$ or $B\to\infty$ and $S\to p_2/p_1$ as $u\to\infty$
-or $B\to 0$ follow directly from the formulas. \qed
+For $u \geq 1$, the battery depletes for every admitted level $x \in (0,B)$ and also
+for the atom at $x=B$. Writing $\pi_{0,B} = p_0 e^{\theta B}/(\lambda K)$, denote
+\begin{multline*}
+  \mathrm{II} = \int_0^{B}\!\left(y - \frac{p_2 x}{c}\right)\frac{e^{\theta x}}{K}\,dx
+  = \frac{p_2}{cK}\int_0^B (uB-x)\,e^{\theta x}\,dx \\
+  = \frac{p_2}{cK}\left[\frac{(u-1)Be^{\theta B}}{\theta}
+  + \frac{e^{\theta B}-1}{\theta^2} - \frac{uB}{\theta}\right] \\
+  = \frac{p_2 B}{cK}\left[\frac{(u-1)e^{\theta B}}{\theta}
+  + \frac{e^{\theta B}-1}{\theta^2 B} - \frac{u}{\theta}\right].
+\end{multline*}
+The atom contributes $(c/(p_1p_2))\cdot\pi_{0,B}(y-p_2B/c)/(1-P_B)$.
+Substituting $\pi_{0,B}=p_0e^{\theta B}/(\lambda K)$ and $y-p_2B/c=(u-1)p_2B/c$
+gives $(p_0 e^{\theta B}(u-1)B)/(p_1 p_2 K(1-P_B))$.
+Adding $\mathrm{II}$ and the atom term, dividing by $y/p_2 = uB/c$, and substituting
+$K(1-P_B)=B+p_0/\lambda$ yields~\eqref{eq:Sy2}.
+
+The limits $S\to 1$ as $u\to 0$ or $B\to\infty$ follow from the formula~\eqref{eq:Sy1}
+since $(e^{\theta uB}-1)/(\theta uB)\to 1$ as $uB\to 0$. As $u\to\infty$
+or $B\to 0$, the Phase~2 component dominates and $S\to p_2/p_1 = 1+c/p_1$. \qed
 
 
 \section{Proof of Theorem \lowercase{\ref{thm:multi}}}

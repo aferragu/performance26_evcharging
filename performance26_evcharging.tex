@@ -70,13 +70,12 @@
 We study a battery-buffered electric vehicle fast charging station modeled as a
 piecewise-deterministic Markov process. A battery mediates between the grid
 connection and one or more chargers, enabling fast service when the battery is charged and falling
-back to the grid rate when depleted. For the single-server loss system we derive the
+back to the grid rate when depleted. For the single--server loss system we derive the
 stationary distribution in closed form, uncovering a decoupling property whereby the
 charger state and battery level are independent in steady state, and obtain explicit
 formulas for several performance metrics. We extend the analysis to the
-multi-server loss system, showing that the stationary densities retain an exponential
-form with occupancy weights governed by a simple recurrence, and that the classical
-Erlang-B formula is recovered at the critical load where the mean battery drift vanishes.
+multi--server loss system, showing that the stationary densities retain an exponential
+form with occupancy weights governed by a simple recurrence, related to the Erlang-B formula.
 \end{abstract}
 
 \keywords{Piecewise deterministic Markov processes, Electrical Vehicles.}
@@ -98,10 +97,10 @@ the grid and the chargers resolves this mismatch: the battery gradually charges 
 grid at a steady, lower rate and discharges at high power during the brief intervals a
 vehicle is present, enabling a much smaller and cheaper grid connection. While battery storage
 at EV stations has been studied before, it has been done primarily in the context of renewable energy integration,
-where the battery smooths intermittent solar or wind supply~\cite{Bayram2011,Kabir2020,Tran2019}. However, with the advent of fast DC chargers available in highways and remote areas, using a battery buffer in these low-utilization regimes has become equally compelling for purely grid-connected stations.
+where the battery smooths intermittent solar or wind supply~\cite{Bayram2011,Kabir2020,Tran2019}. However, with the advent of fast DC chargers available in highways and remote areas, placing a battery buffer in these remote locations with shallow grid access has become a compelling idea.
 
 The central analytical question this raises is a queueing one: given that vehicles
-arrive randomly and the battery recharges during idle or low utilization periods, how often does a vehicle
+arrive randomly, and the battery recharges during idle or low utilization periods, how often does a vehicle
 arrive to find the battery depleted, forcing service at the slower grid rate? This
 coupling between the continuous battery state and the discrete service rate is what
 distinguishes the battery-buffered station from a standard queue, and it has not
@@ -178,7 +177,7 @@ continuous on $[0,B]$ for each $n$. For $\psi \in \mathcal{D}(\mathcal{A})$,
 \end{align}
 \end{subequations}
 where $\psi_n' = \partial_x \psi(n,\cdot)$ is defined Lebesgue-a.e. The first term in
-each line is the flow contribution; the second is the jump contribution, which in fact just switches mass from $n=0$ to $n=1$ and viceversa leaving $x$ unchanged. For any
+each line is the flow contribution; the second is the jump contribution, which in fact just switches mass from $n=0$ to $n=1$ and vice versa leaving $x$ unchanged. For any
 $\psi \in \mathcal{D}(\mathcal{A})$, the process $M_t^\psi := \psi(Z(t)) - \psi(Z(0)) - \int_0^t \mathcal{A}\psi(Z(s))\,ds$
 is a local martingale~\cite{Davis1984}, and the process is right-continuous and a strong Markov process.
 
@@ -290,7 +289,7 @@ with the convention $(e^{\theta B}-1)/\theta = B$ when $\theta = 0$.
 \end{theorem}
 
 \begin{proof}[sketch]
-Adding \eqref{eq:E0}, \eqref{eq:E1} gives $\frac{d}{dx}[p_0 f_0 - c f_1] = 0$, so $p_0 f_0 - c f_1$ is constant on $(0,B)$. Equations \eqref{eq:B1} and \eqref{eq:B0} together give $p_0 f_0(0^+) = c f_1(0^+)$, so the constant is zero. Therefore the densities should be proportional to each other, i.e. $f_1(x) = (p_0/c)\,f_0(x)$ for all $x \in (0,B)$. Substituting this condition into \eqref{eq:E0} yields a first order differential equation for $f_0$, which accounting for the definition of $\theta$ is simply $f_0'(x) = \theta\, f_0(x)$. We conclude that $f_0$ (and thus also $f_1$) should be exponential: $f_0(x) = f_0(0^+)\,e^{\theta x}$. With this expression, the atoms follow directly from \eqref{eq:B2}, \eqref{eq:B0}, and \eqref{eq:B3} is automatically satisfied, confirming consistency. Setting $f_0(0^+) = 1/K$ and imposing normalization
+Adding \eqref{eq:E0}, \eqref{eq:E1} gives $\frac{d}{dx}[p_0 f_0 - c f_1] = 0$, so $p_0 f_0 - c f_1$ is constant on $(0,B)$. Equations \eqref{eq:B1} and \eqref{eq:B0} together give $p_0 f_0(0^+) = c f_1(0^+)$, so the constant is zero. Therefore, the densities should be proportional to each other, i.e. $f_1(x) = (p_0/c)\,f_0(x)$ for all $x \in (0,B)$. Substituting this condition into \eqref{eq:E0} yields a first order differential equation for $f_0$, which accounting for the definition of $\theta$ is simply $f_0'(x) = \theta\, f_0(x)$. We conclude that $f_0$ (and thus also $f_1$) should be exponential: $f_0(x) = f_0(0^+)\,e^{\theta x}$. With this expression, the atoms follow directly from \eqref{eq:B2}, \eqref{eq:B0}, and \eqref{eq:B3} is automatically satisfied, confirming consistency. Setting $f_0(0^+) = 1/K$ and imposing normalization
 determines $K$ as in \eqref{eq:K}.
 \end{proof}
 
@@ -324,7 +323,7 @@ A more meaningful quantity is the \emph{average slowdown}, which we define as $E
   \bar{S} := \frac{E[T]}{E[Y]} = \frac{\mu p_2  P_B}{\lambda(1-P_B)} = \frac{p_2}{\rho} \frac{P_B}{1-P_B}
 \end{equation}
 
-A final quantity of interest is how different demands are affected in terms of charging time. One expects that larger demands are more affected since the battery may deplete during serive. To this end, define the \emph{slowdown factor}:
+A final quantity of interest is how different demands are affected in terms of charging time. One expects that larger demands are more affected since the battery may deplete during service. To this end, define the \emph{slowdown factor}:
 \begin{equation}
   S(y) := \frac{\mathbb{E}[T \mid Y=y]}{(y/p_2)}.
 \end{equation}
@@ -381,7 +380,7 @@ Remarkably, this depends only on $\alpha$ and $\beta$ and not on the load. This 
 \end{equation}
 Finally the blocking probability becomes:
 \begin{equation}
-  P_B = \tilde\rho\bar{S}_0/(1+\tilde\rho\bar{S}_0) = \frac{\tilde\rho(\alpha + \beta)}{\beta + 1 + \tilde\rho(\alpha + \beta)}.
+  P_B = \frac{\tilde\rho\bar{S}_0}{1+\tilde\rho\bar{S}_0} = \frac{\tilde\rho(\alpha + \beta)}{\beta + 1 + \tilde\rho(\alpha + \beta)}.
   \label{eq:PB_opt}
 \end{equation}
 This has the form of an $M/M/1/1$ blocking formula with effective load
@@ -521,7 +520,7 @@ the battery discharges at rate $c$, so it is exhausted after delivering energy
 $p_2 \cdot (x/c) = p_2 x/c$ to the car; this takes time $x/c$. If $y \leq p_2 x/c$,
 the car completes in Phase~1 with charging time $y/p_2$. Otherwise, the remaining
 demand $y - p_2 x/c$ is served in Phase~2 at rate $p_1$, taking additional time
-$(y - p_2 x/c)/p_1$. Hence the total charging time is
+$(y - p_2 x/c)/p_1$. Hence, the total charging time is
 \begin{equation}
   T(x,y) = \frac{y}{p_2} + \left(\frac{1}{p_1} - \frac{1}{p_2}\right)
             \max\!\left(y - \frac{p_2 x}{c},\, 0\right). \label{eq:Txy}
@@ -569,7 +568,7 @@ Setting $\min(x^*,B) = B$:
 Adding the atom contribution $({\pi_{0,B}}/{K(1-P_B)})(y - p_2 B/c)$ with
 $\pi_{0,B} = p_0 e^{\theta B}/(\lambda K)$ and collecting terms yields \eqref{eq:Sy2}.
 
-\textbf{Monotonicity and limiting behaviour.}
+\textbf{Monotonicity and limiting behavior.}
 Since $(1/p_1 - 1/p_2) > 0$ and the Phase~2 component $\max(y - p_2 x/c, 0)$ is
 non-decreasing in $y$, we have $S(y) \geq 1$ for all $y$, with $S(y) \to 1$ as
 $y \to 0$ (all service in Phase~1). As $y \to \infty$ the Phase~2 component dominates
@@ -577,7 +576,7 @@ and $S(y) \to p_2/p_1$. As $B \to \infty$ the battery is never depleted and
 $S(y) \to 1$; as $B \to 0$ all service is at rate $p_1$ and $S(y) = p_2/p_1$. \qed
 
 
-\section{Proof of Theorem~\ref{thm:multi}}
+\section{Proof of Theorem \lowercase{\ref{thm:multi}}}
 \label{app:multi}
 
 \textbf{Interior equations.}
@@ -608,12 +607,12 @@ balance gives:
 \end{equation}
 At $x = 0$, for each $n > n^*$ (where $r_n < 0$, flow pushes toward $x=0$), flux
 balance gives:
-\begin{equation}
+\begin{multline}
   |r_n|\,f_n(0^+) = -(\lambda\,\mathbf{1}_{n<s} + \mu p_1)\,\pi_n^{(0)}
-                    + \mu p_1\,\pi_{n+1}^{(0)}\,\mathbf{1}_{n<s}
+                    + \mu p_1\,\pi_{n+1}^{(0)}\,\mathbf{1}_{n<s} \\
                     + \lambda\,\pi_{n-1}^{(0)}\,\mathbf{1}_{n>n^*+1}.
   \label{eq:0flux_multi}
-\end{equation}
+\end{multline}
 Additionally, at $x=0$ for $n = n^*+1$ the atom $\pi_{n^*+1}^{(0)}$ receives inflow
 from mode $n^*$ via the interior flow reaching $x=0$ and is fed back into the interior
 at mode $n^*$ (no atom there since $r_{n^*} \geq 0$):

@@ -298,7 +298,7 @@ charges at rate $p_0$ during the idle period (mean duration $1/\lambda$) and dis
 at rate $c$ during the busy period with mean duration $1/(\mu p_2)$. Then, the expected net
 battery change per cycle is therefore $\Delta := \frac{p_0}{\lambda} - \frac{c}{\mu p_2}$. It is easy to see that $\theta$ has the same sign as $\Delta$, in particular:
 \begin{equation*}
-  \theta > 0 \Leftrightarrow \rho < \frac{p_0p_2}{c} = \rho \frac{p_0 p_2}{p_2-p_1}
+  \theta > 0 \Leftrightarrow \rho < \frac{p_0p_2}{c} = \frac{p_0 p_2}{p_2-p_1}
 \end{equation*}
 This corresponds to a \emph{lightly loaded} station, where the battery gains energy on average on each cycle and thus tends to fill, concentrating its mass towards $x=B$. When $\lambda/\mu > p_0 p_2/c$, we are in the \emph{highly loaded} regime, $\theta < 0$, the battery tends to drain and mass concentrates near $x = 0$, where a significant fraction of service occurs at the slow
 rate $p_1$. When $\theta = 0$ the battery neither drains nor fills on average and stationary density is uniform on $(0, B)$.
@@ -320,7 +320,7 @@ We now focus on the mean service time. By Little's law, since there is only one 
 \end{equation}
 A more meaningful quantity is the \emph{average slowdown}, which we define as $E[T]$ normalized by the average service time in a system that operates at the fast rate $p_2$ permanently, which is given by:
 \begin{equation}\label{eq:avg_slowdown}
-  \bar{S} := \frac{E[T]}{E[Y]} = \frac{\mu p_2  P_B}{\lambda(1-P_B)} = \frac{p_2}{\rho} \frac{P_B}{1-P_B}
+  \bar{S} := \frac{\mu p_2 E[T]}{E[Y]} = \frac{\mu p_2  P_B}{\lambda(1-P_B)} = \frac{p_2}{\rho} \frac{P_B}{1-P_B}
 \end{equation}
 
 A final quantity of interest is how different demands are affected in terms of charging time. One expects that larger demands are more affected since the battery may deplete during service. To this end, define the \emph{slowdown factor}:
@@ -329,7 +329,7 @@ A final quantity of interest is how different demands are affected in terms of c
 \end{equation}
 The following proposition is proved in the Appendix.
 \begin{proposition}\label{prop:slowdown}
-Let $u = cy/(p_2 B) = y/x^*$ be the demand normalised by the critical threshold
+Let $u = cy/(p_2 B) = y/x^*$ be the demand normalized by the critical threshold
 $x^* = p_2 B/c$, so that $u < 1$ means the battery may survive the charge and $u \geq 1$
 means it always depletes. Then:
 \begin{subequations}

@@ -329,22 +329,26 @@ A final quantity of interest is how different demands are affected in terms of c
 \end{equation}
 The following proposition is proved in the Appendix.
 \begin{proposition}\label{prop:slowdown}
-Define $x^* = p_2 B/c$. If $Y=y<x^*$, the battery may be active during the whole charge and: 
+Let $u = cy/(p_2 B) = y/x^*$ be the demand normalised by the critical threshold
+$x^* = p_2 B/c$, so that $u < 1$ means the battery may survive the charge and $u \geq 1$
+means it always depletes. Then:
 \begin{subequations}
-  \begin{equation}
-  S(y) = 1 + \frac{p_2-p_1}{p_1\,y\,K(1-P_B)\,\theta}
-         \left[\frac{p_2}{c\,\theta}\!\left(e^{\theta cy/p_2}-1\right) - y\right].
+\begin{equation}
+  S(u) = 1 + \frac{1}{p_1(B + p_0/\lambda)}
+         \left[\frac{e^{\theta uB}-1}{\theta uB} - 1\right], \qquad u < 1,
   \label{eq:Sy1}
 \end{equation}
-For $y\geqslant x^*$, the battery always depletes during service and:
 \begin{multline}
-  S(y) = 1 + \frac{p_2-p_1}{p_1\,y\,K(1-P_B)}
-         \Bigl\{\tfrac{1}{\theta}\bigl[(y-\tfrac{p_2 B}{c})e^{\theta B} - y
-         + \tfrac{p_2(e^{\theta B}-1)}{c\theta}\bigr] \\
-         + \tfrac{p_0 e^{\theta B}}{\lambda}(y-\tfrac{p_2 B}{c})\Bigr\}.
+  S(u) = 1 + \frac{1}{p_1(B+p_0/\lambda)}
+         \Bigl\{\Bigl(1-\tfrac{1}{u}\Bigr)\Bigl[\tfrac{e^{\theta B}}{\theta}
+         + \tfrac{p_0}{\lambda}e^{\theta B}\Bigr] \\
+         + \tfrac{e^{\theta B}-1}{\theta^2 u} - \tfrac{1}{\theta}\Bigr\},
+         \qquad u \geq 1.
   \label{eq:Sy2}
 \end{multline}
 \end{subequations}
+In both cases $S(u) \geq 1$, with $S \to 1$ as $u \to 0$ or $B \to \infty$,
+and $S \to p_2/p_1$ as $u \to \infty$ or $B \to 0$.
 \end{proposition}
 
 
@@ -513,67 +517,53 @@ and a study of the optimal battery sizing problem are left for future work.
 
 \section{Proof of Proposition \lowercase{\ref{prop:slowdown}}}
 
-\textbf{Charging time formula.}
-Given admission when the battery is at level $x \in (0,B)$ and the car has demand
-$Y = y$, service proceeds in two phases. In Phase~1 (fast charging at rate $p_2$),
-the battery discharges at rate $c$, so it is exhausted after delivering energy
-$p_2 \cdot (x/c) = p_2 x/c$ to the car; this takes time $x/c$. If $y \leq p_2 x/c$,
-the car completes in Phase~1 with charging time $y/p_2$. Otherwise, the remaining
-demand $y - p_2 x/c$ is served in Phase~2 at rate $p_1$, taking additional time
-$(y - p_2 x/c)/p_1$. Hence, the total charging time is
+Given admission at battery level $x \in (0,B)$ with demand $Y=y$, service runs at
+rate $p_2$ until the battery depletes at time $x/c$, then at rate $p_1$ for any
+remaining demand. The total charging time is
 \begin{equation}
   T(x,y) = \frac{y}{p_2} + \left(\frac{1}{p_1} - \frac{1}{p_2}\right)
             \max\!\left(y - \frac{p_2 x}{c},\, 0\right). \label{eq:Txy}
 \end{equation}
-The slowdown factor $S(y) = \mathbb{E}[T \mid Y=y]\,/\,(y/p_2)$ measures the ratio of
-actual to ideal (all-fast) charging time.
-
-\textbf{Averaging over the admitted battery distribution.}
-By PASTA, an admitted car sees the stationary distribution conditioned on $n=0$.
-The admitted battery level has density $g(x) = f_0(x)/(1-P_B)$ on $(0,B)$, plus
-atom $\pi_{0,B}/(1-P_B)$ at $x = B$. Substituting \eqref{eq:Txy} and writing
-$x^* = cy/p_2$ for the critical level at which the battery would be exactly depleted:
-\begin{equation}
-  \mathbb{E}[T \mid Y=y] = \frac{y}{p_2} + \frac{p_2 - p_1}{p_1 p_2}
-  \cdot \frac{1}{1-P_B}
-  \int_0^{\min(x^*,\,B)} \!\left(y - \frac{p_2 x}{c}\right) f_0(x)\,dx
-  + \mathbf{1}_{y \geq p_2B/c}\,\frac{\pi_{0,B}}{1-P_B}\left(y - \frac{p_2 B}{c}\right)
-  \cdot\frac{p_2-p_1}{p_1 p_2}.
+By PASTA, an admitted car sees the stationary distribution conditioned on $n=0$,
+so the admitted battery level has density $f_0(x)/(1-P_B)$ on $(0,B)$ plus atom
+$\pi_{0,B}/(1-P_B)$ at $x=B$. Writing $x_y = cy/p_2$ for the battery level that
+would be exactly depleted by demand $y$, substituting~\eqref{eq:Txy} and using
+$p_2-p_1=c$ gives
+\begin{multline}
+  \mathbb{E}[T \mid Y=y] = \frac{y}{p_2} + \frac{c}{p_1 p_2(1-P_B)}
+  \Bigl[\int_0^{\min(x_y,B)} \!\left(y - \frac{p_2 x}{c}\right) f_0(x)\,dx \\
+  + \mathbf{1}_{y \geq p_2B/c}\,\pi_{0,B}\Bigl(y - \frac{p_2 B}{c}\Bigr)\Bigr].
   \label{eq:ET_y}
-\end{equation}
-The indicator term accounts for cars admitted from the atom at $x=B$ when their demand
-exceeds $p_2 B/c$, in which case the battery is always depleted during service.
+\end{multline}
+We now substitute $u = y/x^* = cy/(p_2 B)$, so $y = up_2B/c$ and $x_y = uB$,
+and use $f_0(x) = e^{\theta x}/K$ and $K(1-P_B) = B + p_0/\lambda$.
 
-\textbf{Case 1: $y < x^* = p_2B/c$.}
-Here $\min(x^*,B)=x^*$ and no atom contribution arises. Using $f_0(x) = e^{\theta x}/K$:
-\begin{align*}
-  \int_0^{x^*} \left(y - \frac{p_2 x}{c}\right) \frac{e^{\theta x}}{K}\,dx
-  &= \frac{1}{K}\left[y\,\frac{e^{\theta x^*}-1}{\theta}
-     - \frac{p_2}{c}\int_0^{x^*} x\,e^{\theta x}\,dx\right] \\
-  &= \frac{1}{K}\left[y\,\frac{e^{\theta x^*}-1}{\theta}
-     - \frac{p_2}{c}\left(\frac{x^* e^{\theta x^*}}{\theta}
-     - \frac{e^{\theta x^*}-1}{\theta^2}\right)\right].
-\end{align*}
-Substituting $x^* = cy/p_2$ and simplifying yields \eqref{eq:Sy1}.
+For $u < 1$, the atom at $x=B$ contributes nothing and the integral runs to $uB$.
+Denoting $\mathrm{I} = \int_0^{uB}(y - p_2 x/c)\,e^{\theta x}\,dx/K$, integration by
+parts gives
+\begin{equation*}
+  \mathrm{I} = \frac{1}{K}\left[\frac{up_2B}{c}\cdot\frac{e^{\theta uB}-1}{\theta}
+  - \frac{p_2}{c}\left(\frac{uB\,e^{\theta uB}}{\theta}
+  - \frac{e^{\theta uB}-1}{\theta^2}\right)\right]
+  = \frac{p_2B}{cK}\cdot\frac{e^{\theta uB}-1-\theta uB}{\theta^2}.
+\end{equation*}
+Substituting into~\eqref{eq:ET_y}, dividing by $y/p_2 = uB/c$ and simplifying
+using $K(1-P_B)=B+p_0/\lambda$ yields~\eqref{eq:Sy1}.
 
-\textbf{Case 2: $y \geq x^* = p_2B/c$.}
-Here the battery is always depleted during service regardless of the admission level.
-Setting $\min(x^*,B) = B$:
-\begin{align*}
-  \int_0^{B} \left(y - \frac{p_2 x}{c}\right) \frac{e^{\theta x}}{K}\,dx
-  &= \frac{1}{K}\left[y\,\frac{e^{\theta B}-1}{\theta}
-     - \frac{p_2}{c}\left(\frac{B e^{\theta B}}{\theta}
-     - \frac{e^{\theta B}-1}{\theta^2}\right)\right].
-\end{align*}
-Adding the atom contribution $({\pi_{0,B}}/{K(1-P_B)})(y - p_2 B/c)$ with
-$\pi_{0,B} = p_0 e^{\theta B}/(\lambda K)$ and collecting terms yields \eqref{eq:Sy2}.
+For $u \geq 1$, the integral runs to $B$ and the atom contributes. Writing
+$\pi_{0,B} = p_0 e^{\theta B}/(\lambda K)$ and denoting
+\begin{equation*}
+  \mathrm{II} = \int_0^{B}\!\left(y - \frac{p_2 x}{c}\right)\frac{e^{\theta x}}{K}\,dx
+  = \frac{1}{K}\left[\frac{up_2B}{c}\cdot\frac{e^{\theta B}-1}{\theta}
+  - \frac{p_2}{c}\left(\frac{Be^{\theta B}}{\theta}
+  - \frac{e^{\theta B}-1}{\theta^2}\right)\right],
+\end{equation*}
+the atom term is $\pi_{0,B}(y-p_2B/c)/(K(1-P_B)) = (p_0/\lambda)e^{\theta B}(u-1)B/c \cdot c/(B+p_0/\lambda)$.
+Collecting, dividing by $y/p_2 = uB/c$, and using $K(1-P_B)=B+p_0/\lambda$
+yields~\eqref{eq:Sy2}.
 
-\textbf{Monotonicity and limiting behavior.}
-Since $(1/p_1 - 1/p_2) > 0$ and the Phase~2 component $\max(y - p_2 x/c, 0)$ is
-non-decreasing in $y$, we have $S(y) \geq 1$ for all $y$, with $S(y) \to 1$ as
-$y \to 0$ (all service in Phase~1). As $y \to \infty$ the Phase~2 component dominates
-and $S(y) \to p_2/p_1$. As $B \to \infty$ the battery is never depleted and
-$S(y) \to 1$; as $B \to 0$ all service is at rate $p_1$ and $S(y) = p_2/p_1$. \qed
+The limits $S\to 1$ as $u\to 0$ or $B\to\infty$ and $S\to p_2/p_1$ as $u\to\infty$
+or $B\to 0$ follow directly from the formulas. \qed
 
 
 \section{Proof of Theorem \lowercase{\ref{thm:multi}}}

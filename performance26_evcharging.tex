@@ -430,6 +430,12 @@ three values of the speed-up ratio $\alpha = p_2/p_1$.}
 \end{figure}
 
 % -------------------------------------------------------
+\section{Numerical Results}
+\label{sec:sims}
+% -------------------------------------------------------
+
+
+% -------------------------------------------------------
 \section{The Many-Server Case}
 \label{sec:multiserver}
 % -------------------------------------------------------
@@ -437,7 +443,7 @@ three values of the speed-up ratio $\alpha = p_2/p_1$.}
 The single-server analysis extends naturally to $s \geq 1$ parallel chargers sharing
 a battery buffer of capacity $B$ and a grid connection of rate $p_1$, operating as a
 loss system. We set $p_0 = p_1$ for simplicity; the case $p_0 \neq p_1$ can be handled
-similarly with additional notation.
+with additional notation.
 
 The state is $Z(t) = (n(t), x(t))$ with $n(t) \in \{0,\ldots,s\}$ and $x(t) \in [0,B]$.
 With $p_0=p_1$ the net battery drift is $r_n = p_1 - np_2$ uniformly for all $n$:
@@ -446,25 +452,31 @@ $n > n^*$. Arrivals occur at rate $\lambda$ when $n<s$; departures at total rate
 $n\mu p_2$ when $x>0$ and at rate $\mu p_1$ when $x=0$. The process is again an
 ergodic PDMP by the same arguments as Section~\ref{sec:model}.
 
-The stationary balance equations on $(0,B)$ take the form $R\mathbf{f}'(x) = Q\mathbf{f}(x)$,
+The stationary balance equations on $(0,B)$ take the form $R\,\mathbf{f}'(x) = Q\,\mathbf{f}(x)$,
 where $\mathbf{f}(x) = (f_0(x),\ldots,f_s(x))^T$, $R = \mathrm{diag}(r_0,\ldots,r_s)$
-is the drift matrix, and $Q$ is the transition rate matrix of the occupancy chain.
-Exponential solutions of the form $\mathbf{f}(x) = \mathbf{a}\,e^{\theta x}$ require
-$\theta R\mathbf{a} = Q\mathbf{a}$, i.e.\ $(\theta, \mathbf{a})$ must be an eigenpair of
-the matrix pencil $(Q, R)$. The general interior solution is therefore a superposition
-of all such modes. Which modes are selected and with what coefficients is determined by
-the boundary conditions: two tridiagonal linear systems (one at $x=B$, one at $x=0$)
-coupled at $n=n^*$. Identifying which modes contribute and whether the solution can be
-driven toward a specific regime (e.g.\ the uniform density corresponding to a balanced
-drift) requires solving an implicit system that does not admit a closed form for
-general $s$. The full analysis, including the matrix-analytic treatment of the pencil
-$(Q, R)$ and the boundary systems, is the subject of ongoing work.
+is the diagonal drift matrix, and $Q$ is the $(s+1)\times(s+1)$ transition rate matrix
+of the occupancy chain. When $p_2/p_1 \notin \mathbb{N}$, $R$ is invertible and
+exponential solutions $\mathbf{f}(x) = \mathbf{a}\,e^{\theta x}$ require $(\theta,\mathbf{a})$
+to be an eigenpair of $R^{-1}Q$. This pencil has $s+1$ eigenvalues, one of which is
+always $\theta = 0$: setting $\theta=0$ gives $Q\mathbf{a}=0$, whose solution is the
+Erlang-B stationary distribution $a_n = \rho^n/n!$. The general interior solution is
+therefore a superposition of all $s+1$ exponential modes.
 
+The boundary conditions provide exactly $s+1$ equations (two tridiagonal systems, one
+at $x=B$ and one at $x=0$, coupled at $n=n^*$, plus normalization), which generically
+determine all $s+1$ coefficients. This counting argument suggests that all modes
+contribute for generic parameter values, with the $\theta=0$ (Erlang-B) mode
+disappearing only on a specific surface in parameter space — the multi-server analogue
+of the optimal regime of Section~\ref{ssec:optimal_regime}. For $s=1$ this collapses
+to 2 eigenvalues with a single boundary equation, and the decoupling property of
+Theorem~\ref{thm:stationary} selects a single non-zero mode.
 
-% -------------------------------------------------------
-\section{Simulation}
-\label{sec:sims}
-% -------------------------------------------------------
+Several open questions remain before a complete solution can be stated. First, whether
+the $s+1$ eigenvalues of $R^{-1}Q$ are always real (we conjecture yes, but have no
+proof). Second, whether the corresponding coefficients are always positive, which is
+necessary for $\mathbf{f}(x)$ to be a valid density vector. Establishing both would
+require a deeper analysis of the spectral structure of the pencil $(Q,R)$ and is the
+subject of ongoing work.
 
 
 % -------------------------------------------------------

@@ -90,14 +90,14 @@ infrastructure. A key challenge is the provisioning of public \emph{fast chargin
 fast chargers can deliver 150 \unit{\kilo\watt} or more per port, requiring grid connections eventually sized for
 their peak output. Yet in practice a charging station is not used continuously; vehicles
 arrive stochastically, and the chargers may be idle a large portion of the time. Sizing the grid
-connection for worst-case simultaneous demand is therefore wasteful, civil infrastructure becomes costly, and utility demand
-charges (fees based on peak power draw) can represent the dominant
-operating cost of a such a facility~\cite{NREL2023}. A battery, acting as an energy buffer, placed between
+connection for worst-case simultaneous demand is therefore wasteful. Civil infrastructure
+investment becomes costly, and utility demand charges (fees based on peak power draw)
+can represent the dominant operating cost of such a facility~\cite{NREL2023}. A battery, acting as an energy buffer, placed between
 the grid and the chargers resolves this mismatch: the battery gradually charges from the
 grid at a steady, lower rate and discharges at high power during the brief intervals vehicles
 are present, enabling a much smaller and cheaper grid connection. While battery storage
 at EV stations has been studied before, it has been done primarily in the context of renewable energy integration,
-where the battery smooths intermittent solar or wind supply~\cite{Bayram2011,Kabir2020,Tran2019,Tangetal2026}. However, with the advent of fast DC chargers available in highways and remote areas, placing a battery buffer in these locations with shallow grid access has become a compelling idea.
+where the battery smooths intermittent solar or wind supply~\cite{Bayram2011,Kabir2020,Tran2019,Tangetal2026}. However, the advent of fast DC chargers in highways and remote locations with limited grid access has made battery buffering a particularly compelling solution.
 
 The central analytical question this raises is a queueing one: given that vehicles
 arrive randomly, and the battery recharges during idle or low utilization periods, how often does a vehicle
@@ -128,9 +128,9 @@ according to a Poisson process of rate $\lambda > 0$, each carrying an energy de
 $Y \sim \mathrm{Exp}(\mu)$. The station operates as a \emph{loss system}: a car that
 arrives when the charger is busy is turned away.
 
-The system parameters are the following: the grid may supply a maximum power $p_1$, and this energy may be used to charge the battery or the car, if present. When the system is idle, the battery is recharged at rate $0<p_0\leqslant p_1$. Inequality reflects that we may want to recharge the battery at a slower rate to preserve battery life. The EV charging station itself may provide power $p_2>p_1$, which amounts to fast charging. When a car is present, this power is provided by the grid at rate $p_1$ and the extra amount $c:=p_2-p_1>0$ is provided by the battery, whenever is not empty. If the battery empties, the system reverts to charging only from the grid at rate $p_1$, and the battery stays depleted until the current car finishes service. We denote by $x(t)\in[0,B]$ the current state of the battery at time $t$, and by $n(t)\in\{0,1\}$ the presence of not of a charging vehicle.
+The system parameters are: the grid supplies a maximum power $p_1$, used to charge the battery or serve the car when present. When idle, the battery recharges at rate $0<p_0\leqslant p_1$; the inequality allows for slower recharging to preserve battery life. The charger delivers power $p_2>p_1$ (fast charging), drawing $p_1$ from the grid and $c:=p_2-p_1>0$ from the battery. If the battery empties, the system reverts to charging from the grid alone at rate $p_1$, and remains so until the current car departs. We denote by $x(t)\in[0,B]$ the battery level and by $n(t)\in\{0,1\}$ the presence of a charging vehicle.
 
-Under the above assumptions, when a car is admitted, service proceeds in at most two phases. In \emph{Phase~1}
+When a car is admitted, service proceeds in at most two phases. In \emph{Phase~1}
 (fast charging), while the battery level $x > 0$, the car charges at rate $p_2$ and the
 battery discharges at rate $c$. In \emph{Phase~2} (slow charging), once the battery is
 exhausted, $x = 0$ and the car charges at rate $p_1$, while $x$ remains at zero. A car with small demand may complete service entirely in Phase~1 if its service requirement is low enough. Under the exponential energy demands assumed before, the instantaneous departure rate from the system is therefore $\mu p(x)$, where:
@@ -158,8 +158,8 @@ before reaching the boundary. Neither condition holds here: $E$ is compact, and 
 reaches $x=0$ and $x=B$ in finite time without a jump. Nevertheless, the vector
 field~\eqref{eq:vectorfield} is bounded and monotone on each mode, so the flow is
 globally well-defined. The strong Markov property follows from the martingale-problem
-approach, which extends to this setting since all jump rates are bounded and the jump
-kernel leaves $x$ unchanged, i.e. jumps in the continuous variable are bounded.
+approach, which extends to this setting since all jump rates are bounded and the jump kernel leaves $x$ unchanged
+(and thus the jumps are trivially bounded, as required by the theorem).
 
 The extended generator $\mathcal{A}$ of $Z(t)$ has domain $\mathcal{D}(\mathcal{A})$
 consisting of functions $\psi : E \to \mathbb{R}$ such that $\psi(n,\cdot)$ is absolutely
@@ -172,16 +172,11 @@ continuous on $[0,B]$ for each $n$. For $\psi \in \mathcal{D}(\mathcal{A})$,
   \label{eq:gen1}
 \end{align}
 \end{subequations}
-where $\psi_n' = \partial_x \psi(n,\cdot)$ is defined Lebesgue-a.e. The first term in
-each line is the flow contribution; the second is the jump contribution, which in fact just switches mass from $n=0$ to $n=1$ and vice versa leaving $x$ unchanged. For any
+where $\psi_n' = \partial_x \psi(n,\cdot)$ is defined Lebesgue-a.e. The first term in each line is the flow contribution; the second is the jump
+contribution, reflecting instantaneous mode switches at rate $\lambda$ (arrivals)
+and $\mu p(x)$ (departures), leaving $x$ unchanged. For any
 $\psi \in \mathcal{D}(\mathcal{A})$, the process $M_t^\psi := \psi(Z(t)) - \psi(Z(0)) - \int_0^t \mathcal{A}\psi(Z(s))\,ds$
 is a local martingale~\cite{Davis1984}, and the process is right-continuous and a strong Markov process.
-
-Note that an arriving car always finds $x>0$ with probability one. During any idle period
-the battery charges at rate $p_0 > 0$, and since the idle time before the next arrival is
-$\mathrm{Exp}(\lambda)$ (positive a.s.), the battery is strictly positive at every arrival
-epoch. The state $(n=0, x=0)$ therefore should have zero probability under any stationary
-distribution.
 
 The adjoint operator $\mathcal{A}^*$ operates on the probability distributions on $E$ and provides the forward Kolmogorov equation of the system \cite{Davis1993}. A stationary distribution $\pi$ satisfies $\int \mathcal{A}\psi\,d\pi = 0$ for all
 $\psi \in \mathcal{D}(\mathcal{A})$, which is the weak form of the Kolmogorov forward
@@ -210,6 +205,12 @@ equation $\mathcal{A}^*\pi = 0$. We now proceed to solve the steady state of thi
   \caption{State space and system dynamics, showing a typical trajectory of $Z(t)$.}\label{fig:dynamics_single_server}
 \end{figure}
 
+Note that an arriving car always finds $x>0$ with probability one: during any idle
+period the battery charges at rate $p_0>0$, and since the idle duration is
+$\mathrm{Exp}(\lambda)$ (positive a.s.), the battery is strictly positive at every
+arrival epoch. Consequently $(n=0,x=0)$ has zero probability under any stationary
+distribution, and we can restrict attention to $E' = \{0\}\times(0,B] \cup \{1\}\times[0,B]$.
+
 % -------------------------------------------------------
 \section{Single-Server in steady-state}
 \label{sec:stationary}
@@ -222,7 +223,7 @@ $\{n\}\times(a,b)$ is reachable with positive probability from any starting poin
 a combination of deterministic drift and Poisson events), the process is ergodic with a
 unique stationary distribution $\pi$~\cite{MeynTweedie1993}.
 
-We now seek $\pi$ as a mixed measure with densities on $(0,B)$ and point masses at the boundary points where flow accumulates. Therefore, we propose the following solution structure:
+We seek $\pi$ as a mixed measure with densities on $(0,B)$ and point masses at the boundary points where flow accumulates:
 \begin{equation}
   \pi = f_0(x)\,dx + f_1(x)\,dx + \pi_{0,B}\,\delta_{(0,B)} + \pi_{1,0}\,\delta_{(1,0)}. 
   \label{eq:ansatz}
@@ -259,7 +260,7 @@ And finally by a similar argument, at $(n,x)=(1,B)$
   c\,f_1(B^-) = \lambda\,\pi_{0,B}. \label{eq:B3}
 \end{equation}
 \end{subequations}
-Equations \eqref{eq:balance} provide the global balance equations for our system, which coupled with the normalization condition $\int_0^B (f_0 + f_1)\,dx + \pi_{0,B} + \pi_{1,0} = 1$ should define the steady-state distribution. We can now state the main result of this section.
+Equations \eqref{eq:balance} provide the global balance equations for our system, which coupled with the normalization condition $\int_0^B (f_0 + f_1)\,dx + \pi_{0,B} + \pi_{1,0} = 1$ defines the steady-state distribution. We can now state the main result of this section.
 
 \begin{theorem} \label{thm:stationary}
 Let $\theta := \mu p_2/c - \lambda/p_0$. The unique stationary distribution of $Z(t)$ has the form~\eqref{eq:ansatz} with
@@ -285,7 +286,7 @@ with the convention $(e^{\theta B}-1)/\theta = B$ when $\theta = 0$.
 \end{theorem}
 
 \begin{proof}
-Adding \eqref{eq:E0}, \eqref{eq:E1} gives $\frac{d}{dx}[p_0 f_0 - c f_1] = 0$, so $p_0 f_0 - c f_1$ is constant on $(0,B)$. Equations \eqref{eq:B1} and \eqref{eq:B0} together give $p_0 f_0(0^+) = c f_1(0^+)$, so the constant is zero. Therefore, the densities should be proportional to each other, i.e. $f_1(x) = (p_0/c)\,f_0(x)$ for all $x \in (0,B)$. Substituting this condition into \eqref{eq:E0} yields a first order differential equation for $f_0$, which accounting for the definition of $\theta$ is simply $f_0'(x) = \theta\, f_0(x)$. We conclude that $f_0$ (and thus also $f_1$) should be exponential: $f_0(x) = f_0(0^+)\,e^{\theta x}$. With this expression, the atoms follow directly from \eqref{eq:B2}, \eqref{eq:B0}, and \eqref{eq:B3} is automatically satisfied, confirming consistency. Setting $f_0(0^+) = 1/K$ and imposing normalization
+Adding \eqref{eq:E0}, \eqref{eq:E1} gives $\frac{d}{dx}[p_0 f_0 - c f_1] = 0$, so $p_0 f_0 - c f_1$ is constant on $(0,B)$. Equations \eqref{eq:B1} and \eqref{eq:B0} together give $p_0 f_0(0^+) = c f_1(0^+)$, so the constant is zero. Therefore, the densities are proportional: $f_1(x) = (p_0/c)\,f_0(x)$ for all $x \in (0,B)$. Substituting this condition into \eqref{eq:E0} yields a first order differential equation for $f_0$, which accounting for the definition of $\theta$ is simply $f_0'(x) = \theta\, f_0(x)$. We conclude that $f_0$ (and thus also $f_1$) is exponential: $f_0(x) = f_0(0^+)\,e^{\theta x}$. With this expression, the atoms follow directly from \eqref{eq:B2}, \eqref{eq:B0}, and \eqref{eq:B3} is automatically satisfied, confirming consistency. Setting $f_0(0^+) = 1/K$ and imposing normalization
 determines $K$ as in \eqref{eq:K}.
 \end{proof}
 
@@ -301,7 +302,7 @@ rate $p_1$. When $\theta = 0$ the battery neither drains nor fills on average an
 
 \subsection{Performance metrics}\label{ssec:metrics}
 
-We now derive key performance metrics directly from Theorem~\ref{thm:stationary}. We begin by computing the blocking probability, that due to the PASTA property, is just the stationary probability of being in state $1$, i.e.
+We now derive key performance metrics directly from Theorem~\ref{thm:stationary}. We begin by computing the blocking probability, which, by the PASTA property, equals the stationary probability the charger is busy:
 \begin{equation}
   P_B = \int_0^B f_1(x)\,dx + \pi_{1,0}
       = \frac{p_0}{K}\left(\frac{e^{\theta B}-1}{c\,\theta} + \frac{1}{\mu p_1}\right).
@@ -309,7 +310,7 @@ We now derive key performance metrics directly from Theorem~\ref{thm:stationary}
 \end{equation}
 Note that this probability is also the probability that the charger is working. As $B \to 0$, $P_B \to \rho/(\rho + p_1)$, the blocking probability of an $M/M/1/1$ queue at rate $p_1$, since cars can only be served from the grid. Conversely, if the battery is large, as $B \to \infty$ we distinguish two cases: in the lightly loaded regime, $\theta > 0$ and $P_B \to \rho/(\rho + p_2)$, corresponding to service always at the fast rate $p_2$ because the battery can cope with the load and the system operates most of the time in fast charging. However, if the system is highly loaded ($\theta < 0$), $P_B$ converges to a value strictly between these two limits even as $B \to \infty$, reflecting that the system operates \emph{partly in both charging regimes} because the battery regularly depletes.
 
-We now focus on the mean service time. By Little's law, since there is only one server working and arrivals onto a busy system are blocked, we have $E[N] = P_B = \lambda (1-P_B)E[T]$ and therefore, the mean service time of an admitted car is:
+We now focus on the mean service time. Since there is at most one car in service, $E[N] = P_B$. By Little's law applied to admitted customers, $\lambda(1-P_B)E[T] = P_B$, so the mean service time of an admitted car is:
 \begin{equation}
   \mathbb{E}[T] = \frac{P_B}{\lambda(1-P_B)}.
   \label{eq:ET}
@@ -327,9 +328,8 @@ The following proposition is proved in the Appendix.
 \begin{proposition}\label{prop:slowdown}
 The quantity $x^* = p_2 B/c$ is the energy demand that would exactly deplete a full
 battery: a car requiring $y < x^*$ may complete in Phase~1, while one with $y \geq x^*$
-is guaranteed to exhaust the battery regardless of the admission level. Define
-$u = y/x^* = cy/(p_2 B)$ as the demand normalized by this threshold, so $u$
-measures how many full batteries the charge would consume. Then:
+is guaranteed to exhaust the battery regardless of the admission level. Let
+$u = y/x^*$ be the normalized demand. Then:
 \begin{subequations}
 \begin{equation}
   S(u) = 1 + \frac{1}{p_1(B + p_0/\lambda)}

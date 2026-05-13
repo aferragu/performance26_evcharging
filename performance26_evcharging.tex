@@ -431,51 +431,31 @@ three values of the speed-up ratio $\alpha = p_2/p_1$.}
 \label{sec:multiserver}
 % -------------------------------------------------------
 
-We now extend the model to $s \geq 1$ parallel chargers sharing a single battery buffer
-of capacity $B$ and a grid connection of rate $p_1$, still operating as a loss system.
-We impose $p_1 < s p_2$ (the grid alone cannot sustain full occupancy) and, for
-simplicity, set $p_0 = p_1$ (the idle recharge rate equals the grid supply rate). This
-last condition ensures that the net battery drift $r_n = p_1 - np_2$ has a uniform
-expression for all $n \geq 0$: the battery charges at rate $r_n > 0$ whenever
-$n \leq n^* := \lfloor p_1/p_2 \rfloor$ (including idle), and drains at rate
-$|r_n| = np_2 - p_1 > 0$ when $n > n^*$.\footnote{If $p_2/p_1 \in \mathbb{Z}$ then
-$r_{n^*} = 0$ exactly: at occupancy $n^*$ the battery neither charges nor drains.
-The balance equation~\eqref{eq:En_multi} at $n=n^*$ then contains no derivative term
-and $f_{n^*}$ is determined algebraically; the exponential form and
-recurrence~\eqref{eq:recurrence} remain valid without modification.}
-Relaxing $p_0 \neq p_1$ is possible but breaks the uniform structure of $r_n$ and
-complicates the recurrence below without changing its qualitative form.
+The single-server analysis extends naturally to $s \geq 1$ parallel chargers sharing
+a battery buffer of capacity $B$ and a grid connection of rate $p_1$, operating as a
+loss system. We set $p_0 = p_1$ for simplicity; the case $p_0 \neq p_1$ can be handled
+similarly with additional notation.
 
-The state space is $E = \{0,\ldots,s\} \times [0,B]$, compact. Arrivals occur at rate
-$\lambda$ when $n < s$; departures occur at total rate $n\mu p_2$ when $x > 0$ and at
-rate $\mu p_1$ when $x = 0$ (the grid supplies $p_1$ shared equally among the $n$
-busy chargers, giving total throughput $\mu p_1$ regardless of $n$). The process
-$Z(t) = (n(t), x(t))$ is again an ergodic PDMP by the same arguments as
-Section~\ref{sec:model}. The stationary distribution has densities $f_n(x)$ on $(0,B)$
-and point masses at $(n,B)$ for $n \leq n^*$ and $(n,0)$ for $n > n^*$.
+The state is $Z(t) = (n(t), x(t))$ with $n(t) \in \{0,\ldots,s\}$ and $x(t) \in [0,B]$.
+With $p_0=p_1$ the net battery drift is $r_n = p_1 - np_2$ uniformly for all $n$:
+the battery charges when $n \leq n^* := \lfloor p_1/p_2 \rfloor$ and drains when
+$n > n^*$. Arrivals occur at rate $\lambda$ when $n<s$; departures at total rate
+$n\mu p_2$ when $x>0$ and at rate $\mu p_1$ when $x=0$. The process is again an
+ergodic PDMP by the same arguments as Section~\ref{sec:model}.
 
-\begin{theorem}
-\label{thm:multi}
-Let $\rho = \lambda/(\mu p_2)$. There exists a unique $\theta \in \mathbb{R}$, satisfying
-the boundary flux equations at $x=0$ and $x=B$ together with normalization, such that
-the stationary densities take the form
-\begin{equation}
-  f_n(x) = C\,a_n(\theta)\,e^{\theta x}, \qquad x \in (0,B),\ n = 0,\ldots,s,
-  \label{eq:fn_multi}
-\end{equation}
-where $C > 0$ is a normalization constant and the coefficients $a_n(\theta)$ satisfy
-$a_0 = 1$ and
-\begin{equation}
-  a_{n+1} = \frac{\theta\,S_n + \lambda\,a_n}{(n+1)\mu p_2},
-  \quad S_n = \textstyle\sum_{k=0}^{n} r_k\,a_k,
-  \quad n = 0,\ldots,s-1.
-  \label{eq:recurrence}
-\end{equation}
-The proof is given in Appendix~\ref{app:multi}.
-\end{theorem}
-
-Performance metrics follow from $C$ and the point masses obtained in the proof via the
-same formulas as Section~\ref{ssec:metrics}.
+The stationary balance equations on $(0,B)$ take the form $R\mathbf{f}'(x) = Q\mathbf{f}(x)$,
+where $\mathbf{f}(x) = (f_0(x),\ldots,f_s(x))^T$, $R = \mathrm{diag}(r_0,\ldots,r_s)$
+is the drift matrix, and $Q$ is the transition rate matrix of the occupancy chain.
+Exponential solutions of the form $\mathbf{f}(x) = \mathbf{a}\,e^{\theta x}$ require
+$\theta R\mathbf{a} = Q\mathbf{a}$, i.e.\ $(\theta, \mathbf{a})$ must be an eigenpair of
+the matrix pencil $(Q, R)$. The general interior solution is therefore a superposition
+of all such modes. Which modes are selected and with what coefficients is determined by
+the boundary conditions: two tridiagonal linear systems (one at $x=B$, one at $x=0$)
+coupled at $n=n^*$. Identifying which modes contribute and whether the solution can be
+driven toward a specific regime (e.g.\ the uniform density corresponding to a balanced
+drift) requires solving an implicit system that does not admit a closed form for
+general $s$. The full analysis, including the matrix-analytic treatment of the pencil
+$(Q, R)$ and the boundary systems, is the subject of ongoing work.
 
 
 % -------------------------------------------------------
@@ -494,18 +474,15 @@ piecewise-deterministic Markov processes. For the single-server loss system we d
 the stationary distribution in closed form, establishing a decoupling property that
 separates the battery level from the charger state in steady state, and obtained explicit
 expressions for the blocking probability, mean charging time, and slowdown factor. We
-extended the analysis to a loss system with $s$ parallel chargers sharing a common
-battery, showing that the stationary densities retain an exponential form in the battery
-level with occupancy-dependent weights governed by a simple recurrence. In both cases the
-key parameter $\theta$, the sign of the mean battery drift, determines whether the system
-operates in a battery-rich or battery-scarce regime and controls the deviation of the
-blocking probability from the classical Erlang-B value.
+identified an optimal battery regime ($\theta=0$) in which the average slowdown depends
+only on hardware parameters and not on load, and derived explicit sizing formulas for
+the battery capacity and recharge rate.
 
-The analysis highlights a structural difference from standard fluid queues: the
-state-dependent service rate at $x = 0$ couples the discrete and continuous components
-in a way that prevents a product-form solution in the many-server case while still
-admitting an exponential form in $x$. Numerical illustrations of the performance metrics
-and a study of the optimal battery sizing problem are left for future work.
+The many-server extension reveals a richer structure: the interior balance equations
+take the form of a matrix ODE whose solutions are superpositions of the eigenmodes of
+the pencil $(Q,R)$, and the boundary conditions couple two tridiagonal systems at each
+boundary. This matrix-analytic treatment, as well as numerical illustrations of the
+single-server performance metrics, are the subject of ongoing work.
 
 
 \bibliographystyle{abbrv}
@@ -586,72 +563,6 @@ The limits $S\to 1$ as $u\to 0$ or $B\to\infty$ follow from the formula~\eqref{e
 since $(e^{\theta uB}-1)/(\theta uB)\to 1$ as $uB\to 0$. As $u\to\infty$
 or $B\to 0$, the Phase~2 component dominates and $S\to p_2/p_1 = 1+c/p_1$. \qed
 
-
-\section{Proof of Theorem \lowercase{\ref{thm:multi}}}
-\label{app:multi}
-
-The stationarity condition $\int \mathcal{A}\psi\,d\pi = 0$ applied to the
-interior densities yields, for $0 \leq n \leq s$,
-\begin{multline}
-  r_n f_n'(x) = \lambda f_{n-1}(x)\,\mathbf{1}_{n>0}
-              + (n{+}1)\mu p_2\, f_{n+1}(x)\,\mathbf{1}_{n<s} \\
-              - (\lambda\,\mathbf{1}_{n<s} + n\mu p_2)\, f_n(x), \quad x \in (0,B).
-  \label{eq:En_multi}
-\end{multline}
-Summing from $k=0$ to $n$ for $0 \leq n \leq s-1$, the right side telescopes to
-$-\lambda f_n + (n+1)\mu p_2 f_{n+1}$, giving the summed equations
-\begin{equation}
-  \sum_{k=0}^n r_k f_k'(x) = -\lambda f_n(x) + (n+1)\mu p_2\, f_{n+1}(x).
-  \label{eq:Tn_multi}
-\end{equation}
-Substituting $f_n(x) = Ca_n e^{\theta x}$ into~\eqref{eq:Tn_multi} and cancelling
-$Ce^{\theta x}$ yields the recurrence~\eqref{eq:recurrence}.
-
-\textbf{Boundary flux equations.}
-At $x = B$, for each $n \leq n^*$ (where $r_n > 0$, flow pushes toward $x=B$), flux
-balance gives:
-\begin{equation}
-  r_n\,f_n(B^-) = -\lambda\,\pi_n^{(B)} + \mu p_2\,(n+1)\,\pi_{n+1}^{(B)}\,\mathbf{1}_{n<n^*}
-                  + \lambda\,\pi_{n-1}^{(B)}\,\mathbf{1}_{n>0}.
-  \label{eq:Bflux_multi}
-\end{equation}
-At $x = 0$, for each $n > n^*$ (where $r_n < 0$, flow pushes toward $x=0$), flux
-balance gives:
-\begin{multline}
-  |r_n|\,f_n(0^+) = -(\lambda\,\mathbf{1}_{n<s} + \mu p_1)\,\pi_n^{(0)}
-                    + \mu p_1\,\pi_{n+1}^{(0)}\,\mathbf{1}_{n<s} \\
-                    + \lambda\,\pi_{n-1}^{(0)}\,\mathbf{1}_{n>n^*+1}.
-  \label{eq:0flux_multi}
-\end{multline}
-Additionally, at $x=0$ for $n = n^*+1$ the atom $\pi_{n^*+1}^{(0)}$ receives inflow
-from mode $n^*$ via the interior flow reaching $x=0$ and is fed back into the interior
-at mode $n^*$ (no atom there since $r_{n^*} \geq 0$):
-\begin{equation}
-  r_{n^*}\,f_{n^*}(0^+) = \mu p_1\,\pi_{n^*+1}^{(0)} - \lambda\,f_{n^*}(0^+)\,\mathbf{1}_{n^*>0}.
-  \label{eq:0flux_transition}
-\end{equation}
-
-\textbf{Determining $\theta$ and normalization.}
-For each $\theta$, the recurrence~\eqref{eq:recurrence} uniquely determines
-$a_1,\ldots,a_s$ given $a_0=1$. The point masses $\pi_n^{(B)}$ and $\pi_n^{(0)}$ are
-then obtained from~\eqref{eq:Bflux_multi}--\eqref{eq:0flux_transition} by forward
-substitution, giving each as a continuous function of $\theta$. Substituting into the
-normalization condition
-\begin{equation}
-  C\sum_{n=0}^s a_n(\theta)\,\frac{e^{\theta B}-1}{\theta}
-  + \sum_{n=0}^{n^*} \pi_n^{(B)}(\theta)
-  + \sum_{n=n^*+1}^{s} \pi_n^{(0)}(\theta) = 1
-  \label{eq:norm_multi}
-\end{equation}
-yields a scalar equation for $\theta$. A continuity and sign argument shows this
-equation has a unique root, which is the $\theta$ asserted in the theorem.
-
-\textbf{Consistency with $s=1$.}
-For $s=1$ and $p_0=p_1$, we have $n^*=0$, $r_0=p_1$, $r_1=-c$. The recurrence gives
-$a_1 = (\theta p_1 + \lambda)/(\mu p_2)$. The boundary condition at $x=0$ forces
-$c\,f_1(0^+) = \mu p_1\,\pi_1^{(0)}$, i.e.\ $ca_1 = \mu p_1 \cdot p_1 a_1 \cdot (\text{from atom relation})$,
-which together with the boundary at $x=B$ gives $\theta = \mu p_2/c - \lambda/p_1$,
-recovering Theorem~\ref{thm:stationary}. \qed
 
 \end{document}
 

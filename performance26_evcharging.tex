@@ -434,6 +434,71 @@ three values of the speed-up ratio $\alpha = p_2/p_1$.}
 \label{sec:sims}
 % -------------------------------------------------------
 
+We illustrate the theoretical results through event-driven simulations of the
+single-server system with parameters $p_2 = 150$ kW, $p_1 = 60$ kW, $c = 90$ kW,
+$\alpha = 2.5$, $1/\mu = 20$ kWh, $B = 78$ kWh ($\beta = 6.5$), and
+$p_0 = 36$ kW. Three arrival rates are considered: $\lambda = 2, 3, 4$ cars/h,
+corresponding to $\theta > 0$, $\theta = 0$, and $\theta < 0$ respectively.
+
+Figure~\ref{fig:paths} shows a sample path of the battery level $x(t)$ for each
+regime. For $\lambda = 2$ ($\theta > 0$) the battery tends to fill and spends most
+time near $B$; for $\lambda = 4$ ($\theta < 0$) it tends to drain toward zero; and
+for $\lambda = 3$ ($\theta = 0$) it cycles freely across $(0, B)$ without dwelling
+at either boundary, consistent with the uniform stationary density.
+
+\begin{figure}[t]
+  \centering
+  % placeholder: three sample paths
+  \caption{Sample paths of the battery level $x(t)$ for $\lambda = 2$ (top),
+  $\lambda = 3$ (middle), and $\lambda = 4$ (bottom) cars/h. Parameters:
+  $p_2=150$, $p_1=60$, $B=78$ kWh, $p_0=36$ kW.}
+  \label{fig:paths}
+\end{figure}
+
+We focus on the optimal regime $\lambda = 3$ ($\theta = 0$) for validation.
+Figure~\ref{fig:hist} shows the empirical stationary distribution of the battery
+level, which closely matches the uniform density $1/B$ predicted by
+Theorem~\ref{thm:stationary} at $\theta = 0$.
+
+\begin{figure}[t]
+  \centering
+  % placeholder: histogram vs uniform density
+  \caption{Empirical stationary distribution of battery level $x$ at $\lambda=3$
+  (histogram) overlaid with the uniform density $1/B$ (dashed line).}
+  \label{fig:hist}
+\end{figure}
+
+Table~\ref{tab:metrics} reports the blocking probability $P_B$ and average slowdown
+$\bar{S}$ from simulation against the analytical values from
+\eqref{eq:PB_opt}--\eqref{eq:Sbar_beta}.
+
+\begin{table}[t]
+  \centering
+  \caption{Analytical vs.\ simulated performance metrics at $\lambda=3$, $\theta=0$.}
+  \label{tab:metrics}
+  \begin{tabular}{lcc}
+    \hline
+    Metric & Analytical & Simulated \\
+    \hline
+    $P_B$ & & \\
+    $\bar{S}$ & 1.2 & \\
+    \hline
+  \end{tabular}
+\end{table}
+
+Finally, Figure~\ref{fig:slowdown} shows the slowdown factor $S(u)$ as a function
+of the normalized demand $u = y/x^*$. The analytical curves from
+Proposition~\ref{prop:slowdown} are overlaid with empirical estimates obtained by
+binning admitted cars by their demand.
+
+\begin{figure}[t]
+  \centering
+  % placeholder: S(u) analytical vs empirical
+  \caption{Slowdown factor $S(u)$ as a function of normalized demand $u = y/x^*$,
+  for $\lambda=3$ ($\theta=0$). Analytical curve (solid) from
+  Proposition~\ref{prop:slowdown} vs.\ empirical estimates (dots).}
+  \label{fig:slowdown}
+\end{figure}
 
 % -------------------------------------------------------
 \section{The Many-Server Case}

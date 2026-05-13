@@ -150,7 +150,7 @@ The system state at time $t$ is thus the pair $Z(t) = (n(t), x(t))$. Between arr
 The jumps are spontaneous events: \emph{arrivals} at $(0,x)$ occur at rate $\lambda$ and
 the states transitions (deterministically) to $(1,x)$; \emph{departures} at $(1,x)$ with $x>0$ occur at rate $\mu p_2$
 and transition to $(0,x)$; \emph{departures} at $(1,0)$ occur at rate $\mu p_1$ and
-transition to $(0,0)$, or in short $(1,x)\mapsto (0,x)$ at rate $\mu p(x)$. In all cases the battery level is unchanged at the jump epoch.
+transition to $(0,0)$, or in short $(1,x)\mapsto (0,x)$ at rate $\mu p(x)$. In all cases the battery level is unchanged at the jump epoch. A depiction of the typical cycle is given in Figure \ref{fig:dynamics_single_server}.
 
 The process $Z(t)$ with state space $\{0,1\}\times[0,B]$ fits the PDMP framework of Davis~\cite{Davis1984,Davis1993},
 though the standard theory requires an open state space and forces the process to jump
@@ -227,13 +227,13 @@ We now seek $\pi$ as a mixed measure with densities on $(0,B)$ and point masses 
   \pi = f_0(x)\,dx + f_1(x)\,dx + \pi_{0,B}\,\delta_{(0,B)} + \pi_{1,0}\,\delta_{(1,0)}. 
   \label{eq:ansatz}
 \end{equation}
-Here $f_n(x)$ $n=0,1$ are the interior densities and $\pi_{0,B}, \pi_{1,0} \geq 0$ are point
+Here $f_n(x)$, $n=0,1$, are the interior densities and $\pi_{0,B}, \pi_{1,0} \geq 0$ are point
 masses at the corners where the flow accumulates: $x=B$ in mode~$0$ (since $r(0,\cdot)=p_0>0$)
 and $x=0$ in mode~$1$ (since $r(1,\cdot)=-c<0$). The other two corners should carry no atoms since flow arriving on them is immediately carried into the interior by the flow (cf. Figure \ref{fig:dynamics_single_server}).
 
 Substituting this form into $\int \mathcal{A}\psi\,d\pi = 0$ and using eqs. \eqref{eq:generator}, the
 stationarity condition $\int \mathcal{A}\psi\,d\pi = 0$ for all $\psi \in \mathcal{D}(\mathcal{A})$ yields the following balance equations for the interior densities:
-\begin{subequations}
+\begin{subequations}\label{eq:balance}
   \begin{align}
   p_0\, f_0'(x) &= -\lambda\, f_0(x) + \mu p_2\, f_1(x), \label{eq:E0} \\
   -c\, f_1'(x)  &= \phantom{-}\lambda\, f_0(x) - \mu p_2\, f_1(x). \label{eq:E1}
@@ -259,7 +259,7 @@ And finally by a similar argument, at $(n,x)=(1,B)$
   c\,f_1(B^-) = \lambda\,\pi_{0,B}. \label{eq:B3}
 \end{equation}
 \end{subequations}
-Finally we have the normalization condition $\int_0^B (f_0 + f_1)\,dx + \pi_{0,B} + \pi_{1,0} = 1$. We can now state the main result of this section.
+Equations \eqref{eq:balance} provide the global balance equations for our system, which coupled with the normalization condition $\int_0^B (f_0 + f_1)\,dx + \pi_{0,B} + \pi_{1,0} = 1$ should define the steady-state distribution. We can now state the main result of this section.
 
 \begin{theorem} \label{thm:stationary}
 Let $\theta := \mu p_2/c - \lambda/p_0$. The unique stationary distribution of $Z(t)$ has the form~\eqref{eq:ansatz} with

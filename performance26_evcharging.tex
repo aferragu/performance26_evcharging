@@ -312,12 +312,14 @@ Note that this probability is also the probability that the charger is working. 
 
 We now focus on the mean service time. Since there is at most one car in service, $E[N] = P_B$. By Little's law applied to admitted customers, $\lambda(1-P_B)E[T] = P_B$, so the mean service time of an admitted car is:
 \begin{equation}
-  \mathbb{E}[T] = \frac{P_B}{\lambda(1-P_B)}.
+  \mathbb{E}[T] = \frac{P_B}{\lambda(1-P_B)}
+  = \frac{1}{1 + \frac{\lambda B}{p_0}}\left(\frac{e^{\theta B}-1}{c\theta} + \frac{1}{\mu p_1}\right).
   \label{eq:ET}
 \end{equation}
 A more meaningful quantity is the \emph{average slowdown}, which we define as $E[T]$ normalized by the average service time in a system that operates at the fast rate $p_2$ permanently, which is given by:
 \begin{equation}\label{eq:avg_slowdown}
-  \bar{S} := \frac{p_2 E[T]}{E[Y]} = \frac{\mu p_2  P_B}{\lambda(1-P_B)} = \frac{p_2}{\rho} \frac{P_B}{1-P_B}
+  \bar{S} := \frac{\mu p_2\, \mathbb{E}[T]}{\mathbb{E}[Y]} = \frac{p_2}{\rho}\frac{P_B}{1-P_B}
+  = \frac{\mu p_2}{1 + \frac{\lambda B}{p_0}}\left(\frac{e^{\theta B}-1}{c\theta} + \frac{1}{\mu p_1}\right).
 \end{equation}
 
 A final quantity of interest is how different demands are affected in terms of charging time. One expects that larger demands are more affected since the battery may deplete during service. To this end, define the \emph{slowdown factor}:
@@ -326,9 +328,9 @@ A final quantity of interest is how different demands are affected in terms of c
 \end{equation}
 The following proposition is proved in the Appendix.
 \begin{proposition}\label{prop:slowdown}
-The quantity $x^* = p_2 B/c$ is the energy demand that would exactly deplete a full
-battery: a car requiring $y < x^*$ may complete in Phase~1, while one with $y \geq x^*$
-is guaranteed to exhaust the battery regardless of the admission level. Let
+Let $x^* = p_2 B/c$ be the energy demand that would exactly deplete a full battery.
+A car requiring $y < x^*$ may complete in Phase~1, while one with $y \geq x^*$
+is guaranteed to exhaust the battery regardless of admission level. Let
 $u = y/x^*$ be the normalized demand. Then:
 \begin{subequations}
 \begin{equation}
@@ -353,7 +355,7 @@ and $S \to p_2/p_1$ as $u \to \infty$ or $B \to 0$.
 \subsection{Optimal battery regime}\label{ssec:optimal_regime}
 
 For practical battery health it is desirable to charge the battery \emph{slowly}, and to keep it \emph{cycling}
-continuously rather than maintaining it fully charged or fully depleted for long periods. The stationary distribution of Theorem~\ref{thm:stationary} reveals a natural design criterion that achieves both goals simultaneously: namely control the value of the idle recharge time $p_0$ to aim for the balanced regime where $\theta=0$ and the battery is kept most of the time in $(0,B)$ and not the boundaries.
+continuously rather than maintaining it fully charged or fully depleted for long periods. The stationary distribution of Theorem~\ref{thm:stationary} reveals a natural design criterion that achieves both goals simultaneously: namely control the value of the idle recharge rate $p_0$ to aim for the balanced regime where $\theta=0$ and the battery is kept most of the time in $(0,B)$ and not the boundaries.
 
 To analyze this, we first introduce the following definitions. Let $\alpha = p_2/p_1 >1$ be the \emph{speed-up ratio} of fast vs. slow charging. Let $\beta = \mu B p_2 / c$ be the \emph{normalized battery capacity}, the ratio between the battery drain time and the average fast recharge session duration, i.e. how many full fast-charge sessions the battery can sustain before depleting. Finally, define the \emph{normalized load}
 $\tilde\rho = \rho/p_2 = \lambda/(\mu p_2)$.
@@ -368,14 +370,14 @@ The constraint $p_0^* \leqslant p_1$ requires then:
   \tilde\rho \leqslant \frac{p_1}{c} = \frac{1}{\alpha - 1} \; \Longleftrightarrow \; \rho \leqslant \rho_{\max} = \frac{p_1 p_2}{c}.
   \label{eq:rhomax}
 \end{equation}
-Below this threshold the operator can minimize battery stress by throttling down the idle recharge rate (slower recharge) and achieve the uniform regime. Above it, $\theta < 0$ regardless of $p_0$ and the battery drains on steady state.
+Below this threshold the operator can minimize battery stress by throttling down the idle recharge rate (slower recharge) and achieve the uniform regime. Above it, $\theta < 0$ regardless of $p_0$ and the battery drains in steady state.
 
-Setting now $\theta=0$ and $p_0 = p_0^*$ in the expressions for $K$ and $P_B$, one finds a simple form for the average slowdown in terms of the normalized battery capacity:
+Setting $\theta=0$ and $p_0 = p_0^*$ in the expressions for $K$ and $P_B$, one finds a simple form for the average slowdown in terms of the normalized battery capacity:
 \begin{equation}
   \bar{S} = \frac{\alpha + \beta}{\beta + 1}.
   \label{eq:Sbar_beta}
 \end{equation}
-Remarkably, this depends only on $\alpha$ and $\beta$ and not on the load. This is very useful from a design perspective since \emph{the same design} works across all (feasible) loads $\rho<\rho^*$, and decreases from $\alpha=p_2/p_1$ at $\beta\to 0$ (no battery) to $1$ at $\beta\to\infty$. Setting a target slowdown $\bar{S}_0 \in (1,\alpha)$ we get:
+Remarkably, this depends only on $\alpha$ and $\beta$ and not on the load. This is very useful from a design perspective since \emph{the same design} works across all (feasible) loads $\rho<\rho_{\max}$, and decreases from $\alpha=p_2/p_1$ at $\beta\to 0$ (no battery) to $1$ at $\beta\to\infty$. Setting a target slowdown $\bar{S}_0 \in (1,\alpha)$ we get:
 \begin{equation}
   \beta^* = \frac{\alpha - \bar{S}_0}{\bar{S}_0 - 1} \; \Longleftrightarrow \; B^* = \frac{c}{\mu p_2}\frac{\alpha - \bar{S}_0}{\bar{S}_0 - 1}.
   \label{eq:Bstar}
@@ -386,8 +388,7 @@ Finally the blocking probability becomes:
   \label{eq:PB_opt}
 \end{equation}
 This has the form of an $M/M/1/1$ blocking formula with effective load
-$\tilde\rho\bar{S}$, since $P_B = \tilde\rho\bar{S}/(1+\tilde\rho\bar{S})$.
-Unlike $\bar{S}$, the blocking probability depends on $\tilde\rho$, as expected.
+$\tilde\rho\bar{S}$. Unlike $\bar{S}$, the blocking probability depends on $\tilde\rho$, as expected.
 
 \begin{figure}[t]
 \centering

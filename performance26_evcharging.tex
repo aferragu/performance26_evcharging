@@ -87,39 +87,35 @@ form with occupancy weights governed by a simple recurrence, related to the Erla
 
 The rapid adoption of electric vehicles (EVs) is placing increasing demands on electrical
 infrastructure. A key challenge is the provisioning of public \emph{fast charging}: modern DC
-fast chargers can deliver 150~kW or more per port, requiring grid connections sized for
+fast chargers can deliver 150 \unit{\kilo\watt} or more per port, requiring grid connections eventually sized for
 their peak output. Yet in practice a charging station is not used continuously; vehicles
-arrive stochastically, and the chargers are idle most of the time. Sizing the grid
+arrive stochastically, and the chargers may be idle a large portion of the time. Sizing the grid
 connection for worst-case simultaneous demand is therefore wasteful, civil infrastructure becomes costly, and utility demand
 charges (fees based on peak power draw) can represent the dominant
-operating cost of a fast charging site~\cite{NREL2023}. A battery, acting as an energy buffer, placed between
+operating cost of a such a facility~\cite{NREL2023}. A battery, acting as an energy buffer, placed between
 the grid and the chargers resolves this mismatch: the battery gradually charges from the
-grid at a steady, lower rate and discharges at high power during the brief intervals a
-vehicle is present, enabling a much smaller and cheaper grid connection. While battery storage
+grid at a steady, lower rate and discharges at high power during the brief intervals vehicles
+are present, enabling a much smaller and cheaper grid connection. While battery storage
 at EV stations has been studied before, it has been done primarily in the context of renewable energy integration,
-where the battery smooths intermittent solar or wind supply~\cite{Bayram2011,Kabir2020,Tran2019}. However, with the advent of fast DC chargers available in highways and remote areas, placing a battery buffer in these remote locations with shallow grid access has become a compelling idea.
+where the battery smooths intermittent solar or wind supply~\cite{Bayram2011,Kabir2020,Tran2019,Tangetal2026}. However, with the advent of fast DC chargers available in highways and remote areas, placing a battery buffer in these locations with shallow grid access has become a compelling idea.
 
 The central analytical question this raises is a queueing one: given that vehicles
 arrive randomly, and the battery recharges during idle or low utilization periods, how often does a vehicle
 arrive to find the battery depleted, forcing service at the slower grid rate? This
-coupling between the continuous battery state and the discrete service rate is what
+coupling between the continuous battery state and the discrete nature of the vehicle queue is what
 distinguishes the battery-buffered station from a standard queue, and it has not
-been captured in the existing EV charging literature, which models charging with a fixed
-service rate~\cite{Bayram2013,Dupont2023,Tan2014}.
+been captured in the existing EV charging literature, where mostly fixed service rates are used~\cite{Bayram2013,Dupont2023,Tan2014}.
 
 In this paper, we propose a station model using a Piecewise-Deterministic Markov Process
 (PDMP)~\cite{Davis1984,Davis1993}: the battery level evolves deterministically between
-random events, while car arrivals and departures trigger instantaneous switches.
+random events, while car arrivals and departures trigger instantaneous state jumps.
 The state is then the pair $(n, x)$ of system occupancy and battery level. We derive the generator
-of this process, and compute the stationary distribution in closed form for the single-server loss system. 
+of this Markov process, and compute the stationary distribution in closed form for the single-server loss system. 
 A key structural finding is a \emph{decoupling property}: in steady state the charger occupancy and battery level
-are conditionally independent given the battery is the interior of the state space (partially charged), so that the
-stationary density factors as a product of an exponential in $x$ and a mode-dependent
-weight. This yields explicit formulas for the blocking probability, mean charging time,
-and a \emph{slowdown factor} quantifying the service degradation as a function of a
-car's energy demand. We then extend the analysis to a loss system with $s$ parallel
-chargers sharing a common battery. The exponential form of the stationary density is
-preserved, with the mode weights now governed by a simple recurrence. Armed with these formulas, we discuss several performance issues, design objectives that provide guidelines on how to design such systems and provide some numerical examples.
+are conditionally independent given the battery is the interior of the state space. This enables to compute explicit formulas for the blocking probability, mean charging time, and a \emph{slowdown factor} quantifying the service degradation as a function of a
+car's energy demand. Armed with these formulas, we discuss several performance issues, design objectives that provide guidelines on how to design such systems and provide some numerical examples.
+
+We also discuss the extension of our analysis to the case where multiple chargers are available, where $s$ fast-chargers share a common battery. In this case, the solution involves matrix-analytic-methods and no closed form formulas can be obtained, but the problem remains numerically tractable.
 
 % -------------------------------------------------------
 \section{Single-Server Model}

@@ -208,7 +208,7 @@ equation $\mathcal{A}^*\pi = 0$. We now proceed to solve the steady state of thi
 Note that an arriving car always finds $x>0$ with probability one: during any idle
 period the battery charges at rate $p_0>0$, and since the idle duration is
 $\mathrm{Exp}(\lambda)$ (positive a.s.), the battery is strictly positive at every
-arrival epoch. Consequently $(n=0,x=0)$ has zero probability under any stationary
+arrival epoch. Consequently, $(n=0,x=0)$ has zero probability under any stationary
 distribution, and we can restrict attention to $E' = \{0\}\times(0,B] \cup \{1\}\times[0,B]$.
 
 % -------------------------------------------------------
@@ -223,12 +223,12 @@ $\{n\}\times(a,b)$ is reachable with positive probability from any starting poin
 a combination of deterministic drift and Poisson events), the process is ergodic with a
 unique stationary distribution $\pi$~\cite{MeynTweedie1993}.
 
-We seek $\pi$ as a mixed measure with densities on $(0,B)$ and point masses at the boundary points where flow accumulates:
+We seek $\pi$ as a mixed measure of the form:
 \begin{equation}
-  \pi = f_0(x)\,dx + f_1(x)\,dx + \pi_{0,B}\,\delta_{(0,B)} + \pi_{1,0}\,\delta_{(1,0)}. 
+  \pi = f_0(x)dx + f_1(x)dx + \pi_{0,B}\delta_{(0,B)} + \pi_{1,0}\delta_{(1,0)}. 
   \label{eq:ansatz}
 \end{equation}
-Here $f_n(x)$, $n=0,1$, are the interior densities and $\pi_{0,B}, \pi_{1,0} \geq 0$ are point
+Here $f_n(x)$, are the interior densities and $\pi_{0,B}, \pi_{1,0} \geq 0$ are point
 masses at the corners where the flow accumulates: $x=B$ in mode~$0$ (since $r(0,\cdot)=p_0>0$)
 and $x=0$ in mode~$1$ (since $r(1,\cdot)=-c<0$). The other two corners should carry no atoms since flow arriving on them is immediately carried into the interior by the flow (cf. Figure \ref{fig:dynamics_single_server}).
 
@@ -286,7 +286,7 @@ with the convention $(e^{\theta B}-1)/\theta = B$ when $\theta = 0$.
 \end{theorem}
 
 \begin{proof}
-Adding \eqref{eq:E0}, \eqref{eq:E1} gives $\frac{d}{dx}[p_0 f_0 - c f_1] = 0$, so $p_0 f_0 - c f_1$ is constant on $(0,B)$. Equations \eqref{eq:B1} and \eqref{eq:B0} together give $p_0 f_0(0^+) = c f_1(0^+)$, so the constant is zero. Therefore, the densities are proportional: $f_1(x) = (p_0/c)\,f_0(x)$ for all $x \in (0,B)$. Substituting this condition into \eqref{eq:E0} yields a first order differential equation for $f_0$, which accounting for the definition of $\theta$ is simply $f_0'(x) = \theta\, f_0(x)$. We conclude that $f_0$ (and thus also $f_1$) is exponential: $f_0(x) = f_0(0^+)\,e^{\theta x}$. With this expression, the atoms follow directly from \eqref{eq:B2}, \eqref{eq:B0}, and \eqref{eq:B3} is automatically satisfied, confirming consistency. Setting $f_0(0^+) = 1/K$ and imposing normalization
+Adding \eqref{eq:E0}, \eqref{eq:E1} gives $\frac{d}{dx}[p_0 f_0 - c f_1] = 0$, so $p_0 f_0 - c f_1$ is constant on $(0,B)$. Equations \eqref{eq:B1} and \eqref{eq:B0} together give $p_0 f_0(0^+) = c f_1(0^+)$, so the constant is zero. Therefore, $f_1(x) = (p_0/c)\,f_0(x)$ for all $x \in (0,B)$. Substituting this condition into \eqref{eq:E0} yields a first order differential equation for $f_0$, which accounting for the definition of $\theta$ is simply $f_0'(x) = \theta\, f_0(x)$. We conclude that $f_0$ (and thus also $f_1$) is exponential: $f_0(x) = f_0(0^+)\,e^{\theta x}$. With this expression, the atoms follow directly from \eqref{eq:B2}, \eqref{eq:B0}, and \eqref{eq:B3} is automatically satisfied, confirming consistency. Setting $f_0(0^+) = 1/K$ and imposing normalization
 determines $K$ as in \eqref{eq:K}.
 \end{proof}
 
@@ -318,8 +318,7 @@ We now focus on the mean service time. Since there is at most one car in service
 \end{equation}
 A more meaningful quantity is the \emph{average slowdown}, which we define as $E[T]$ normalized by the average service time in a system that operates at the fast rate $p_2$ permanently, which is given by:
 \begin{equation}\label{eq:avg_slowdown}
-  \bar{S} := \frac{\mu p_2\, \mathbb{E}[T]}{\mathbb{E}[Y]} = \frac{p_2}{\rho}\frac{P_B}{1-P_B}
-  = \frac{\mu p_2}{1 + \frac{\lambda B}{p_0}}\left(\frac{e^{\theta B}-1}{c\theta} + \frac{1}{\mu p_1}\right).
+  \bar{S} := \frac{\mu p_2\, \mathbb{E}[T]}{\mathbb{E}[Y]} = \frac{\mu p_2}{1 + \frac{\lambda B}{p_0}}\left(\frac{e^{\theta B}-1}{c\theta} + \frac{1}{\mu p_1}\right).
 \end{equation}
 
 A final quantity of interest is how different demands are affected in terms of charging time. One expects that larger demands are more affected since the battery may deplete during service. To this end, define the \emph{slowdown factor}:
@@ -335,7 +334,7 @@ $u = y/x^*$ be the normalized demand. Then:
 \begin{subequations}
 \begin{equation}
   S(u) = 1 + \frac{1}{p_1(B + p_0/\lambda)}
-         \left[\frac{e^{\theta uB}-1}{\theta uB} - 1\right], \qquad u < 1,
+         \left[\frac{e^{\theta uB}-1}{\theta uB} - 1\right], \quad u < 1,
   \label{eq:Sy1}
 \end{equation}
 \begin{multline}
@@ -343,7 +342,7 @@ $u = y/x^*$ be the normalized demand. Then:
          \Bigl\{\Bigl(1-\tfrac{1}{u}\Bigr)\Bigl[\tfrac{e^{\theta B}}{\theta}
          + \tfrac{p_0}{\lambda}e^{\theta B}\Bigr] \\
          + \tfrac{e^{\theta B}-1}{\theta^2 u} - \tfrac{1}{\theta}\Bigr\},
-         \qquad u \geq 1.
+         \quad u \geq 1.
   \label{eq:Sy2}
 \end{multline}
 \end{subequations}

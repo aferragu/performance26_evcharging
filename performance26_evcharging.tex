@@ -68,14 +68,17 @@
 %% article.
 \begin{abstract}
 We study a battery-buffered electric vehicle fast charging station modeled as a
-piecewise-deterministic Markov process. A battery mediates between the grid
-connection and one or more chargers, enabling fast service when the battery is charged and falling
-back to the grid rate when depleted. For the single--server loss system we derive the
-stationary distribution in closed form, uncovering a decoupling property whereby the
-charger state and battery level are independent in steady state, and obtain explicit
-formulas for several performance metrics. We extend the analysis to the
-multi--server loss system, showing that the stationary densities retain an exponential
-form with occupancy weights governed by a simple recurrence, related to the Erlang-B formula.
+piecewise-deterministic Markov process. A battery buffer mediates between the grid
+connection and the charger, enabling fast service when charged and falling back to the
+grid rate when depleted. For the single-server loss system we derive the stationary
+distribution in closed form, uncovering a decoupling property whereby the charger state
+and battery level are independent in steady state, and obtain explicit formulas for the
+blocking probability, mean charging time, and a demand-dependent slowdown factor. We
+identify an optimal battery regime in which the average slowdown depends only on
+hardware parameters, yielding explicit battery sizing guidelines. We discuss the
+extension to $s$ parallel chargers, showing that the interior balance equations reduce
+to an eigenvalue problem for a matrix pencil, and identify the boundary conditions that
+select the contributing modes; the full multi-server analysis is left as future work.
 \end{abstract}
 
 \keywords{Piecewise deterministic Markov processes, Electrical Vehicles.}

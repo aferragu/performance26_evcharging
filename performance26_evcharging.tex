@@ -263,7 +263,7 @@ Equations \eqref{eq:balance} provide the global balance equations for our system
 
 \begin{theorem} \label{thm:stationary}
 Let $\theta := \mu p_2/c - \lambda/p_0$. The unique stationary distribution of $Z(t)$ has the form~\eqref{eq:ansatz} with
-\begin{subequations}
+\begin{subequations}\label{eq:steady_state}
 \begin{equation}
   f_0(x) = \frac{e^{\theta x}}{K}, \qquad
   f_1(x) = \frac{p_0}{c}\cdot\frac{e^{\theta x}}{K}, \qquad x \in (0,B),
@@ -274,17 +274,17 @@ Let $\theta := \mu p_2/c - \lambda/p_0$. The unique stationary distribution of $
   \pi_{0,B} = \frac{p_0\,e^{\theta B}}{\lambda\, K},
   \label{eq:atoms}
 \end{equation}
-\end{subequations}
 and the normalization constant is
 \begin{equation}
   K = \frac{p_0+c}{c}\cdot\frac{e^{\theta B}-1}{\theta}
     + \frac{p_0}{\mu p_1} + \frac{p_0\,e^{\theta B}}{\lambda},
   \label{eq:K}
 \end{equation}
+\end{subequations}
 with the convention $(e^{\theta B}-1)/\theta = B$ when $\theta = 0$.
 \end{theorem}
 
-\begin{proof}[sketch]
+\begin{proof}
 Adding \eqref{eq:E0}, \eqref{eq:E1} gives $\frac{d}{dx}[p_0 f_0 - c f_1] = 0$, so $p_0 f_0 - c f_1$ is constant on $(0,B)$. Equations \eqref{eq:B1} and \eqref{eq:B0} together give $p_0 f_0(0^+) = c f_1(0^+)$, so the constant is zero. Therefore, the densities should be proportional to each other, i.e. $f_1(x) = (p_0/c)\,f_0(x)$ for all $x \in (0,B)$. Substituting this condition into \eqref{eq:E0} yields a first order differential equation for $f_0$, which accounting for the definition of $\theta$ is simply $f_0'(x) = \theta\, f_0(x)$. We conclude that $f_0$ (and thus also $f_1$) should be exponential: $f_0(x) = f_0(0^+)\,e^{\theta x}$. With this expression, the atoms follow directly from \eqref{eq:B2}, \eqref{eq:B0}, and \eqref{eq:B3} is automatically satisfied, confirming consistency. Setting $f_0(0^+) = 1/K$ and imposing normalization
 determines $K$ as in \eqref{eq:K}.
 \end{proof}
@@ -296,12 +296,12 @@ battery change per cycle is therefore $\Delta := \frac{p_0}{\lambda} - \frac{c}{
 \begin{equation*}
   \theta > 0 \Leftrightarrow \rho < \frac{p_0p_2}{c} = \frac{p_0 p_2}{p_2-p_1}
 \end{equation*}
-This corresponds to a \emph{lightly loaded} station, where the battery gains energy on average on each cycle and thus tends to fill, concentrating its mass towards $x=B$. When $\lambda/\mu > p_0 p_2/c$, we are in the \emph{highly loaded} regime, $\theta < 0$, the battery tends to drain and mass concentrates near $x = 0$, where a significant fraction of service occurs at the slow
+This corresponds to a \emph{lightly loaded} station, where the battery gains energy on average on each cycle and thus tends to fill, concentrating its mass towards $x=B$. When $\rho > p_0 p_2/c$, we are in the \emph{highly loaded} regime, $\theta < 0$, the battery tends to drain and mass concentrates near $x = 0$, where a significant fraction of service occurs at the slow
 rate $p_1$. When $\theta = 0$ the battery neither drains nor fills on average and stationary density is uniform on $(0, B)$.
 
 \subsection{Performance metrics}\label{ssec:metrics}
 
-We now derive the key performance metrics directly from Theorem~\ref{thm:stationary}. We begin by computing the blocking probability, that due to the PASTA property, is just the stationary probability of being in state $1$, i.e.
+We now derive key performance metrics directly from Theorem~\ref{thm:stationary}. We begin by computing the blocking probability, that due to the PASTA property, is just the stationary probability of being in state $1$, i.e.
 \begin{equation}
   P_B = \int_0^B f_1(x)\,dx + \pi_{1,0}
       = \frac{p_0}{K}\left(\frac{e^{\theta B}-1}{c\,\theta} + \frac{1}{\mu p_1}\right).
@@ -316,7 +316,7 @@ We now focus on the mean service time. By Little's law, since there is only one 
 \end{equation}
 A more meaningful quantity is the \emph{average slowdown}, which we define as $E[T]$ normalized by the average service time in a system that operates at the fast rate $p_2$ permanently, which is given by:
 \begin{equation}\label{eq:avg_slowdown}
-  \bar{S} := \frac{\mu p_2 E[T]}{E[Y]} = \frac{\mu p_2  P_B}{\lambda(1-P_B)} = \frac{p_2}{\rho} \frac{P_B}{1-P_B}
+  \bar{S} := \frac{p_2 E[T]}{E[Y]} = \frac{\mu p_2  P_B}{\lambda(1-P_B)} = \frac{p_2}{\rho} \frac{P_B}{1-P_B}
 \end{equation}
 
 A final quantity of interest is how different demands are affected in terms of charging time. One expects that larger demands are more affected since the battery may deplete during service. To this end, define the \emph{slowdown factor}:
@@ -353,7 +353,7 @@ and $S \to p_2/p_1$ as $u \to \infty$ or $B \to 0$.
 \subsection{Optimal battery regime}\label{ssec:optimal_regime}
 
 For practical battery health it is desirable to charge the battery \emph{slowly}, and to keep it \emph{cycling}
-continuously rather maintaining it fully charged or fully depleted for long periods. The stationary distribution of Theorem~\ref{thm:stationary} reveals a natural design criterion that achieves both goals simultaneously: namely control the value of the idle recharge time to reduce recharging power, but aim for the balanced regime where $\theta=0$ so the battery is kept most of the time in $(0,B)$ and not the boundaries.
+continuously rather than maintaining it fully charged or fully depleted for long periods. The stationary distribution of Theorem~\ref{thm:stationary} reveals a natural design criterion that achieves both goals simultaneously: namely control the value of the idle recharge time $p_0$ to aim for the balanced regime where $\theta=0$ and the battery is kept most of the time in $(0,B)$ and not the boundaries.
 
 To analyze this, we first introduce the following definitions. Let $\alpha = p_2/p_1 >1$ be the \emph{speed-up ratio} of fast vs. slow charging. Let $\beta = \mu B p_2 / c$ be the \emph{normalized battery capacity}, the ratio between the battery drain time and the average fast recharge session duration, i.e. how many full fast-charge sessions the battery can sustain before depleting. Finally, define the \emph{normalized load}
 $\tilde\rho = \rho/p_2 = \lambda/(\mu p_2)$.
@@ -375,7 +375,7 @@ Setting now $\theta=0$ and $p_0 = p_0^*$ in the expressions for $K$ and $P_B$, o
   \bar{S} = \frac{\alpha + \beta}{\beta + 1}.
   \label{eq:Sbar_beta}
 \end{equation}
-Remarkably, this depends only on $\alpha$ and $\beta$ and not on the load. This is very useful from a design perspective since \emph{the same design} works across all (feasible) loads $\rho<\rho^*$, and decreases from $\alpha=p_2/p_1$ at $\beta\to 0s$ (no battery) to $1$ at $\beta\to\infty$. Setting a target slowdown $\bar{S}_0 \in (1,\alpha)$ we get:
+Remarkably, this depends only on $\alpha$ and $\beta$ and not on the load. This is very useful from a design perspective since \emph{the same design} works across all (feasible) loads $\rho<\rho^*$, and decreases from $\alpha=p_2/p_1$ at $\beta\to 0$ (no battery) to $1$ at $\beta\to\infty$. Setting a target slowdown $\bar{S}_0 \in (1,\alpha)$ we get:
 \begin{equation}
   \beta^* = \frac{\alpha - \bar{S}_0}{\bar{S}_0 - 1} \; \Longleftrightarrow \; B^* = \frac{c}{\mu p_2}\frac{\alpha - \bar{S}_0}{\bar{S}_0 - 1}.
   \label{eq:Bstar}
@@ -395,7 +395,7 @@ Unlike $\bar{S}$, the blocking probability depends on $\tilde\rho$, as expected.
 \begin{axis}[
   width=\columnwidth,
   height=0.65\columnwidth,
-  xlabel={Normalised battery capacity $\beta$},
+  xlabel={Normalized battery capacity $\beta$},
   ylabel={Average slowdown $\bar{S}$},
   xmin=0, xmax=6,
   ymin=1, ymax=4.3,

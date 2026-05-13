@@ -435,42 +435,80 @@ three values of the speed-up ratio $\alpha = p_2/p_1$.}
 % -------------------------------------------------------
 
 We illustrate the theoretical results through event-driven simulations of the
-single-server system with parameters $p_2 = 150$ kW, $p_1 = 60$ kW, $c = 90$ kW,
-$\alpha = 2.5$, $1/\mu = 20$ kWh, $B = 78$ kWh ($\beta = 6.5$), and
-$p_0 = 36$ kW. Three arrival rates are considered: $\lambda = 2, 3, 4$ cars/h,
-corresponding to $\theta > 0$, $\theta = 0$, and $\theta < 0$ respectively.
+single-server system. We set $p_2 = 150\,\unit{\kilo\watt}$, a typical DC fast
+charger output, and $p_1 = 60\,\unit{\kilo\watt}$, representative of a medium-sized
+grid connection; this gives $c = 90\,\unit{\kilo\watt}$ and $\alpha = p_2/p_1 = 2.5$.
+For the energy demand distribution, large-scale data from the US
+Department of Energy reports an average of 22 kWh per paid DC fast charging
+session~\cite{NREL2023}, consistent with a partial top-up rather than a
+full charge. We use $1/\mu = 20\,\unit{\kilo\watt\hour}$, giving a mean fast-charge
+session duration of $1/(\mu p_2) = 20/150 \approx 8\,\unit{\minute}$.
 
-Figure~\ref{fig:paths} shows a sample path of the battery level $x(t)$ for each
-regime. For $\lambda = 2$ ($\theta > 0$) the battery tends to fill and spends most
-time near $B$; for $\lambda = 4$ ($\theta < 0$) it tends to drain toward zero; and
-for $\lambda = 3$ ($\theta = 0$) it cycles freely across $(0, B)$ without dwelling
-at either boundary, consistent with the uniform stationary density.
+We target an arrival rate of $\lambda = 3$ cars/h and aim to operate in the optimal
+battery regime ($\theta = 0$), which requires $p_0^* = \tilde\rho c = (3/7.5)\times
+90 = 36\,\unit{\kilo\watt}$ and is feasible since $\tilde\rho = 0.4 < 1/(\alpha-1)
+= 0.667$. We size the battery to achieve an average slowdown of $\bar{S}_0 = 1.2$,
+i.e.\ 20\% above the ideal fast-charging time. From~\eqref{eq:Bstar},
+$\beta^* = (\alpha-\bar{S}_0)/(\bar{S}_0-1) = 1.3/0.2 = 6.5$, giving
+$B^* = \beta^* c/(\mu p_2) = 6.5 \times 90/7.5 = 78\,\unit{\kilo\watt\hour}$.
+As a sanity check, a car with mean demand $20\,\unit{\kilo\watt\hour}$ charging
+at the slow rate $p_1 = 60\,\unit{\kilo\watt}$ would take $20\,\unit{\minute}$;
+the design target of $\bar{S}=1.2$ corresponds to a mean service time of
+$8 \times 1.2 = 9.6\,\unit{\minute}$, a modest 1.6-minute penalty. The resulting
+system parameters are summarized in Table~\ref{tab:params}.
+
+\begin{table}[t]
+  \centering
+  \caption{System parameters used in the numerical study.}
+  \label{tab:params}
+  \begin{tabular}{llr}
+    \hline
+    Parameter & Symbol & Value \\
+    \hline
+    Fast charging rate   & $p_2$        & $150\,\unit{\kilo\watt}$ \\
+    Grid connection      & $p_1$        & $60\,\unit{\kilo\watt}$ \\
+    Speed-up ratio       & $\alpha$     & $2.5$ \\
+    Mean energy demand   & $1/\mu$      & $20\,\unit{\kilo\watt\hour}$ \\
+    Arrival rate         & $\lambda$    & $3\,\text{cars/h}$ \\
+    Idle recharge rate   & $p_0^*$      & $36\,\unit{\kilo\watt}$ \\
+    Battery capacity     & $B^*$        & $78\,\unit{\kilo\watt\hour}$ \\
+    Norm.\ battery cap.\ & $\beta^*$    & $6.5$ \\
+    Target slowdown      & $\bar{S}_0$  & $1.2$ \\
+    \hline
+  \end{tabular}
+\end{table}
+
+To illustrate the three battery regimes, we fix the design parameters and vary the
+arrival rate: $\lambda = 2$ (lightly loaded, $\theta > 0$), $\lambda = 3$ (optimal,
+$\theta = 0$), and $\lambda = 4$ (heavily loaded, $\theta < 0$). Figure~\ref{fig:paths}
+shows a sample path of $x(t)$ for each case. For $\lambda=2$ the battery drifts
+toward $B$ and spends long periods near full; for $\lambda=4$ it drains toward zero
+and service frequently degrades to the slow rate; for $\lambda=3$ it oscillates
+freely across $(0,B)$ without dwelling at either boundary, consistent with the
+uniform stationary density predicted by Theorem~\ref{thm:stationary}.
 
 \begin{figure}[t]
   \centering
   % placeholder: three sample paths
-  \caption{Sample paths of the battery level $x(t)$ for $\lambda = 2$ (top),
-  $\lambda = 3$ (middle), and $\lambda = 4$ (bottom) cars/h. Parameters:
-  $p_2=150$, $p_1=60$, $B=78$ kWh, $p_0=36$ kW.}
+  \caption{Sample paths of $x(t)$ for $\lambda = 2$ ($\theta>0$, top),
+  $\lambda = 3$ ($\theta=0$, middle), and $\lambda = 4$ ($\theta<0$, bottom).}
   \label{fig:paths}
 \end{figure}
 
-We focus on the optimal regime $\lambda = 3$ ($\theta = 0$) for validation.
-Figure~\ref{fig:hist} shows the empirical stationary distribution of the battery
-level, which closely matches the uniform density $1/B$ predicted by
-Theorem~\ref{thm:stationary} at $\theta = 0$.
+We now focus on the design case $\lambda=3$ to validate the analytical formulas.
+Figure~\ref{fig:hist} shows the empirical stationary distribution of $x$, which
+closely matches the uniform density $1/B$ of Theorem~\ref{thm:stationary} at $\theta=0$.
 
 \begin{figure}[t]
   \centering
   % placeholder: histogram vs uniform density
-  \caption{Empirical stationary distribution of battery level $x$ at $\lambda=3$
-  (histogram) overlaid with the uniform density $1/B$ (dashed line).}
+  \caption{Empirical stationary distribution of $x$ at $\lambda=3$ (histogram)
+  vs.\ the uniform density $1/B$ (dashed).}
   \label{fig:hist}
 \end{figure}
 
-Table~\ref{tab:metrics} reports the blocking probability $P_B$ and average slowdown
-$\bar{S}$ from simulation against the analytical values from
-\eqref{eq:PB_opt}--\eqref{eq:Sbar_beta}.
+Table~\ref{tab:metrics} compares analytical and simulated values of $P_B$ and
+$\bar{S}$. The analytical values follow from~\eqref{eq:PB_opt} and~\eqref{eq:Sbar_beta}.
 
 \begin{table}[t]
   \centering
@@ -480,23 +518,24 @@ $\bar{S}$ from simulation against the analytical values from
     \hline
     Metric & Analytical & Simulated \\
     \hline
-    $P_B$ & $0.324$ & \\
-    $\bar{S}$ & $1.2$ & \\
+    $P_B$    & $0.324$ & \\
+    $\bar{S}$ & $1.200$ & \\
     \hline
   \end{tabular}
 \end{table}
 
 Finally, Figure~\ref{fig:slowdown} shows the slowdown factor $S(u)$ as a function
-of the normalized demand $u = y/x^*$. The analytical curves from
-Proposition~\ref{prop:slowdown} are overlaid with empirical estimates obtained by
-binning admitted cars by their demand.
+of normalized demand $u = y/x^*$, validating Proposition~\ref{prop:slowdown}.
+Cars with $u < 1$ may complete in Phase~1 and experience little slowdown;
+those with $u \geq 1$ always exhaust the battery and suffer a slowdown approaching
+$\alpha = 2.5$ for large demands.
 
 \begin{figure}[t]
   \centering
   % placeholder: S(u) analytical vs empirical
-  \caption{Slowdown factor $S(u)$ as a function of normalized demand $u = y/x^*$,
-  for $\lambda=3$ ($\theta=0$). Analytical curve (solid) from
-  Proposition~\ref{prop:slowdown} vs.\ empirical estimates (dots).}
+  \caption{Slowdown factor $S(u)$ vs.\ normalized demand $u = y/x^*$ at $\lambda=3$.
+  Analytical curve (solid) from Proposition~\ref{prop:slowdown} vs.\
+  empirical per-bin estimates (dots).}
   \label{fig:slowdown}
 \end{figure}
 

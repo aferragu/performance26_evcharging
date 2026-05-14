@@ -401,7 +401,7 @@ Finally the blocking probability becomes:
   \label{eq:PB_opt}
 \end{equation}
 This has the form of an $M/M/1/1$ blocking formula with effective load
-$\tilde\rho\bar{S}$. Unlike $\bar{S}$, the blocking probability depends on $\tilde\rho$, as expected.
+$\tilde\rho\bar{S}_0$. Unlike $\bar{S}$, the blocking probability depends on $\tilde\rho$, as expected.
 
 \begin{figure}[t]
 \centering
@@ -498,7 +498,7 @@ and service frequently degrades to the slow rate; for $\lambda=3$ it oscillates
 freely across $(0,B)$ without dwelling at either boundary, consistent with the
 uniform stationary density predicted by Theorem~\ref{thm:stationary}.
 
-\begin{figure}[t]
+\begin{figure}
   \centering
   % placeholder: three sample paths
   \caption{Sample paths of $x(t)$ for $\lambda = 2$ ($\theta>0$, top),
@@ -510,7 +510,14 @@ We now focus on the design case $\lambda=3$ to validate the analytical formulas.
 Figure~\ref{fig:hist} shows the empirical stationary distribution of $x$, which
 closely matches the uniform density $1/B$ of Theorem~\ref{thm:stationary} at $\theta=0$.
 
-\begin{figure}[t]
+\begin{figure}
+  \centering
+  % placeholder: histogram
+  \caption{Empirical distribution of battery level $x$ and atoms compared with their theoretical counterparts.}
+  \label{fig:hist}
+\end{figure}
+
+\begin{figure}
 \centering
 \begin{tikzpicture}
 \begin{axis}[

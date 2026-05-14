@@ -47,7 +47,7 @@
 %Conference
 \conferenceinfo{IFIP Performance '26.}{3-5 November 2026, Ghent, Belgium}
 
-\title{Queueing analysis of a battery-backed electrical vehicle charging system}
+\title{Queueing analysis of a battery-backed electrical vehicle fast charging system}
  
 %  \numberofauthors{2}
 %  \author{
@@ -78,7 +78,7 @@ identify an optimal battery regime in which the average slowdown depends only on
 hardware parameters, yielding explicit battery sizing guidelines. We discuss the
 extension to $s$ parallel chargers, showing that the interior balance equations reduce
 to an eigenvalue problem for a matrix pencil, and identify the boundary conditions that
-select the contributing modes; the full multi-server analysis is left as future work.
+select the contributing modes. Simulation results are provided as examples.
 \end{abstract}
 
 \keywords{Piecewise deterministic Markov processes, Electrical Vehicles.}
@@ -319,13 +319,13 @@ We now focus on the mean service time. Since there is at most one car in service
   = \frac{1}{1 + \frac{\lambda B}{p_0}}\left(\frac{e^{\theta B}-1}{c\theta} + \frac{1}{\mu p_1}\right).
   \label{eq:ET}
 \end{equation}
-A more meaningful quantity is the \emph{average slowdown}, which we define as $E[T]$ normalized by the average service time in a system that operates at the fast rate $p_2$ permanently, which is given by:
+Another meaningful quantity is the \emph{average slowdown}, which we define as $E[T]$ normalized by the average service time in a system that operates at the fast rate $p_2$ permanently, which is given by:
 \begin{equation}\label{eq:avg_slowdown}
   \bar{S} := \frac{\mu p_2\, \mathbb{E}[T]}{\mathbb{E}[Y]} = \frac{\mu p_2}{1 + \frac{\lambda B}{p_0}}\left(\frac{e^{\theta B}-1}{c\theta} + \frac{1}{\mu p_1}\right).
 \end{equation}
 
 A final quantity of interest is the \emph{slowdown factor}, measuring service
-degradation relative to ideal fast charging:
+degradation relative to ideal fast charging as a function of requested energy:
 \begin{equation}
   S(y) := \frac{\mathbb{E}[T \mid Y=y]}{y/p_2} \geq 1.
 \end{equation}
@@ -339,8 +339,7 @@ This gives the compact formula
 \end{equation}
 so that $S(y) = 1 + (p_2/(p_1 y))\,\mathbb{E}[(x_y - x)^+]$, where the expectation
 is over the admitted battery level. Note that even for moderate demands $y < x^*$,
-slowdown occurs whenever the car arrives at a battery level $x < x_y$ — which
-happens with positive probability for any $\theta$. The threshold $x^* = p_2 B/c$
+slowdown occurs whenever the car arrives at a battery level $x < x_y$. The threshold $x^* = p_2 B/c$
 is the energy demand that would deplete even a full battery: for $y \geq x^*$,
 slow charging is unavoidable regardless of the battery level at admission.
 
@@ -350,19 +349,19 @@ $K(1-P_B) = (e^{\theta B}-1)/\theta + p_0 e^{\theta B}/\lambda$. Then:
 \begin{subequations}
 \begin{equation}
   S(y) = 1 + \frac{p_2}{p_1\,y}\cdot\frac{J(x_y)}{K(1-P_B)},
-  \qquad y < \frac{p_2 B}{c},
+  \quad y < \frac{p_2 B}{c},
   \label{eq:Sy1}
 \end{equation}
 \begin{equation}
   S(y) = 1 + \frac{p_2}{p_1\,y}\left[\frac{J(B)}{K(1-P_B)} + (x_y - B)\right],
-  \qquad y \geq \frac{p_2 B}{c}.
+  \quad y \geq \frac{p_2 B}{c}.
   \label{eq:Sy2}
 \end{equation}
 \end{subequations}
 In both cases $S(y)\geq 1$, $S(y)\to 1$ as $y\to 0$ or $B\to\infty$,
 and $S(y)\to p_2/p_1$ as $y\to\infty$ or $B\to 0$.
 \end{proposition}
-The proof is in Appendix~\ref{app:slowdown}.
+The proof is based on applying the PASTA property to compute $\mathbb{E}[(x_y - x)^+]$ for an admitted car and is given in Appendix~\ref{app:slowdown}.
 
 
 \subsection{Optimal battery regime}\label{ssec:optimal_regime}
@@ -475,7 +474,7 @@ the design target of $\bar{S}=1.2$ corresponds to a mean service time of
 $8 \times 1.2 = 9.6\,\unit{\minute}$, a modest 1.6-minute penalty. The resulting
 system parameters are summarized in Table~\ref{tab:params}.
 
-\begin{table}[t]
+\begin{table}[b]
   \centering
   \caption{System parameters used in the numerical study.}
   \label{tab:params}
@@ -627,11 +626,11 @@ single-server performance metrics, are the subject of ongoing work.
 
 \appendix
 
-\section{Proof of Proposition~\ref{prop:slowdown}}
+\section{Proof of Proposition \lowercase{\ref{prop:slowdown}}}
 \label{app:slowdown}
 
 From~\eqref{eq:Txy}, $S(y) = 1 + (p_2/(p_1 y))\,\mathbb{E}[(x_y-x)^+]$,
-where $x$ has the admitted distribution: density $e^{\theta x}/(K(1-P_B))$ on
+where $x$ has the distribution of the battery seen by an admitted vehicle. By the PASTA property, this distribution is just the steady-state distribution conditioned on $n=0$, i.e. has density $e^{\theta x}/(K(1-P_B))$ on
 $(0,B)$ and atom $\pi_{0,B}/(1-P_B)$ at $x=B$, with $\pi_{0,B}=p_0 e^{\theta B}/(\lambda K)$.
 Since $(x_y-x)^+=0$ for $x\geq x_y$, only admitted levels $x<x_y$ contribute.
 The fundamental integral needed is

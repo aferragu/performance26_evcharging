@@ -395,6 +395,13 @@ Remarkably, this depends only on $\alpha$ and $\beta$ and not on the load. This 
   \beta^* = \frac{\alpha - \bar{S}_0}{\bar{S}_0 - 1} \; \Longleftrightarrow \; B^* = \frac{c}{\mu p_2}\frac{\alpha - \bar{S}_0}{\bar{S}_0 - 1}.
   \label{eq:Bstar}
 \end{equation}
+The required $\beta^*$ grows with $\alpha$: a large speed-up ratio means the battery
+drains fast relative to its recharge rate, demanding a larger buffer to keep the
+average slowdown modest. In the numerical example of Section~\ref{sec:sims},
+$\alpha=2.5$ and $\bar{S}_0=1.2$ yield $\beta^*=6.5$, i.e.\ the battery must sustain
+6.5 mean fast-charge sessions before depleting --- a conservative but necessary sizing
+given the aggressive speed-up ratio.
+
 Finally the blocking probability becomes:
 \begin{equation}
   P_B = \frac{\tilde\rho\bar{S}_0}{1+\tilde\rho\bar{S}_0} = \frac{\tilde\rho(\alpha + \beta)}{\beta + 1 + \tilde\rho(\alpha + \beta)}.

@@ -1,0 +1,43 @@
+% Preamble requirements:
+%   \usepackage{pgfplots}
+%   \pgfplotsset{compat=1.18}
+%   \usepackage{subcaption}
+%   \usepgfplotslibrary{fillbetween}
+
+
+\begin{figure}[t]
+  \centering
+  \begin{subfigure}[b]{\textwidth}
+    \centering
+  \end{subfigure}
+  \begin{subfigure}[b]{\textwidth}
+    \centering
+  \end{subfigure}
+  \begin{subfigure}[b]{\textwidth}
+    \centering
+  \end{subfigure}
+  \caption{Sample battery trajectory for $\lambda=2$ ($\vartheta>0$, light load),
+    $\lambda=3$ ($\vartheta=0$, critical regime), and $\lambda=4$ ($\vartheta<0$, heavy load).
+    Grey shading indicates charger busy periods.}
+  \label{fig:trajectory}
+\end{figure}
+
+
+\begin{figure}[t]
+  \centering
+  \caption{Stationary distribution $F(x)$ of the battery level at $\lambda=3$
+    ($\vartheta=0$). Filled circles mark atoms at $x=0$
+    ($\pi_{10}=0.0901$) and $x=B$ ($\pi_{0B}=0.0901$);
+    open circles mark the left limit $F(B^-)$.}
+  \label{fig:cdf}
+\end{figure}
+
+
+\begin{figure}[t]
+  \centering
+
+  \caption{Slowdown factor $S(y) = \mathbb{E}[T \mid Y=y]\,/\,(y/p_2)$ as a
+    function of demand $y$, for the three load regimes.
+    Solid: kernel regression from simulation. Dashed: analytical formula.}
+  \label{fig:slowdown}
+\end{figure}

@@ -326,7 +326,7 @@ Another meaningful quantity is the \emph{average slowdown}, which we define as $
 
 A final quantity of interest is the \emph{slowdown factor}, measuring service
 degradation relative to ideal fast charging as a function of requested energy:
-\begin{equation}
+\begin{equation}\label{eq:slowdown}
   S(y) := \frac{\mathbb{E}[T \mid Y=y]}{y/p_2} \geq 1.
 \end{equation}
 The key quantity is $x_y := cy/p_2$, the battery level that would be exactly depleted
@@ -346,7 +346,7 @@ slow charging is unavoidable regardless of the battery level at admission.
 \begin{proposition}\label{prop:slowdown}
 Let $x_y = cy/p_2$, $J(a) = (e^{\theta a}-1-\theta a)/\theta^2$, and
 $K(1-P_B) = (e^{\theta B}-1)/\theta + p_0 e^{\theta B}/\lambda$. Then:
-\begin{subequations}
+\begin{subequations}\label{eq:Sy}
 \begin{equation}
   S(y) = 1 + \frac{p_2}{p_1\,y}\cdot\frac{J(x_y)}{K(1-P_B)},
   \quad y < \frac{p_2 B}{c},
@@ -401,7 +401,7 @@ $\alpha=2.5$ and $\bar{S}_0=1.2$ yield $\beta^*=6.5$, i.e.\ the battery must sus
 6.5 mean fast-charge sessions before depleting --- a conservative but necessary sizing
 given the aggressive speed-up ratio.
 
-Finally the blocking probability becomes:
+Finally, the blocking probability becomes:
 \begin{equation}
   P_B = \frac{\tilde\rho\bar{S}_0}{1+\tilde\rho\bar{S}_0} = \frac{\tilde\rho(\alpha + \beta)}{\beta + 1 + \tilde\rho(\alpha + \beta)}.
   \label{eq:PB_opt}
@@ -464,39 +464,39 @@ session duration of $1/(\mu p_2) = 20/150 \approx 8\,\unit{\minute}$.
 We target an arrival rate of $\lambda = 3$ cars/h and aim to operate in the optimal
 battery regime ($\theta = 0$), which requires $p_0^* = \tilde\rho c = (3/7.5)\times
 90 = 36\,\unit{\kilo\watt}$ and is feasible since $\tilde\rho = 0.4 < 1/(\alpha-1)
-= 0.667$. We size the battery to achieve an average slowdown of $\bar{S}_0 = 1.2$,
+= 2/3$. We size the battery to achieve an average slowdown of $\bar{S}_0 = 1.2$,
 i.e.\ 20\% above the ideal fast-charging time. From~\eqref{eq:Bstar},
 $\beta^* = (\alpha-\bar{S}_0)/(\bar{S}_0-1) = 1.3/0.2 = 6.5$, giving
 $B^* = \beta^* c/(\mu p_2) = 6.5 \times 90/7.5 = 78\,\unit{\kilo\watt\hour}$.
-As a sanity check, a car with mean demand $20\,\unit{\kilo\watt\hour}$ charging
+Note that a car with mean demand $20\,\unit{\kilo\watt\hour}$ charging
 at the slow rate $p_1 = 60\,\unit{\kilo\watt}$ would take $20\,\unit{\minute}$;
 the design target of $\bar{S}=1.2$ corresponds to a mean service time of
-$8 \times 1.2 = 9.6\,\unit{\minute}$, a modest 1.6-minute penalty. The resulting
-system parameters are summarized in Table~\ref{tab:params}.
+$8 \times 1.2 = 9.6\,\unit{\minute}$, a modest 1.6-minute penalty. 
 
-\begin{table}[b]
-  \centering
-  \caption{System parameters used in the numerical study.}
-  \label{tab:params}
-  \begin{tabular}{llr}
-    \hline
-    Parameter & Symbol & Value \\
-    \hline
-    Fast charging rate   & $p_2$        & $150\,\unit{\kilo\watt}$ \\
-    Grid connection      & $p_1$        & $60\,\unit{\kilo\watt}$ \\
-    Speed-up ratio       & $\alpha$     & $2.5$ \\
-    Mean energy demand   & $1/\mu$      & $20\,\unit{\kilo\watt\hour}$ \\
-    Arrival rate         & $\lambda$    & $3\,\text{cars/h}$ \\
-    Idle recharge rate   & $p_0^*$      & $36\,\unit{\kilo\watt}$ \\
-    Battery capacity     & $B^*$        & $78\,\unit{\kilo\watt\hour}$ \\
-    Norm.\ battery cap.\ & $\beta^*$    & $6.5$ \\
-    Target slowdown      & $\bar{S}_0$  & $1.2$ \\
-    \hline
-  \end{tabular}
-\end{table}
+% The resulting system parameters are summarized in Table~\ref{tab:params}.
+% \begin{table}[b]
+%   \centering
+%   \caption{System parameters used in the numerical study.}
+%   \label{tab:params}
+%   \begin{tabular}{llr}
+%     \hline
+%     Parameter & Symbol & Value \\
+%     \hline
+%     Fast charging rate   & $p_2$        & $150\,\unit{\kilo\watt}$ \\
+%     Grid connection      & $p_1$        & $60\,\unit{\kilo\watt}$ \\
+%     Speed-up ratio       & $\alpha$     & $2.5$ \\
+%     Mean energy demand   & $1/\mu$      & $20\,\unit{\kilo\watt\hour}$ \\
+%     Arrival rate         & $\lambda$    & $3\,\text{cars/h}$ \\
+%     Idle recharge rate   & $p_0^*$      & $36\,\unit{\kilo\watt}$ \\
+%     Battery capacity     & $B^*$        & $78\,\unit{\kilo\watt\hour}$ \\
+%     Norm.\ battery cap.\ & $\beta^*$    & $6.5$ \\
+%     Target slowdown      & $\bar{S}_0$  & $1.2$ \\
+%     \hline
+%   \end{tabular}
+% \end{table}
 
 To illustrate the three battery regimes, we fix the design parameters and vary the
-arrival rate: $\lambda = 2$ (lightly loaded, $\theta > 0$), $\lambda = 3$ (optimal,
+arrival rate: $\lambda = 2$ (lightly loaded, $\theta > 0$), $\lambda = 3$ (critical,
 $\theta = 0$), and $\lambda = 4$ (heavily loaded, $\theta < 0$). Figure~\ref{fig:paths}
 shows a sample path of $x(t)$ for each case. For $\lambda=2$ the battery drifts
 toward $B$ and spends long periods near full; for $\lambda=4$ it drains toward zero
@@ -504,60 +504,37 @@ and service frequently degrades to the slow rate; for $\lambda=3$ it oscillates
 freely across $(0,B)$ without dwelling at either boundary, consistent with the
 uniform stationary density predicted by Theorem~\ref{thm:stationary}.
 
-\begin{figure}
+\begin{figure}[t]
   \centering
-  % placeholder: three sample paths
-  \caption{Sample paths of $x(t)$ for $\lambda = 2$ ($\theta>0$, top),
-  $\lambda = 3$ ($\theta=0$, middle), and $\lambda = 4$ ($\theta<0$, bottom).}
+    \centering
+    \input{lambda_2_battery.tex}
+
+    \input{lambda_3_battery.tex}
+
+    \input{lambda_4_battery.tex}
+
+    \caption{Sample battery trajectory for the three load regimes (lightly loaded, critical and heavily loaded).}
   \label{fig:paths}
 \end{figure}
 
-We now focus on the design case $\lambda=3$ to validate the analytical formulas.
-Figure~\ref{fig:hist} shows the empirical stationary distribution of $x$, which
-closely matches the uniform density $1/B$ of Theorem~\ref{thm:stationary} at $\theta=0$.
+In Figure~\ref{fig:cdf} we plot the empirical stationary distribution of $x$ for the critical case, showing good fit with the theoretical uniform density predicted by Theorem~\ref{thm:stationary} at $\theta=0$, plus the atoms at the boundaries. Finally, in Figure \ref{fig:slowdown} we plot the theoretical slowdown curves $S(y)$ from eqs. \eqref{eq:Sy} for the three load regimes, as well as an empirical estimation of the measured slowdown, using a kernel regression estimator to fit $E[T \mid Y=y]$ from the definition \eqref{eq:slowdown}.
 
-\begin{figure}
+\begin{figure}[t]
   \centering
-  % placeholder: histogram
-  \caption{Empirical distribution of battery level $x$ and atoms compared with their theoretical counterparts.}
-  \label{fig:hist}
+  \input{empirical_battery.tex}
+  \caption{Stationary distribution of the battery level for $\lambda=3$
+    ($\theta=0$) including the atoms at $x=0$ and $x=B$.}
+  \label{fig:cdf}
 \end{figure}
 
-\begin{figure}
-\centering
-\begin{tikzpicture}
-\begin{axis}[
-  width=\columnwidth,
-  height=0.65\columnwidth,
-  xlabel={Energy demand $y$ [kWh]},
-  ylabel={Slowdown $S(y)$},
-  xmin=0, xmax=60,
-  ymin=1, ymax=1.7,
-  xtick={0,10,20,30,40,50,60},
-  ytick={1,1.2,1.4,1.6},
-  grid=both,
-  grid style={dashed,gray!40},
-  thick,
-  legend pos=north west,
-  legend style={font=\footnotesize},
-  clip=false,
-]
-\addplot[color=verdecito, very thick] coordinates {(0.5,1.0006) (1.0,1.0012) (1.5,1.0018) (2.0,1.0024) (2.5,1.0030) (3.0,1.0036) (3.5,1.0042) (4.0,1.0048) (4.5,1.0054) (5.0,1.0060) (5.5,1.0067) (6.0,1.0073) (6.5,1.0079) (7.0,1.0086) (7.5,1.0092) (8.0,1.0098) (8.5,1.0105) (9.0,1.0111) (9.5,1.0118) (10.0,1.0124) (10.5,1.0131) (11.0,1.0138) (11.5,1.0144) (12.0,1.0151) (12.5,1.0158) (13.0,1.0164) (13.5,1.0171) (14.0,1.0178) (14.5,1.0185) (15.0,1.0192) (15.5,1.0199) (16.0,1.0206) (16.5,1.0213) (17.0,1.0220) (17.5,1.0227) (18.0,1.0234) (18.5,1.0242) (19.0,1.0249) (19.5,1.0256) (20.0,1.0263) (20.5,1.0271) (21.0,1.0278) (21.5,1.0286) (22.0,1.0293) (22.5,1.0301) (23.0,1.0308) (23.5,1.0316) (24.0,1.0324) (24.5,1.0331) (25.0,1.0339) (25.5,1.0347) (26.0,1.0355) (26.5,1.0363) (27.0,1.0371) (27.5,1.0379) (28.0,1.0387) (28.5,1.0395) (29.0,1.0403) (29.5,1.0411) (30.0,1.0419) (30.5,1.0428) (31.0,1.0436) (31.5,1.0444) (32.0,1.0453) (32.5,1.0461) (33.0,1.0470) (33.5,1.0478) (34.0,1.0487) (34.5,1.0496) (35.0,1.0504) (35.5,1.0513) (36.0,1.0522) (36.5,1.0531) (37.0,1.0540) (37.5,1.0549) (38.0,1.0558) (38.5,1.0567) (39.0,1.0576) (39.5,1.0585) (40.0,1.0594) (40.5,1.0604) (41.0,1.0613) (41.5,1.0622) (42.0,1.0632) (42.5,1.0641) (43.0,1.0651) (43.5,1.0661) (44.0,1.0670) (44.5,1.0680) (45.0,1.0690) (45.5,1.0700) (46.0,1.0710) (46.5,1.0720) (47.0,1.0730) (47.5,1.0740) (48.0,1.0750) (48.5,1.0760) (49.0,1.0770) (49.5,1.0781) (50.0,1.0791) (50.5,1.0802) (51.0,1.0812) (51.5,1.0823) (52.0,1.0833) (52.5,1.0844) (53.0,1.0855) (53.5,1.0866) (54.0,1.0877) (54.5,1.0888) (55.0,1.0899) (55.5,1.0910) (56.0,1.0921) (56.5,1.0932) (57.0,1.0943) (57.5,1.0955) (58.0,1.0966) (58.5,1.0978) (59.0,1.0989) (59.5,1.1001) (60.0,1.1013)};
-\addlegendentry{$\lambda=2$ ($\theta>0$)}
-\addplot[color=azulcito, very thick] coordinates {(0.5,1.0025) (1.0,1.0050) (1.5,1.0075) (2.0,1.0100) (2.5,1.0125) (3.0,1.0150) (3.5,1.0175) (4.0,1.0200) (4.5,1.0225) (5.0,1.0250) (5.5,1.0275) (6.0,1.0300) (6.5,1.0325) (7.0,1.0350) (7.5,1.0375) (8.0,1.0400) (8.5,1.0425) (9.0,1.0450) (9.5,1.0475) (10.0,1.0500) (10.5,1.0525) (11.0,1.0550) (11.5,1.0575) (12.0,1.0600) (12.5,1.0625) (13.0,1.0650) (13.5,1.0675) (14.0,1.0700) (14.5,1.0725) (15.0,1.0750) (15.5,1.0775) (16.0,1.0800) (16.5,1.0825) (17.0,1.0850) (17.5,1.0875) (18.0,1.0900) (18.5,1.0925) (19.0,1.0950) (19.5,1.0975) (20.0,1.1000) (20.5,1.1025) (21.0,1.1050) (21.5,1.1075) (22.0,1.1100) (22.5,1.1125) (23.0,1.1150) (23.5,1.1175) (24.0,1.1200) (24.5,1.1225) (25.0,1.1250) (25.5,1.1275) (26.0,1.1300) (26.5,1.1325) (27.0,1.1350) (27.5,1.1375) (28.0,1.1400) (28.5,1.1425) (29.0,1.1450) (29.5,1.1475) (30.0,1.1500) (30.5,1.1525) (31.0,1.1550) (31.5,1.1575) (32.0,1.1600) (32.5,1.1625) (33.0,1.1650) (33.5,1.1675) (34.0,1.1700) (34.5,1.1725) (35.0,1.1750) (35.5,1.1775) (36.0,1.1800) (36.5,1.1825) (37.0,1.1850) (37.5,1.1875) (38.0,1.1900) (38.5,1.1925) (39.0,1.1950) (39.5,1.1975) (40.0,1.2000) (40.5,1.2025) (41.0,1.2050) (41.5,1.2075) (42.0,1.2100) (42.5,1.2125) (43.0,1.2150) (43.5,1.2175) (44.0,1.2200) (44.5,1.2225) (45.0,1.2250) (45.5,1.2275) (46.0,1.2300) (46.5,1.2325) (47.0,1.2350) (47.5,1.2375) (48.0,1.2400) (48.5,1.2425) (49.0,1.2450) (49.5,1.2475) (50.0,1.2500) (50.5,1.2525) (51.0,1.2550) (51.5,1.2575) (52.0,1.2600) (52.5,1.2625) (53.0,1.2650) (53.5,1.2675) (54.0,1.2700) (54.5,1.2725) (55.0,1.2750) (55.5,1.2775) (56.0,1.2800) (56.5,1.2825) (57.0,1.2850) (57.5,1.2875) (58.0,1.2900) (58.5,1.2925) (59.0,1.2950) (59.5,1.2975) (60.0,1.3000)};
-\addlegendentry{$\lambda=3$ ($\theta=0$)}
-\addplot[color=rojito, very thick] coordinates {(0.5,1.0067) (1.0,1.0135) (1.5,1.0201) (2.0,1.0268) (2.5,1.0334) (3.0,1.0399) (3.5,1.0465) (4.0,1.0530) (4.5,1.0594) (5.0,1.0658) (5.5,1.0722) (6.0,1.0786) (6.5,1.0849) (7.0,1.0912) (7.5,1.0974) (8.0,1.1036) (8.5,1.1098) (9.0,1.1159) (9.5,1.1220) (10.0,1.1281) (10.5,1.1342) (11.0,1.1402) (11.5,1.1462) (12.0,1.1521) (12.5,1.1580) (13.0,1.1639) (13.5,1.1697) (14.0,1.1756) (14.5,1.1813) (15.0,1.1871) (15.5,1.1928) (16.0,1.1985) (16.5,1.2042) (17.0,1.2098) (17.5,1.2154) (18.0,1.2210) (18.5,1.2265) (19.0,1.2320) (19.5,1.2375) (20.0,1.2429) (20.5,1.2484) (21.0,1.2538) (21.5,1.2591) (22.0,1.2645) (22.5,1.2698) (23.0,1.2750) (23.5,1.2803) (24.0,1.2855) (24.5,1.2907) (25.0,1.2959) (25.5,1.3010) (26.0,1.3061) (26.5,1.3112) (27.0,1.3162) (27.5,1.3213) (28.0,1.3263) (28.5,1.3313) (29.0,1.3362) (29.5,1.3411) (30.0,1.3460) (30.5,1.3509) (31.0,1.3557) (31.5,1.3606) (32.0,1.3653) (32.5,1.3701) (33.0,1.3749) (33.5,1.3796) (34.0,1.3843) (34.5,1.3889) (35.0,1.3936) (35.5,1.3982) (36.0,1.4028) (36.5,1.4074) (37.0,1.4119) (37.5,1.4164) (38.0,1.4209) (38.5,1.4254) (39.0,1.4299) (39.5,1.4343) (40.0,1.4387) (40.5,1.4431) (41.0,1.4474) (41.5,1.4518) (42.0,1.4561) (42.5,1.4604) (43.0,1.4646) (43.5,1.4689) (44.0,1.4731) (44.5,1.4773) (45.0,1.4815) (45.5,1.4857) (46.0,1.4898) (46.5,1.4939) (47.0,1.4980) (47.5,1.5021) (48.0,1.5061) (48.5,1.5102) (49.0,1.5142) (49.5,1.5182) (50.0,1.5222) (50.5,1.5261) (51.0,1.5300) (51.5,1.5339) (52.0,1.5378) (52.5,1.5417) (53.0,1.5456) (53.5,1.5494) (54.0,1.5532) (54.5,1.5570) (55.0,1.5608) (55.5,1.5645) (56.0,1.5682) (56.5,1.5720) (57.0,1.5757) (57.5,1.5793) (58.0,1.5830) (58.5,1.5866) (59.0,1.5903) (59.5,1.5939) (60.0,1.5974)};
-\addlegendentry{$\lambda=4$ ($\theta<0$)}
-\addplot[dashed, gray, domain=0:60] {1};
-% empirical dots placeholder
-\end{axis}
-\end{tikzpicture}
-\caption{Slowdown factor $S(y)$ from Proposition~\ref{prop:slowdown} for three
-load regimes ($p_2=150$, $p_1=60$, $B=78$ kWh, $p_0=36$ kW). The range shown
-covers 95\% of demands ($P(Y\leq 60)\approx 0.95$); the threshold $x^*=130$ kWh
-lies well beyond. Even within this range, slowdown is significant for heavily
-loaded stations ($\theta<0$). Empirical simulation estimates (dots) to be overlaid.}
-\label{fig:slowdown}
+
+\begin{figure}[t]
+  \centering
+  \input{slowdown.tex}
+  \caption{Slowdown factor $S(y) = \mathbb{E}[T \mid Y=y]\,/\,(y/p_2)$ as a
+    function of demand $y$, for the three load regimes.
+    Solid: kernel regression from simulation. Dashed: analytical formula.}
+  \label{fig:slowdown}
 \end{figure}
 
 % -------------------------------------------------------
@@ -610,15 +587,13 @@ piecewise-deterministic Markov processes. For the single-server loss system we d
 the stationary distribution in closed form, establishing a decoupling property that
 separates the battery level from the charger state in steady state, and obtained explicit
 expressions for the blocking probability, mean charging time, and slowdown factor. We
-identified an optimal battery regime ($\theta=0$) in which the average slowdown depends
+identified a desirable battery regime in which the average slowdown depends
 only on hardware parameters and not on load, and derived explicit sizing formulas for
 the battery capacity and recharge rate.
 
-The many-server extension reveals a richer structure: the interior balance equations
-take the form of a matrix ODE whose solutions are superpositions of the eigenmodes of
-the pencil $(Q,R)$, and the boundary conditions couple two tridiagonal systems at each
-boundary. This matrix-analytic treatment, as well as numerical illustrations of the
-single-server performance metrics, are the subject of ongoing work.
+The many-server extension reveals a richer structure where the interior density requires incorporating 
+all the eigenmodes of the pencil $(Q,R)$, and the boundary conditions couple two tridiagonal systems at each
+boundary. This matrix-analytic treatment is the subject of ongoing work.
 
 
 \bibliographystyle{abbrv}

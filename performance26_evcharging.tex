@@ -12,7 +12,7 @@
 % Notation
 \usepackage{siunitx}
 \usepackage{balance}
-\usepackage{microtype}
+
 
 % Theorems
 \newtheorem{theorem}{Theorem}[section]
@@ -47,19 +47,19 @@
 %Conference
 \conferenceinfo{IFIP Performance '26.}{3-5 November 2026, Ghent, Belgium}
 
-\title{Queueing analysis of a battery-backed electrical vehicle fast charging system}
+\title{Queueing analysis of a battery-backed electric vehicle fast charging system}
  
-%  \numberofauthors{2}
-%  \author{
-% 	\alignauthor Andres Ferragut\\
-% 		\affaddr{Universidad ORT Uruguay}\\
-% 		\affaddr{Montevideo, Uruguay}\\
-% 		\email{ferragut@ort.edu.uy}
-% 	\alignauthor Sebastián Bibiloni \thanks{This work was partially supported by ANII Uruguay under grant CF\_1\_2024\_1\_182277.}\\
-% 		\affaddr{Universidad de la República}\\
-% 		\affaddr{Montevideo, Uruguay}\\
-% 		\email{sebastianbibiloni@ingener.com}
-%  }	
+ \numberofauthors{2}
+ \author{
+\alignauthor Sebastián Bibiloni \thanks{This work was partially supported by ANII Uruguay under grant CF\_1\_2024\_1\_182277.}\\
+		\affaddr{Universidad de la República}\\
+		\affaddr{Montevideo, Uruguay}\\
+		\email{sbibiloni@fing.edu.uy}	
+ \alignauthor Andres Ferragut\\
+		\affaddr{Universidad ORT Uruguay}\\
+		\affaddr{Montevideo, Uruguay}\\
+		\email{ferragut@ort.edu.uy}
+ }	
 
 \date{November 2026}
 \maketitle
@@ -118,7 +118,7 @@ A key structural finding is a \emph{decoupling property}: in steady state the ch
 are conditionally independent given the battery is the interior of the state space. This enables to compute explicit formulas for the blocking probability, mean charging time, and a \emph{slowdown factor} quantifying the service degradation as a function of a
 car's energy demand. Armed with these formulas, we discuss several performance issues, design objectives that provide guidelines on how to design such systems and provide some numerical examples.
 
-We also discuss the extension of our analysis to the case where multiple chargers are available, where $s$ fast-chargers share a common battery. In this case, the solution involves matrix-analytic-methods and no closed form formulas can be obtained, but the problem remains numerically tractable.
+We also discuss the extension of our analysis to the case where multiple chargers are available, where $s$ fast-chargers share a common battery. In this case, the solution involves matrix-analytic methods and no closed form formulas can be obtained, but the problem remains numerically tractable.
 
 % -------------------------------------------------------
 \section{Single-Server Model}
@@ -289,7 +289,7 @@ with the convention $(e^{\theta B}-1)/\theta = B$ when $\theta = 0$.
 \end{theorem}
 
 \begin{proof}
-Adding \eqref{eq:E0}, \eqref{eq:E1} gives $\frac{d}{dx}[p_0 f_0 - c f_1] = 0$, so $p_0 f_0 - c f_1$ is constant on $(0,B)$. Equations \eqref{eq:B1} and \eqref{eq:B0} together give $p_0 f_0(0^+) = c f_1(0^+)$, so the constant is zero. Therefore, $f_1(x) = (p_0/c)\,f_0(x)$ for all $x \in (0,B)$. Substituting this condition into \eqref{eq:E0} yields a first order differential equation for $f_0$, which accounting for the definition of $\theta$ is simply $f_0'(x) = \theta\, f_0(x)$. We conclude that $f_0$ (and thus also $f_1$) is exponential: $f_0(x) = f_0(0^+)\,e^{\theta x}$. With this expression, the atoms follow directly from \eqref{eq:B2}, \eqref{eq:B0}, and \eqref{eq:B3} is automatically satisfied, confirming consistency. Setting $f_0(0^+) = 1/K$ and imposing normalization
+Adding \eqref{eq:E0}, \eqref{eq:E1} gives $\frac{d}{dx}[p_0 f_0 - c f_1] = 0$, so $p_0 f_0 - c f_1$ is constant on $(0,B)$. Equations \eqref{eq:B1} and \eqref{eq:B0} together give $p_0 f_0(0^+) = c f_1(0^+)$, so the constant is zero. Therefore, $f_1(x) = (p_0/c)\,f_0(x)$ for all $x \in (0,B)$. Substituting this condition into \eqref{eq:E0} yields a first order differential equation for $f_0$, which accounting for the definition of $\theta$ is simply $f_0'(x) = \theta\, f_0(x)$. We conclude that $f_0$ and $f_1$ are exponential with $f_0(x) = f_0(0^+)\,e^{\theta x}$. From this expression, the atoms follow directly from \eqref{eq:B2}, \eqref{eq:B0}, and \eqref{eq:B3} is automatically satisfied, confirming consistency. Setting $f_0(0^+) = 1/K$ and imposing normalization
 determines $K$ as in \eqref{eq:K}.
 \end{proof}
 
@@ -616,7 +616,7 @@ The fundamental integral needed is
 obtained by integration by parts.
 
 \textit{Case~1: $y < p_2B/c$.} Here $x_y < B$, so the atom at $x=B$ satisfies
-$B > x_y$ and contributes nothing to $(x_y-x)^+$. Thus
+$B > x_y$ and contributes nothing to $(x_y-x)^+$. Thus,
 \[
   \mathbb{E}[(x_y-x)^+] = \frac{J(x_y)}{K(1-P_B)}.
 \]
@@ -641,7 +641,7 @@ Since $(e^{\theta B}-1)/\theta + p_0 e^{\theta B}/\lambda = K(1-P_B)$, this simp
 \[
   \mathbb{E}[(x_y-x)^+] = \frac{J(B)}{K(1-P_B)} + (x_y - B).
 \]
-Therefore
+Therefore,
 \[
   S(y) = 1 + \frac{p_2}{p_1 y}\!\left[\frac{J(B)}{K(1-P_B)} + (x_y-B)\right].
 \]

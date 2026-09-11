@@ -111,7 +111,7 @@ coupling between the continuous battery state and the discrete nature of the veh
 distinguishes the battery-buffered station from a standard queue, and it has not
 been captured in the existing EV charging literature, where mostly fixed service rates are used~\cite{Bayram2013,Dupont2023,Tan2014}.
 
-In this paper, we propose a station model using a Piecewise-Deterministic Markov Process
+In this paper, we propose a station model using a Piecewise Deterministic Markov Process
 (PDMP)~\cite{Davis1984,Davis1993}: the battery level evolves deterministically between
 random events, while car arrivals and departures trigger instantaneous state jumps.
 The state is then the pair $(n, x)$ of system occupancy and battery level. We derive the generator
@@ -133,16 +133,16 @@ according to a Poisson process of rate $\lambda > 0$, each carrying an energy de
 $Y \sim \mathrm{Exp}(\mu)$. The station operates as a \emph{loss system}: a car that
 arrives when the charger is busy is turned away.
 
-The system parameters are: the grid supplies a maximum power $p_1$, used to charge the battery or serve the car when present. When idle, the battery recharges at rate $0<p_0\leqslant p_1$; the inequality allows for slower recharging to preserve battery life. The charger delivers power $p_2>p_1$ (fast charging), drawing $p_1$ from the grid and $c:=p_2-p_1>0$ from the battery. If the battery empties, the system reverts to charging from the grid alone at rate $p_1$, and remains so until the current car departs. We denote by $x(t)\in[0,B]$ the battery level and by $n(t)\in\{0,1\}$ the presence of a charging vehicle.
+The system parameters are: the grid supplies a maximum power $p_1$, used to charge the battery or serve the car when present. When idle, the battery recharges at rate $0<p_0\leqslant p_1$; the inequality allows for slower recharging to preserve battery life. The charger delivers power $p_2>p_1$ (fast charging), drawing $p_1$ from the grid and $c:=p_2-p_1>0$ from the battery. If the battery empties, the system reverts to charging from the grid alone at rate $p_1$, and remains so until the current car departs. We denote by $x(t)\in[0,B]$ the battery level at time $t$, and by $n(t)\in\{0,1\}$ the presence of a charging vehicle.
 
 When a car is admitted, service proceeds in at most two phases. In \emph{Phase~1}
 (fast charging), while the battery level $x > 0$, the car charges at rate $p_2$ and the
 battery discharges at rate $c$. In \emph{Phase~2} (slow charging), once the battery is
-exhausted, $x = 0$ and the car charges at rate $p_1$, while $x$ remains at zero. A car with small demand may complete service entirely in Phase~1 if its service requirement is low enough. Under the exponential energy demands assumed before, the instantaneous departure rate from the system is therefore $\mu p(x)$, where:
+exhausted, $x = 0$ and the car charges at rate $p_1$, while $x$ remains at zero. A car with a small demand with respect to $B$ may complete service entirely in Phase~1 if its service requirement is low enough. Under the exponential energy demands assumed before, the instantaneous departure rate from the system is therefore $\mu p(x)$, where:
 \begin{equation}\label{eq:power_function}
 p(x) = p_2\,\mathbf{1}_{x>0} + p_1\,\mathbf{1}_{x=0}.
 \end{equation}
-The system state at time $t$ is thus the pair $Z(t) = (n(t), x(t))$. Between arrival and departure events, the battery evolves deterministically according to $\dot{x} = r(n, x)$, where
+The system state at time $t$ is the pair $Z(t) = (n(t), x(t))$. Between arrival and departure events, the battery evolves deterministically according to $\dot{x} = r(n, x)$, where
 \begin{equation}
   r(n, x) = \begin{cases}
     p_0  & n = 0,\ x < B, \\
@@ -163,7 +163,7 @@ before reaching the boundary. Neither condition holds here: $E$ is compact, and 
 reaches $x=0$ and $x=B$ in finite time without a jump. Nevertheless, the vector
 field~\eqref{eq:vectorfield} is bounded and monotone on each mode, so the flow is
 globally well-defined. The strong Markov property follows from the martingale-problem
-approach, which extends to this setting since all jump rates are bounded and the jump kernel leaves $x$ unchanged
+approach (cf. \cite[Theorem~4.8]{Davis1984}), which extends to this setting since all jump rates are bounded and the jump kernel leaves $x$ unchanged
 (and thus the jumps are trivially bounded, as required by the theorem).
 
 The extended generator $\mathcal{A}$ of $Z(t)$ has domain $\mathcal{D}(\mathcal{A})$
@@ -207,14 +207,13 @@ equation $\mathcal{A}^*\pi = 0$. We now proceed to solve the steady state of thi
     \draw[very thick, azulcito, dashed, ->] (0.5,1) -- node[midway,anchor=west] {\footnotesize $\mu p(x)$} (0.5,-1);
   \end{tikzpicture}
   \end{center}
-  \caption{State space and system dynamics, showing a typical trajectory of $Z(t)$.}\label{fig:dynamics_single_server}
+  \caption{State space and system dynamics, showing a typical trajectory of $Z(t)$. In this example, the charge finishes before the battery drains.}\label{fig:dynamics_single_server}
 \end{figure}
 
 Note that an arriving car always finds $x>0$ with probability one: during any idle
 period the battery charges at rate $p_0>0$, and since the idle duration is
-$\mathrm{Exp}(\lambda)$ (positive a.s.), the battery is strictly positive at every
-arrival epoch. Consequently, $(n=0,x=0)$ has zero probability under any stationary
-distribution, and we can restrict attention to $E' = \{0\}\times(0,B] \cup \{1\}\times[0,B]$.
+$\mathrm{Exp}(\lambda)$, the battery is strictly positive at every
+arrival epoch.
 
 % -------------------------------------------------------
 \section{Single-Server in steady-state}
@@ -233,12 +232,11 @@ We seek $\pi$ as a mixed measure of the form:
   \pi = f_0(x)dx + f_1(x)dx + \pi_{0,B}\delta_{(0,B)} + \pi_{1,0}\delta_{(1,0)}. 
   \label{eq:ansatz}
 \end{equation}
-Here $f_n(x)$, are the interior densities and $\pi_{0,B}, \pi_{1,0} \geq 0$ are point
-masses at the corners where the flow accumulates: $x=B$ in mode~$0$ (since $r(0,\cdot)=p_0>0$)
-and $x=0$ in mode~$1$ (since $r(1,\cdot)=-c<0$). The other two corners should carry no atoms since flow arriving on them is immediately carried into the interior by the flow (cf. Figure \ref{fig:dynamics_single_server}).
+Here $f_n(x)$, are the interior densities and $\pi_{0,B}, \pi_{1,0} \geq 0$ are Dirac point
+masses at the corners where the flow accumulates (i.e. the drift in $x$ points towards the boundary). This occurs for $x=B$ in mode~$0$ (since $r(0,\cdot)=p_0>0$)
+and $x=0$ in mode~$1$ (since $r(1,\cdot)=-c<0$). The other two corners should carry no atoms since flow arriving on them is immediately carried into the interior (cf. Figure \ref{fig:dynamics_single_server}).
 
-Substituting this form into $\int \mathcal{A}\psi\,d\pi = 0$ and using eqs. \eqref{eq:generator}, the
-stationarity condition $\int \mathcal{A}\psi\,d\pi = 0$ for all $\psi \in \mathcal{D}(\mathcal{A})$ yields the following balance equations for the interior densities:
+Imposing the stationarity condition $\int \mathcal{A}\psi\,d\pi = 0$ for all $\psi \in \mathcal{D}(\mathcal{A})$ for the above measure, and using eqs. \eqref{eq:generator}, we obtain the following balance equations for the densities:
 \begin{subequations}\label{eq:balance}
   \begin{align}
   p_0\, f_0'(x) &= -\lambda\, f_0(x) + \mu p_2\, f_1(x), \label{eq:E0} \\
@@ -307,7 +305,7 @@ rate $p_1$. When $\theta = 0$ the battery neither drains nor fills on average an
 
 \subsection{Performance metrics}\label{ssec:metrics}
 
-We now derive key performance metrics directly from Theorem~\ref{thm:stationary}. We begin by computing the blocking probability, which, by the PASTA property, equals the stationary probability the charger is busy:
+We now derive key performance metrics directly from Theorem~\ref{thm:stationary}. We begin by computing the blocking probability, which, by the PASTA property, equals the stationary probability the charger is working, i.e. $n=1$:
 \begin{equation}
   P_B = \int_0^B f_1(x)\,dx + \pi_{1,0}
       = \frac{p_0}{K}\left(\frac{e^{\theta B}-1}{c\,\theta} + \frac{1}{\mu p_1}\right).
@@ -334,12 +332,12 @@ degradation relative to ideal fast charging as a function of requested energy:
 The key quantity is $x_y := cy/p_2$, the battery level that would be exactly depleted
 by demand $y$: if admitted at $x \geq x_y$ the car completes entirely in fast
 charging; if $x < x_y$ the battery depletes mid-service and slow charging kicks in.
-This gives the compact formula
+This gives the compact formula for the service time of a vehicle that requires $y$ units of energy and finds the battery at level $x$:
 \begin{equation}
   T(x,y) = \frac{y}{p_2} + \frac{(x_y - x)^+}{p_1},
   \label{eq:Txy}
 \end{equation}
-so that $S(y) = 1 + (p_2/(p_1 y))\,\mathbb{E}[(x_y - x)^+]$, where the expectation
+Therefore, $S(y) = 1 + (p_2/(p_1 y))\,\mathbb{E}[(x_y - x)^+]$, where the expectation
 is over the admitted battery level. Note that even for moderate demands $y < x^*$,
 slowdown occurs whenever the car arrives at a battery level $x < x_y$. The threshold $x^* = p_2 B/c$
 is the energy demand that would deplete even a full battery: for $y \geq x^*$,
@@ -589,7 +587,7 @@ identified a desirable battery regime in which the average slowdown depends
 only on hardware parameters and not on load, and derived explicit sizing formulas for
 the battery capacity and recharge rate.
 
-The many-server extension reveals a richer structure where the interior density requires incorporating 
+The many server extension reveals a richer structure where the interior density requires incorporating 
 all the eigenmodes of the pencil $(Q,R)$ and the boundary conditions. Analysis of this case is the subject of ongoing work.
 
 

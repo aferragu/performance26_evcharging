@@ -37,6 +37,8 @@
 \usepgfplotslibrary{fillbetween}
 %\tikzexternalize
 \newcommand{\graphwidth}{\columnwidth}
+\renewcommand{\leq}{\leqslant}
+\renewcommand{\geq}{\geqslant}
 % Colors
 \definecolor{azulcito}{RGB}{40,40,150}
 \definecolor{rojito}{RGB}{150,40,40}
@@ -81,7 +83,7 @@ to an eigenvalue problem for a matrix pencil, and identify the boundary conditio
 select the contributing modes. Simulation results are provided as examples.
 \end{abstract}
 
-\keywords{Piecewise deterministic Markov processes, Electrical Vehicles.}
+\keywords{Piecewise deterministic Markov processes, Electric Vehicles.}
 
 % -------------------------------------------------------
 \section{Introduction}
@@ -548,19 +550,19 @@ loss system. We set $p_0 = p_1$ for simplicity; the case $p_0 \neq p_1$ can be h
 with additional notation.
 
 The state is $Z(t) = (n(t), x(t))$ with $n(t) \in \{0,\ldots,s\}$ and $x(t) \in [0,B]$.
-With $p_0=p_1$ the net battery drift is $r_n = p_1 - np_2$ uniformly for all $n$:
+The net battery drift is $r_n = p_1 - np_2$ uniformly for all $n$:
 the battery charges when $n \leq n^* := \lfloor p_1/p_2 \rfloor$ and drains when
 $n > n^*$. Arrivals occur at rate $\lambda$ when $n<s$; departures at total rate
 $n\mu p_2$ when $x>0$ and at rate $\mu p_1$ when $x=0$. The process is again an
 ergodic PDMP by the same arguments as Section~\ref{sec:model}.
 
-The stationary balance equations on $(0,B)$ take the form $R\,\mathbf{f}'(x) = Q\,\mathbf{f}(x)$,
+The stationary balance equations on $(0,B)$ take the form $R\,\mathbf{f}'(x) = Q^T\,\mathbf{f}(x)$,
 where $\mathbf{f}(x) = (f_0(x),\ldots,f_s(x))^T$, $R = \mathrm{diag}(r_0,\ldots,r_s)$
 is the diagonal drift matrix, and $Q$ is the $(s+1)\times(s+1)$ transition rate matrix
-of the occupancy chain. When $p_2/p_1 \notin \mathbb{N}$, $R$ is invertible and
-exponential solutions $\mathbf{f}(x) = \mathbf{a}\,e^{\theta x}$ require $(\theta,\mathbf{a})$
-to be an eigenpair of $R^{-1}Q$. This pencil has $s+1$ eigenvalues, one of which is
-always $\theta = 0$: setting $\theta=0$ gives $Q\mathbf{a}=0$, whose solution is the
+of the occupancy chain with arrival rate $\lambda$ and departure rate $\mu p_2$ (valid in the interior). 
+When $p_2/p_1 \notin \mathbb{N}$, $R$ is invertible and exponential solutions $\mathbf{f}(x) = \mathbf{a}\,e^{\theta x}$
+require $(\theta,\mathbf{a})$ to be an eigenpair of $R^{-1}Q^T$. This pencil has $s+1$ eigenvalues, one of which is
+always $\theta = 0$: setting $\theta=0$ gives $Q^T\mathbf{a}=0$, whose solution is the
 Erlang-B stationary distribution $a_n = \rho^n/n!$. The general interior solution is
 therefore a superposition of all $s+1$ exponential modes.
 
@@ -570,11 +572,7 @@ determine all $s+1$ coefficients. In contrast with the single-server case, where
 decoupling property of Theorem~\ref{thm:stationary} reduces the solution to a single
 mode, the full spectrum of the pencil $(Q,R)$ is generically needed for $s>1$.
 
-Two open questions must be resolved before a complete solution can be stated: whether
-the eigenvalues of $R^{-1}Q$ are always real, and whether the corresponding
-coefficients are always positive — both necessary for $\mathbf{f}(x)$ to be a valid
-density. We conjecture both hold, but proofs remain open. The complete matrix-analytic
-treatment is the subject of ongoing work.
+In particular, in ongoing work, we were able to establish that the eigenvalues of $R^{-1}Q^T$ are always real, by using the reversibility of the generator matrix $Q$, and that a solution of the form \eqref{eq:ansatz} exists and is unique, with all positive densities in the interior involving all the non-zero eigenvalues of the pencil, and with atoms on the corners where the flux points towards the boundary.
 
 
 % -------------------------------------------------------
@@ -592,8 +590,7 @@ only on hardware parameters and not on load, and derived explicit sizing formula
 the battery capacity and recharge rate.
 
 The many-server extension reveals a richer structure where the interior density requires incorporating 
-all the eigenmodes of the pencil $(Q,R)$, and the boundary conditions couple two tridiagonal systems at each
-boundary. This matrix-analytic treatment is the subject of ongoing work.
+all the eigenmodes of the pencil $(Q,R)$ and the boundary conditions. Analysis of this case is the subject of ongoing work.
 
 
 \bibliographystyle{abbrv}
